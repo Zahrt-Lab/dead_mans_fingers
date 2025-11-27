@@ -16,3 +16,18 @@ def generate_instrument_config() -> List[List[str]]:
         ["HarvardPump", "1", "HarvardPump", "COM19", ""],
     ]
     return rows
+
+# This saves the output instrument config file to a csv file
+def save_instrument_config_csv(config_file: str) -> None:
+    """
+    This saves the output instrument config file to a csv file
+
+    config_file:
+     - This contains the instrument configuration file of all equipment used for this project
+
+    return:
+     - None
+    """
+
+    with open(config_file, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(generate_instrument_config())
