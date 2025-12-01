@@ -972,7 +972,7 @@ def calculate_true_percent_yield(
     concentration_product_mol_per_uL_reactor_bed = max(
         0.0, concentration_product_mol_per_uL_reactor_bed
     )
-
+    # TODO The current initial_reactor_concentration is not measured by the UV-detector but calculated by the code in the preprocessing steps, in future we might want to use the UV detector to get this value
     percent_yield_true = (
         concentration_product_mol_per_uL_reactor_bed
         / initial_reactor_concentration_mol_per_uL
