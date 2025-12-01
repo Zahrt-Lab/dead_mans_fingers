@@ -1572,6 +1572,7 @@ if __name__ == "__main__":
                     "average_absorbance_reactant": "",
                     "average_absorbance_product": "",
                     "percent_yield": 0.0,  # safe default
+                    "percent_conversion_original": 0.0,
                     "throughput_nmol_per_min": 0.0,  # safe default
                     "timestamp": now,
                     "status": "error",
