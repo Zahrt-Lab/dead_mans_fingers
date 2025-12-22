@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 def average_absorbance(
     uv_vis_absorbance_over_time_df: pd.DataFrame,
     wavelength: float,

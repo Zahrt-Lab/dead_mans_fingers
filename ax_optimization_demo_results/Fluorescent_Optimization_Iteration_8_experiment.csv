@@ -1,0 +1,7 @@
+Component,Action,Parameters,Notes,delay
+PhdUltraPump_1,select_syringe,"syringe=20,pump_id=1","The selected syringe size is 20, loaded with 1 syringes",0.5
+PhdUltraPump_1,dispense,"flow_rate=86,volume=1747",The flow rate of our Xylo compund is 86 uL/min and volume is 1747,0.5
+VICI_M6_Pump_1,dispense,"flow_rate=45, volume=911",The flow rate of our 0.1 M HCl Water is 45 uL/min and volume is 911,0.5
+VICI_M6_Pump_2,dispense,"flow_rate=12, volume=242",The flow rate of our cosolvent is 12 uL/min and volume is 242,0.5
+SYNC,wait_for_pumps,,Waiting for XYLO and WATER pumps to complete,0.5
+PhdUltraPump_1,stop,,The pump should have stopped but this is a safety check,0.5

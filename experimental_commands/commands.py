@@ -1,3 +1,14 @@
+import csv
+from experimental_commands.generate_experimental_commands import (
+    generate_experimental_commands,
+)
+from experimental_commands.generate_temperature_commands import (
+    generate_temperature_commands,
+)
+from experimental_commands.generate_wash_commands import generate_wash_commands
+
+# TODO : Update the current experimental commands to match the new experimental setup
+
 # This saves all the instrument commands to a csv file
 def save_commands_csv(
     commands_path: str,
@@ -6,9 +17,12 @@ def save_commands_csv(
     flow_rate_pump1: float,
     flow_rate_pump2: float,
     flow_rate_pump3: float,
+    flow_rate_pump4: float,
     volume_pump1: float,
     volume_pump2: float,
     volume_pump3: float,
+    volume_pump4: float,
+    valve_position_pump3: int,
     temperature: float,
     previous_temperature: float,
 ) -> None:
@@ -45,7 +59,7 @@ def save_commands_csv(
 
     with open(temperature_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
-            generate_temperature_commands(temperature, previous_temperature)
+            generate_temperature_commands(temperature)
         )
 
     with open(experiment_commands_csv, "w", newline="", encoding="utf-8") as f:
@@ -56,14 +70,27 @@ def save_commands_csv(
                 flow_rate_pump1,
                 flow_rate_pump2,
                 flow_rate_pump3,
+                flow_rate_pump4,
                 volume_pump1,
                 volume_pump2,
                 volume_pump3,
+                volume_pump4,
+                valve_position_pump3,
             )
         )
 
     with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
-        csv.writer(f).writerows(generate_wash_commands())
+        csv.writer(f).writerows(
+            generate_wash_commands(
+                flow_rate_pump2,
+                volume_pump2,
+                flow_rate_pump3,
+                volume_pump3,
+                flow_rate_pump4,
+                volume_pump4,
+                valve_position_pump3,
+            )
+        )
 
 
 def run_commands(experiment_commands, instrument_config_file) -> None:

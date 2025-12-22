@@ -1,4 +1,4 @@
-# auto_zahrt/state.py
+# bayesian_optimizer/state.py
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
@@ -8,17 +8,52 @@ EXPERIMENTAL_PARAMETERS: Dict[str, Any] = {}
 # Iteration metadata / stock volumes
 iteration: Dict[str, Any] = {
     "iteration #": 0,
-    "last_temperature": None,
-    "volume_stock_solution1": None,
-    "volume_stock_solution2": None,
-    "volume_stock_solution3": None,
+    "xylopyridine_analog_volume_stock_solution": None,
+    "pump1_0.1M_HCl_water_volume_stock_solution": None,
+    "pump2_0.1M_HCl_water_volume_stock_solution": None,
 }
 
+
+def initialize_cosolvent_volumes(number_of_cosolvents: int) -> None:
+    """
+    Initialize co-solvent volume tracking in iteration dictionary which is varaible in the code
+    
+    Parameters:
+    - number_of_cosolvents: Number of co-solvents (1-6), this is dependent on the valve positions available
+    
+    Raises:
+    - ValueError: If number_of_cosolvents is not in valid range
+    """
+    if not (1 <= number_of_cosolvents <= 6):
+        raise ValueError(f"number_of_cosolvents must be between 1 and 6, got {number_of_cosolvents} cosolvents.")
+    
+    # Remove any existing cosolvent entries
+    keys_to_remove = [key for key in iteration.keys() if key.startswith("cosolvent_")]
+    for key in keys_to_remove:
+        del iteration[key]
+    
+    # Add new cosolvent volume entries
+    for i in range(1, number_of_cosolvents + 1):
+        iteration[f"cosolvent_{i}_volume"] = None
+
+
+def get_cosolvent_volumes() -> Dict[str, float]:
+    """
+    Get all co-solvent volumes from iteration dict.
+    
+    Returns:
+    - Dictionary of co-solvent volumes {cosolvent_1_volume: value, ...}
+    """
+    return {k: v for k, v in iteration.items() if k.startswith("cosolvent_")}
+
 # Cache for multi-objective BO results
-RESULTS_CACHE: Dict[Tuple[float, float, float], Tuple[float, float]] = {}
+RESULTS_CACHE: Dict[Tuple[float, float, float, float], Tuple[float, float]] = {}
 
 # Ax noise (SEM) used when reporting metrics
 NOISE_SEM: float = 1e-3
+
+# Simulation mode flag
+SIMULATION_MODE: bool = False
 
 
 def set_experimental_parameters(params: Dict[str, Any]) -> None:
@@ -37,6 +72,14 @@ def set_noise_sem(value: float) -> None:
     NOISE_SEM = float(value)
 
 
+def set_simulation_mode(value: bool) -> None:
+    """
+    Update the global SIMULATION_MODE flag.
+    """
+    global SIMULATION_MODE
+    SIMULATION_MODE = bool(value)
+
+
 def bayesian_optimization_results_csv_path() -> str:
     """
     Utility to compute the path where BO results are stored,
@@ -46,7 +89,5 @@ def bayesian_optimization_results_csv_path() -> str:
     base_directory.mkdir(parents=True, exist_ok=True)
     return str(
         base_directory
-        / EXPERIMENTAL_PARAMETERS[
-            "Fluorescent_Bayesian_Optimization_results_filename"
-        ]
-    )
+        / EXPERIMENTAL_PARAMETERS["Fluorescent_Bayesian_Optimization_results_filename"]
+        )

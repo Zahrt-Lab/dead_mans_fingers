@@ -1,3 +1,21 @@
+# ------------------------------------------------------------------------------
+# Software: project_dead_mans_fingers
+# Copyright: (C) 2025 by Professor Andrew Zahrt
+# This software is the intellectual property of Professor Andrew Zahrt
+# Contributions by graduate students Scott Laverty are acknowledged.
+# All rights reserved.
+# ------------------------------------------------------------------------------
+
+'''
+Docstring for experimental_commands.uv_vis_detector
+This module provides functions to begin and end UV-VIS measurements using the Ocean Optics UV-Vis detector
+in the project_dead_mans_fingers framework. Once converges on absorance at target wavelengths it will 
+converge and return stop recording and return false to the AutoZahrt framework to stop that run 
+and continue to the next Bayesian Optimization iteration.
+'''
+
+from typing import Tuple, Any
+
 # Will create UV-detector object and return UV-VIS start time
 def begin_uv_vis_measurement(
     output_directory: str,
@@ -9,7 +27,7 @@ def begin_uv_vis_measurement(
     target_wavelengths: Tuple[float, float] = (409.0, 506.0),
     file_name: str = "Fluorescent_Bayesian_Optimization",
     measurement_interval: int = 5,
-) -> Ocean_Optics_UV_vis:
+) -> Tuple[Any, bool]:
     """
     The role of this script is to begin the UV measurements which will use the default
     parameters for this experiment
@@ -25,6 +43,7 @@ def begin_uv_vis_measurement(
      - measurement_interval:
     return:
      - UV_VIS_detector_object: UV_VIS_detector python object
+     - converged_early: Boolean indicating if convergence was detected (True = converged, stop experiment)
     """
 
     print(
@@ -62,8 +81,10 @@ def begin_uv_vis_measurement(
         print(f"Error: {e}")
 
     # This will begin the continous UV-measurements for this iteration of the Bayesian Optimization
-    uv_vis_detector_object.start_continuous()
-    return uv_vis_detector_object
+    # start_continuous() now returns True if convergence detected, False otherwise
+    converged_early = uv_vis_detector_object.start_continuous(stop_upon_convergence=True)
+    
+    return uv_vis_detector_object, converged_early
 
 
 def end_uv_vis_measurement(uv_vis_detector_object: Any) -> None:

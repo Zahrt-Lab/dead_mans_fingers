@@ -1,3 +1,7 @@
+import csv
+import os
+
+
 def append_bayesian_experimental_results(
     bayesian_optimization_csv_path: str, results: dict
 ) -> None:
@@ -19,6 +23,8 @@ def append_bayesian_experimental_results(
         "concentration",
         "reactor_concentration_uM",
         "temperature",
+        "co_solvent",
+        "co_solvent_volume",
         "target_volume",
         "reactant_wavelength",
         "product_wavelength",

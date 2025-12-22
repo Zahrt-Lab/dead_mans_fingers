@@ -1,4 +1,16 @@
-# auto_zahrt/ax_runner.py
+# ------------------------------------------------------------------------------
+# Software: project_dead_mans_fingers
+# Copyright: (C) 2025 by Professor Andrew Zahrt
+# This software is the intellectual property of Professor Andrew Zahrt
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
+# All rights reserved.
+# ------------------------------------------------------------------------------
+
+'''
+This module contains the AxRunner class to run the Bayesian Optimization for our experiment
+'''
+
+# bayesian_optimizer/ax_runner.py
 from __future__ import annotations
 
 import os
@@ -7,38 +19,44 @@ from typing import Dict
 
 from ax.service.ax_client import AxClient, ObjectiveProperties
 
-from auto_zahrt import state
-from auto_zahrt.state import (
+from bayesian_optimizer import state
+from bayesian_optimizer.state import (
     EXPERIMENTAL_PARAMETERS,
     iteration,
     bayesian_optimization_results_csv_path,
+    SIMULATION_MODE,
 )
-from auto_zahrt.experiment import (
+from bayesian_optimizer.bayesian_optimization_run import (
     run_bayesian_optimization_iteration,
-    objective_percent_yield,   # optional, but nice to export if needed
-    objective_throughput,
-    append_bayesian_experimental_results,  # wherever this is defined in experiment.py
+    objective_function_percent_yield,
+    objective_function_throughput,
 )
-# Also import your config helpers from the module where they currently live.
-# If they are in experiment.py, this works:
-from auto_zahrt.experiment import (
+from post_processing.append_bayesian_experimental_results import (
+    append_bayesian_experimental_results,
+)
+from preprocessing.experimental_parameters import (
     load_experimental_parameters,
     check_required_experimental_parameters,
 )
 
+
 def _init_or_load_ax(
     state_path: str,
-    fr_min: float,
-    fr_max: float,
-    conc_min: float,
-    conc_max: float,
-    temp_min: float,
-    temp_max: float,
-    objA_threshold: float,
-    objB_threshold: float,
+    flow_rate_min: float,
+    flow_rate_max: float,
+    dilution_factor_min: float,
+    dilution_factor_max: float,
+    temperature_min: float,
+    temperature_max: float,
+    cosolvents_valve_position_min: float,
+    cosolvents_valve_position_max: float,
+    co_solvent_volume_min: float,
+    co_solvent_volume_max: float,
+    percent_yield_threshold: float,
+    throughput_threshold: float,
 ) -> AxClient:
     """
-    Initialize a new AxClient or resume from a JSON state file.
+    Initialize a new AxClient or resume from a JSON state file to begin a bayesian optimization campaign.
     """
     if os.path.exists(state_path):
         ax = AxClient.load_from_json_file(state_path)
@@ -47,51 +65,71 @@ def _init_or_load_ax(
 
     ax = AxClient()
     ax.create_experiment(
-        name="AUTO_ZAHRT_moo_ax",
+        name="project_dead_mans_fingers_moo_ax",
         parameters=[
             {
                 "name": "flow_rate",
                 "type": "range",
-                "bounds": [fr_min, fr_max],
+                "bounds": [flow_rate_min, flow_rate_max],
                 "value_type": "int",
             },
             {
-                "name": "concentration",
+                "name": "dilution_factor",
                 "type": "range",
-                "bounds": [conc_min, conc_max],
+                "bounds": [dilution_factor_min, dilution_factor_max],
                 "value_type": "float",
             },
             {
                 "name": "temperature",
                 "type": "range",
-                "bounds": [temp_min, temp_max],
+                "bounds": [temperature_min, temperature_max],
+                "value_type": "float",
+            },
+            {
+                "name": "co_solvent",
+                "type": "range",
+                "bounds": [cosolvents_valve_position_min, cosolvents_valve_position_max],
                 "value_type": "int",
             },
+            {
+                "name": "co_solvent_volume",
+                "type": "range",
+                "bounds": [co_solvent_volume_min, co_solvent_volume_max],
+                "value_type": "float",
+            },
         ],
+        # This will set the objective functions and their thresholds to maximize both percent yield and throughput
         objectives={
             "percent_yield": ObjectiveProperties(
-                minimize=False, threshold=float(objA_threshold)
+                minimize=False, threshold=float(percent_yield_threshold)
             ),
             "throughput": ObjectiveProperties(
-                minimize=False, threshold=float(objB_threshold)
+                minimize=False, threshold=float(throughput_threshold)
             ),
         },
     )
+    
     print("Started new Ax experiment.")
     return ax
+
 
 def evaluate_ax(params: Dict[str, float]) -> Dict[str, tuple[float, float]]:
     """
     Runs ONE lab experiment using your existing pipeline.
     Returns the two objective metrics with (mean, sem) for Ax.
     """
-    flow_rate = float(params["flow_rate"])
-    concentration = float(params["concentration"])
-    temperature = float(params["temperature"])
 
+    # This first checks experimental cache to avoid redundant experiments
+    flow_rate = float(params["flow_rate"])
+    dilution_factor = float(params["dilution_factor"])
+    temperature = float(params["temperature"])
+    co_solvent = float(params["co_solvent"])
+    co_solvent_volume = float(params["co_solvent_volume"])
+
+    # It then tries to run the experiment using the run_bayesian_optimization_iteration function, catching errors
     try:
         percent_yield, throughput = run_bayesian_optimization_iteration(
-            (flow_rate, concentration, temperature)
+            (flow_rate, dilution_factor, temperature, co_solvent, co_solvent_volume)
         )
 
         return {
@@ -104,7 +142,7 @@ def evaluate_ax(params: Dict[str, float]) -> Dict[str, tuple[float, float]]:
         now = time.strftime("%Y-%m-%d %H:%M:%S")
 
         reactant_concentration_uM = float(
-            concentration * EXPERIMENTAL_PARAMETERS.get("stock_concentration_uM", 0.0)
+            dilution_factor * EXPERIMENTAL_PARAMETERS.get("stock_concentration_uM", 0.0)
         )
 
         reactant_wavelength = EXPERIMENTAL_PARAMETERS.get("reactant_wavelength", "")
@@ -115,29 +153,34 @@ def evaluate_ax(params: Dict[str, float]) -> Dict[str, tuple[float, float]]:
             {
                 "iteration": iteration["iteration #"],
                 "flow_rate": flow_rate,
-                "concentration": concentration,
+                "concentration": dilution_factor,
                 "reactor_concentration_uM": reactant_concentration_uM,
                 "temperature": temperature,
+                "co_solvent": co_solvent,
+                "co_solvent_volume": co_solvent_volume,
                 "target_volume": "",
                 "reactant_wavelength": reactant_wavelength,
                 "product_wavelength": product_wavelength,
                 "average_absorbance_reactant": "",
                 "average_absorbance_product": "",
                 "percent_yield": 0.0,
-                "percent_conversion_original": 0.0,
                 "throughput_nmol_per_min": 0.0,
                 "timestamp": now,
                 "status": "error",
                 "error_message": (
-                    err_msg[:240] + "…"
-                ) if len(err_msg) > 240 else err_msg,
+                    (err_msg[:240] + "…") if len(err_msg) > 240 else err_msg
+                ),
             },
         )
+
+        # TODO: Should we return a zero or should a N/A value be used here? If zero I believe it won't 
+        # a factor in the bayesian optimization since it would be below the cutoff thresholds.
 
         return {
             "percent_yield": (0.0, state.NOISE_SEM),
             "throughput": (0.0, state.NOISE_SEM),
         }
+
 
 def run_bo_campaign(
     input_experimental_parameters: str,
@@ -147,6 +190,7 @@ def run_bo_campaign(
     objA_threshold: float,
     objB_threshold: float,
     noise_sem: float,
+    simulation_mode: bool = True,
 ) -> None:
     """
     Top-level driver that:
@@ -157,14 +201,23 @@ def run_bo_campaign(
     """
     # 1) Setup global state
     params = load_experimental_parameters(input_experimental_parameters)
-    check_required_experimental_parameters(params)
+    check_required_experimental_parameters(params, simulation_mode=simulation_mode)
     state.set_experimental_parameters(params)
     state.set_noise_sem(noise_sem)
+    state.set_simulation_mode(simulation_mode)
+
+    mode_str = "SIMULATION" if simulation_mode else "HARDWARE"
+    print(f"\n{'='*60}")
+    print(f"Running in {mode_str} mode")
+    print(f"{'='*60}\n")
 
     fr_min, fr_max = EXPERIMENTAL_PARAMETERS["flow_rate"]
-    conc_min, conc_max = EXPERIMENTAL_PARAMETERS["concentration"]
+    conc_min, conc_max = EXPERIMENTAL_PARAMETERS["dilution_factor"]
     temp_min, temp_max = EXPERIMENTAL_PARAMETERS["temperature"]
-
+    co_solvent_min, co_solvent_max = EXPERIMENTAL_PARAMETERS["cosolvents_valve_position"]
+    co_solvent_volume_min, co_solvent_volume_max = EXPERIMENTAL_PARAMETERS[
+        "co_solvent_dilution_factor"
+    ]
     # 2) Ax init/load
     ax = _init_or_load_ax(
         state_path,
@@ -174,28 +227,33 @@ def run_bo_campaign(
         conc_max,
         temp_min,
         temp_max,
+        co_solvent_min,
+        co_solvent_max,
+        co_solvent_volume_min,
+        co_solvent_volume_max,
         objA_threshold,
         objB_threshold,
     )
 
     # 3) Run the loop
     step = 0
+    # TODO:Should the trials be set to a max of 30 iterations if 0 is provided instead of infinity?
     target = "∞" if trials == 0 else str(trials)
     try:
         while True if trials == 0 else (step < trials):
-            params_dict, tid = ax.get_next_trial()
-            outcomes = evaluate_ax(params_dict)
-            ax.complete_trial(trial_index=tid, raw_data=outcomes)
+            experimental_parameters_dictionary, trial_index = ax.get_next_trial()
+            experimental_results = evaluate_ax(experimental_parameters_dictionary)
+            ax.complete_trial(trial_index=trial_index, raw_data=experimental_results)
             step += 1
 
             if (step % max(1, save_every)) == 0:
                 ax.save_to_json_file(filepath=state_path)
 
             print(
-                f"[Step {step}/{target}] Trial {tid} -> "
-                f"percent_yield={outcomes['percent_yield'][0]:.4f}, "
-                f"throughput={outcomes['throughput'][0]:.6g} "
-                f"at params={params_dict}"
+                f"[Step {step}/{target}] Trial {trial_index} -> "
+                f"percent_yield={experimental_results['percent_yield'][0]:.4f}, "
+                f"throughput={experimental_results['throughput'][0]:.6g} "
+                f"at params={experimental_parameters_dictionary}"
             )
     except KeyboardInterrupt:
         print("\nInterrupted by user; saving Ax state...")
@@ -205,21 +263,22 @@ def run_bo_campaign(
 
         # 4) optional Pareto print (same as your original)
         try:
-            def _m(v):
-                if hasattr(v, "mean"):
-                    return float(v.mean)
-                if isinstance(v, (tuple, list)) and v:
-                    return float(v[0])
-                return float(v)
 
-            pareto = ax.get_pareto_optimal_parameters()
-            items = pareto.items() if isinstance(pareto, dict) else pareto
+            def _mean(value):
+                if hasattr(value, "mean"):
+                    return float(value.mean)
+                if isinstance(value, (tuple, list)) and value:
+                    return float(value[0])
+                return float(value)
+
+            pareto_optimal_params = ax.get_pareto_optimal_parameters()
+            pareto_items = pareto_optimal_params.items() if isinstance(pareto_optimal_params, dict) else pareto_optimal_params
             print("\nPareto-optimal parameter sets (approx means):")
-            for p, outs in items:
-                if isinstance(outs, dict):
-                    summary = {m: round(_m(val), 4) for m, val in outs.items()}
+            for experimental_parameters, experiment_objective_function_outputs in pareto_items:
+                if isinstance(experiment_objective_function_outputs, dict):
+                    experimental_results_summary = {metric: round(_mean(metric_value), 4) for metric, metric_value in experiment_objective_function_outputs.items()}
                 else:
-                    summary = outs
-                print(p, summary)
+                    experimental_results_summary = experiment_objective_function_outputs
+                print(experimental_parameters, experimental_results_summary)
         except Exception as e:
             print(f"(Pareto print skipped: {e})")

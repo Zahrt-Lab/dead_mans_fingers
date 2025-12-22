@@ -23,8 +23,9 @@ import pandas as pd
 import argparse
 from ax.service.ax_client import AxClient, ObjectiveProperties
 
-from AUTO_ZAHRT.Methods.General_Methods_v9 import GeneralExperimentMethod
-from AUTO_ZAHRT.UV_VIS_Detector.UV_VIS_platform_v2 import Ocean_Optics_UV_vis
+# TODO Fix imports below
+#from AUTO_ZAHRT.Methods.General_Methods_v9 import GeneralExperimentMethod
+#from AUTO_ZAHRT.UV_VIS_Detector.UV_VIS_platform_v2 import Ocean_Optics_UV_vis
 
 
 def load_experimental_parameters(input_json_file: str) -> Dict[str, Any]:
@@ -46,61 +47,60 @@ def load_experimental_parameters(input_json_file: str) -> Dict[str, Any]:
         )
     return experimental_parameters_dictionary
 
+# TODO: Needs to update the code to include parameters for light intensity and xylopyridine analogs
+# TODO: We should use a different name for volume variables to avoid confusion of what it for
 
 def check_required_experimental_parameters(
-    experimental_parameters: Dict[str, Any]
+    experimental_parameters: Dict[str, Any], simulation_mode: bool = False
 ) -> None:
     """
-    Checks to make sure all our necessary inputs our presents
+    Checks to make sure all our necessary inputs are present
 
-    return:
+    Parameters:
+    - experimental_parameters: Dictionary of experimental parameters
+    - simulation_mode: If False, the AutoZahrt commands generated will be sent to the automated platform to be executed.
+                     If True, the AutoZahrt commands will be generated but not sent to the platform to executed
+
+    Returns:
      -None
     """
-    required_experimental_parameters = [
-        "budget",
-        "volume",
-        "base_directory",
-        "minimum_volume_required",
-        "volume_stock_solution1",
-        "volume_stock_solution2",
-        "volume_stock_solution3",
-        "name_of_stock_solution1",
-        "name_of_stock_solution2",
-        "name_of_stock_solution3",
-        "Fluorescent_Bayesian_Optimization_results_filename",
-        "syringe_size",
-        "number_of_syringes",
-        "flow_rate",
-        "concentration",
-        "temperature",
-        "stock_concentration_uM",
-        "target_absorbance_in_the_uv_detector",
-        "max_absorbance_concentration_uM_uv_detector",
-        "reactant_wavelength",
-        "product_wavelength",
-        "epsilon_reactant_at_lambda1_L_per_mol_cm",
-        "epsilon_product_at_lambda1_L_per_mol_cm",
-        "epsilon_reactant_at_lambda2_L_per_mol_cm",
-        "epsilon_product_at_lambda2_L_per_mol_cm",
-        "pathlength_cm",
-        "residence_times",
-        "volume_after_residence_times_met",
+    experimental_parameters = [
+          "budget",
+          "volume",
+          "base_directory",
+          "minimum_volume_required",
+          "pump1_xylopyridine_analogs_volume_stock_solution",
+          "pump2_0.1M_HCl_water_volume_stock_solution",
+          "pump3_co-solvents_volume_stock_solutions",
+          "pump4_0.1M_HCl_water_volume_stock_solution",
+          "name_of_co-solvent_stock_solutions",
+          "Fluorescent_Bayesian_Optimization_results_filename",
+          "syringe_size",
+          "number_of_syringes",
+          "flow_rate",
+          "dilution_factor",
+          "cosolvents_valve_position",
+          "co_solvent_dilution_factor",
+          "stock_concentration_uM",
+          "target_absorbance_in_the_uv_detector",
+          "max_absorbance_concentration_uM_uv_detector",
+          "reactant_wavelength",
+          "product_wavelength",
+          "epsilon_reactant_at_lambda1_L_per_mol_cm",
+          "epsilon_product_at_lambda1_L_per_mol_cm",
+          "epsilon_reactant_at_lambda2_L_per_mol_cm",
+          "epsilon_product_at_lambda2_L_per_mol_cm",
+          "pathlength_cm"
     ]
     missing_experimental_parameter = [
         parameter
-        for parameter in required_experimental_parameters
+        for parameter in experimental_parameters
         if parameter not in experimental_parameters
     ]
     if missing_experimental_parameter:
         raise KeyError(
             f"Missing required EXPERIMENTAL_PARAMETERS keys: {missing_experimental_parameter}"
         )
-    if not (
-        0.0 <= experimental_parameters["concentration"][0] <= 1.0
-        and 0.0 <= experimental_parameters["concentration"][1] <= 1.0
-    ):
-        raise ValueError("concentration bounds must be between 0 and 1.")
-
 
 class ExperimentAborted(Exception):
     pass
