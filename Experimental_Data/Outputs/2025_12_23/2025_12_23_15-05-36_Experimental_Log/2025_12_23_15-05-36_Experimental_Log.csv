@@ -1,0 +1,12 @@
+Time,Component,Action,Parameters,Output,Notes
+8.16,0,load_method,input=ax_optimization_demo_results\Fluorescent_Optimization_Iteration_3_wash.csv,Loading input file: ax_optimization_demo_results\Fluorescent_Optimization_Iteration_3_wash.csv,
+9.51,Valve6Way_1,go_to_position,position=5,Moved valve to position 5,
+10.53,Valve6Way_1,check_position,,P05,Valve now at position P05
+11.03,VICI_M6_Pump_1,dispense,"flow_rate=1938.7818843126297, volume=5816.345652937889",Started async dispense,exp. 180.0 s
+11.54,VICI_M6_Pump_2,dispense,"flow_rate=61.2181156873703, volume=183.6543470621109",Started async dispense,exp. 180.0 s
+12.05,Isametic_1,aspirate,"flow_rate=2000, volume=6000",Started async aspirate,exp. 180.0 s
+194.15,VICI_M6_Pump_1,dispense,"flow_rate=1938.7818843126297, volume=5816.345652937889",dispense 5816.345652937889 µL @ 1938.7818843126297 µL/min,≈180.0 s
+194.66,VICI_M6_Pump_2,dispense,"flow_rate=61.2181156873703, volume=183.6543470621109",dispense 183.6543470621109 µL @ 61.2181156873703 µL/min,≈180.0 s
+200.17,Isametic_1,aspirate,"flow_rate=2000, volume=6000",aspirate 6000.0 µL @ 2000.0 µL/min,≈180.0 s
+200.17,SYNC,wait_for_pumps,,All pumps finished,
+200.18,SYNC,wait_for_pumps,,All pumps finished,

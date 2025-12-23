@@ -1,6 +1,6 @@
 {
   "budget": 30,
-  "volume": 2900,
+  "volume": 100,
   "base_directory": "./ax_optimization_demo_results",
   "minimum_volume_required": 2000,
   "pump1_xylopyridine_analogs_volume_stock_solution" : 20000,

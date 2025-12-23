@@ -5,6 +5,7 @@ from typing import Any, Dict, Tuple
 # Global experiment parameters, filled at startup
 EXPERIMENTAL_PARAMETERS: Dict[str, Any] = {}
 
+# TODO: Check to make sure this stock volume code is working to keep track of all the solvents
 # Iteration metadata / stock volumes
 iteration: Dict[str, Any] = {
     "iteration #": 0,
@@ -12,7 +13,6 @@ iteration: Dict[str, Any] = {
     "pump1_0.1M_HCl_water_volume_stock_solution": None,
     "pump2_0.1M_HCl_water_volume_stock_solution": None,
 }
-
 
 def initialize_cosolvent_volumes(number_of_cosolvents: int) -> None:
     """

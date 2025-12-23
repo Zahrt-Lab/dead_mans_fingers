@@ -1,0 +1,11 @@
+Time,Component,Action,Parameters,Output,Notes
+8.17,0,load_method,input=ax_optimization_demo_results\Fluorescent_Optimization_Iteration_1_experiment.csv,Loading input file: ax_optimization_demo_results\Fluorescent_Optimization_Iteration_1_experiment.csv,
+8.18,PhdUltraPump_1,select_syringe,"syringe=20,pump_id=1",Error selecting syringe: 'volume_ml',
+8.68,PhdUltraPump_1,dispense,"flow_rate=33,volume=64",Started async dispense,exp. 116.4 s
+9.18,VICI_M6_Pump_1,dispense,"flow_rate=15, volume=30",Started async dispense,exp. 120.0 s
+9.69,VICI_M6_Pump_2,dispense,"flow_rate=3, volume=5",Started async dispense,exp. 100.0 s
+112.81,VICI_M6_Pump_2,dispense,"flow_rate=3, volume=5",dispense 5.0 µL @ 3.0 µL/min,≈100.0 s
+127.45,PhdUltraPump_1,dispense,"flow_rate=33,volume=64",dispense 64.0 µL @ 33.0 µL/min,≈116.4 s
+132.3,VICI_M6_Pump_1,dispense,"flow_rate=15, volume=30",dispense 30.0 µL @ 15.0 µL/min,≈120.0 s
+132.3,SYNC,wait_for_pumps,,All pumps finished,
+132.3,SYNC,wait_for_pumps,,All pumps finished,

@@ -10,6 +10,7 @@ def calculate_concentration_in_the_reactor_bed(
     volume_pump1_uL: float,
     volume_pump2_uL: float,
     volume_pump3_uL: float,
+    volume_pump4_uL: float,
 ) -> float:
     """
     Calculate product concentration in reactor bed from detector absorbance.

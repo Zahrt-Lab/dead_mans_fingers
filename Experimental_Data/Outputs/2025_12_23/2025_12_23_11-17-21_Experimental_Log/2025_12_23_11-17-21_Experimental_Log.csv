@@ -1,0 +1,3 @@
+Time,Component,Action,Parameters,Output,Notes
+8.15,0,load_method,input=./test_experimental_output/experimental_commands.csv,Loading input file: ./test_experimental_output/experimental_commands.csv,
+8.15,,,,Error: Experiment failed stopping exerpimentand closing connections to all instruments,

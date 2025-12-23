@@ -7,6 +7,9 @@ from experimental_commands.generate_temperature_commands import (
 )
 from experimental_commands.generate_wash_commands import generate_wash_commands
 
+# Import AutoZahrt GeneralExperimentMethod from local Auto_Zahrt_v3 package
+from Auto_Zahrt_v3.methods.methods import GeneralExperimentMethod
+
 # TODO : Update the current experimental commands to match the new experimental setup
 
 # This saves all the instrument commands to a csv file
@@ -24,7 +27,7 @@ def save_commands_csv(
     volume_pump4: float,
     valve_position_pump3: int,
     temperature: float,
-    previous_temperature: float,
+    fraction_of_cosolvent: float,
 ) -> None:
     """
     The role of this csv file is to generate the csv commands for each individual
@@ -82,12 +85,12 @@ def save_commands_csv(
     with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
             generate_wash_commands(
-                flow_rate_pump2,
-                volume_pump2,
-                flow_rate_pump3,
-                volume_pump3,
-                flow_rate_pump4,
-                volume_pump4,
+                2000 * (1- fraction_of_cosolvent),
+                6000 * (1- fraction_of_cosolvent),
+                2000  * fraction_of_cosolvent,
+                6000 * fraction_of_cosolvent,
+                2000,
+                6000,
                 valve_position_pump3,
             )
         )
@@ -102,6 +105,8 @@ def run_commands(experiment_commands, instrument_config_file) -> None:
      - instrument_config_file: Instrument config file to help us to determine what equipment
      is being used
     """
+
+    # TODO: Need to connect this code to the AutoZahrt GeneralExperimentMethod
 
     fluorescent_reaction_optimization_experiment = GeneralExperimentMethod(
         experiment_commands, instrument_config_file

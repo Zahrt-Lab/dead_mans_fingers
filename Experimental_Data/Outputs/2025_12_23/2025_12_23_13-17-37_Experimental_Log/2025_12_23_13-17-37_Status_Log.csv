@@ -1,0 +1,24 @@
+Timestamp,Elapsed_Time_s,Isametic_1,PhdUltraPump_1,Temperature_1,VICI_M6_Pump_1,VICI_M6_Pump_2,Valve6Way_1
+2025-12-23 13:17:45,8.14,68.0,50.0,47.09,Error: invalid velocity response 'PR V0',Error: invalid velocity response 'PR V0',VICI Valve - Position: P
+2025-12-23 13:18:46,69.51,68.0,50.0,47.13,0.0,Error: invalid velocity response '= 0',VICI Valve - Position: CP01
+2025-12-23 13:19:48,130.84,68.0,50.0,47.08,Error: invalid velocity response 'D4 = 0',Error: invalid velocity response 'D3 = 0',VICI Valve - Position: CP01
+2025-12-23 13:20:49,192.16,68.0,50.0,47.06,Error: invalid velocity response 'D5 = 0',Error: invalid velocity response 'D4 = 0',VICI Valve - Position: CP01
+2025-12-23 13:21:50,253.48,68.0,50.0,47.00,Error: invalid velocity response 'D = 1000000',Error: invalid velocity response 'D5 = 0',VICI Valve - Position: CP01
+2025-12-23 13:22:52,314.82,68.0,50.0,47.00,Error: invalid velocity response 'DE = 1',Error: invalid velocity response 'D = 1000000',VICI Valve - Position: CP01
+2025-12-23 13:23:53,376.16,68.0,50.0,47.00,Error: invalid velocity response 'DG = 1',Error: invalid velocity response 'DE = 1',VICI Valve - Position: CP01
+2025-12-23 13:24:54,437.5,68.0,50.0,47.01,"Error: invalid velocity response 'DN = ""!""'",Error: invalid velocity response 'DG = 1',VICI Valve - Position: CP01
+2025-12-23 13:25:56,498.83,68.0,50.0,47.00,Error: invalid velocity response 'EF = 1',"Error: invalid velocity response 'DN = ""!""'",VICI Valve - Position: CP01
+2025-12-23 13:26:57,560.16,68.0,50.0,46.99,Error: invalid velocity response 'EM = 0',Error: invalid velocity response 'EF = 1',VICI Valve - Position: CP01
+2025-12-23 13:27:58,621.5,68.0,50.0,47.00,Error: invalid velocity response 'ER = 23',Error: invalid velocity response 'EM = 0',VICI Valve - Position: CP01
+2025-12-23 13:29:00,682.82,68.0,50.0,47.01,Error: invalid velocity response 'ES = 1',Error: invalid velocity response 'ER = 23',VICI Valve - Position: CP01
+2025-12-23 13:30:01,744.14,68.0,50.0,47.01,Error: invalid velocity response 'FM = 2',Error: invalid velocity response 'ES = 1',VICI Valve - Position: CP01
+2025-12-23 13:31:02,805.47,68.0,50.0,47.01,Error: invalid velocity response 'HC = 5',Error: invalid velocity response 'FM = 2',VICI Valve - Position: CP01
+2025-12-23 13:32:04,866.8,68.0,50.0,47.00,Error: invalid velocity response 'HT = 500',Error: invalid velocity response 'HC = 5',VICI Valve - Position: CP01
+2025-12-23 13:33:05,928.14,68.0,50.0,46.98,Error: invalid velocity response 'I1 = 0',Error: invalid velocity response 'HT = 500',VICI Valve - Position: CP01
+2025-12-23 13:34:06,989.47,68.0,50.0,46.99,Error: invalid velocity response 'I2 = 0',Error: invalid velocity response 'I1 = 0',VICI Valve - Position: CP01
+2025-12-23 13:35:08,1050.81,68.0,50.0,47.00,Error: invalid velocity response 'I3 = 0',Error: invalid velocity response 'I2 = 0',VICI Valve - Position: CP01
+2025-12-23 13:36:09,1112.14,68.0,50.0,47.01,Error: invalid velocity response 'I4 = 0',Error: invalid velocity response 'I3 = 0',VICI Valve - Position: CP01
+2025-12-23 13:37:10,1173.47,68.0,50.0,47.00,Error: invalid velocity response 'I5 = 1019',Error: invalid velocity response 'I4 = 0',VICI Valve - Position: CP01
+2025-12-23 13:38:12,1234.8,68.0,50.0,46.97,Error: invalid velocity response 'IF = 0',Error: invalid velocity response 'I5 = 1019',VICI Valve - Position: CP01
+2025-12-23 13:39:13,1296.12,68.0,50.0,47.01,Error: invalid velocity response 'IL = 15',Error: invalid velocity response 'IF = 0',VICI Valve - Position: CP01
+2025-12-23 13:40:14,1357.44,68.0,50.0,47.00,Error: invalid velocity response 'IN = 15',Error: invalid velocity response 'IL = 15',VICI Valve - Position: CP01

@@ -302,7 +302,7 @@ def run_bayesian_optimization_iteration(
         volume_pump4,
         cosolvent_valve_position_output,
         temperature,
-        temperature,
+        fraction_of_cosolvent,
     )
 
     print(f"Setting temperature to {temperature} celsius")
@@ -314,7 +314,8 @@ def run_bayesian_optimization_iteration(
         print("Finished setting temperature of the thermocouple")
     else:
         print("Skipping hardware temperature commands (simulation mode)")
-    
+
+    #TODO: Wash reactor based on fraction of cosolvents used
     print("Running experimental wash commands to clear out the UV-detector")
     # Run the experimental commands to wash the UV-detector to clear it out
     if not state.SIMULATION_MODE:
@@ -407,10 +408,12 @@ def run_bayesian_optimization_iteration(
 
     if not state.SIMULATION_MODE:
         # Real hardware mode: post-process UV recordings from hardware
+        # Construct the path to the iteration-specific UV-Vis timecourse file
+        uv_vis_iteration_file = str(base_directory / f"Fluorescent_Bayesian_Optimization_iteration_{k}.csv")
         uv_vis_recording_post_processing_df = post_process_uv_recording(
             reactor_bed_flow_rate,
             reactor_bed_target_volume,
-            bayesian_optimization_csv_file_path,
+            uv_vis_iteration_file,
         )
 
         average_absorbance_reactant = average_absorbance(
@@ -448,6 +451,7 @@ def run_bayesian_optimization_iteration(
         volume_pump1_uL=volume_pump1,
         volume_pump2_uL=volume_pump2,
         volume_pump3_uL=volume_pump3,
+        volume_pump4_uL=volume_pump4,
     )
 
     product_throughput_nmol_per_min = calculate_product_throughput(
@@ -455,7 +459,7 @@ def run_bayesian_optimization_iteration(
         EXPERIMENTAL_PARAMETERS["epsilon_product_at_lambda2_L_per_mol_cm"],
         # kept for validation or remove from signature
         EXPERIMENTAL_PARAMETERS["pathlength_cm"],  # not actually needed if concentration was already computed
-        reactor_flow_rate_uL_per_min= (flow_rate_pump1 + flow_rate_pump2),
+        reactor_flow_rate_uL_per_min= (flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3),
     )
 
     print(f"The percent yield of our product is {product_percent_yield} %")

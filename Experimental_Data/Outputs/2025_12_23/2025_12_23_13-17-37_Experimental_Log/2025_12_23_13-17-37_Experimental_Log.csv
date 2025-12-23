@@ -1,0 +1,6 @@
+Time,Component,Action,Parameters,Output,Notes
+8.14,0,load_method,input=ax_optimization_demo_results\Fluorescent_Optimization_Iteration_1_wash.csv,Loading input file: ax_optimization_demo_results\Fluorescent_Optimization_Iteration_1_wash.csv,
+9.49,Valve6Way_1,go_to_position,position=1,Moved valve to position 1,
+10.52,Valve6Way_1,check_position,,P01,Valve now at position P01
+11.02,VICI_M6_Pump_1,dispense,"flow_rate=16, volume=793",Started async dispense,exp. 2973.8 s
+11.52,VICI_M6_Pump_2,dispense,"flow_rate=3, volume=164",Started async dispense,exp. 3280.0 s

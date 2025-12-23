@@ -7,6 +7,8 @@ with simulated experiments. Results are saved to: ./ax_optimization_demo_results
 
 from bayesian_optimizer.ax_runner import run_bo_campaign
 
+#TODO : Double check code that checks for volume throughout the experiment
+
 def main():
     """
     Run Ax Bayesian Optimization campaign with simulated experiments.
@@ -37,8 +39,8 @@ def main():
     # Noise estimate for Ax (standard error of the mean)
     noise_sem = 0.1
     
-    # Run in simulation mode with 30x time speedup
-    simulation_mode = True
+    # Run with actual hardware (not simulation mode)
+    simulation_mode = False
     
     print(f"Configuration:")
     print(f"  Config file: {config_file}")

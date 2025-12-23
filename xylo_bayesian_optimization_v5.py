@@ -23,8 +23,8 @@ import pandas as pd
 import argparse
 from ax.service.ax_client import AxClient, ObjectiveProperties
 
-from AUTO_ZAHRT.Methods.General_Methods_v9 import GeneralExperimentMethod
-from AUTO_ZAHRT.UV_VIS_Detector.UV_VIS_platform_v2 import Ocean_Optics_UV_vis
+from ..Auto_Zahrt_v3.methods.methods import GeneralExperimentMethod
+from ..Auto_Zahrt_v3.uv_detectors.uv_detector import Ocean_Optics_UV_vis
 
 
 def load_experimental_parameters(input_json_file: str) -> Dict[str, Any]:

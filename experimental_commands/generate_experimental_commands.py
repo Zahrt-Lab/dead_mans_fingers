@@ -111,14 +111,6 @@ def generate_experimental_commands(
             0.5,
         ]
     )
-    commands.append([
-        "PhdUltraPump_1",
-        "stop",
-        "",
-        "The pump should have stopped but this is a safety check",
-        0.5,
-        ]
-    )
 
     return commands
 

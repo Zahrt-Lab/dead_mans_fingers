@@ -1,0 +1,5 @@
+Timestamp,Elapsed_Time_s,Isametic_1,PhdUltraPump_1,Temperature_1,VICI_M6_Pump_1,VICI_M6_Pump_2,Valve6Way_1
+2025-12-23 16:32:36,8.18,1997.5,127.0,58.23,Error: invalid velocity response 'PR V0',Error: invalid velocity response 'PR V0',VICI Valve - Position: P4
+2025-12-23 16:33:37,69.7,1997.5,127.0,58.27,Error: invalid velocity response '',Error: invalid velocity response 'D2 = 0',VICI Valve - Position: CP04
+2025-12-23 16:34:39,131.04,1997.5,127.0,58.17,Error: invalid velocity response 'D3 = 0',Error: invalid velocity response 'D3 = 0',VICI Valve - Position: CP04
+2025-12-23 16:35:40,192.37,1997.5,127.0,58.07,Error: invalid velocity response 'D4 = 0',Error: invalid velocity response 'D4 = 0',VICI Valve - Position: CP04

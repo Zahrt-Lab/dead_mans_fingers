@@ -1,0 +1,3 @@
+Timestamp,Elapsed_Time_s,Isametic_1,PhdUltraPump_1,Temperature_1,VICI_M6_Pump_1,VICI_M6_Pump_2,Valve6Way_1
+2025-12-23 15:26:44,8.14,1997.5,64.0,47.01,Error: invalid velocity response 'PR V825',Error: invalid velocity response 'PR V130',VICI Valve - Position: CP05
+2025-12-23 15:27:45,69.52,1997.5,64.0,47.02,Error: invalid velocity response '>PR V825',Error: invalid velocity response '>PR V130',VICI Valve - Position: CP05

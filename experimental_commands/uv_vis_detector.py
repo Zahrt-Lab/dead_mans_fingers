@@ -15,6 +15,8 @@ and continue to the next Bayesian Optimization iteration.
 '''
 
 from typing import Tuple, Any
+from pathlib import Path
+from Auto_Zahrt_v3.uv_detectors.uv_detector import Ocean_Optics_UV_vis
 
 # Will create UV-detector object and return UV-VIS start time
 def begin_uv_vis_measurement(
