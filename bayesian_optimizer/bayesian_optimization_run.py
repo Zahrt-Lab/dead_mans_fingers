@@ -440,6 +440,7 @@ def run_bayesian_optimization_iteration(
         average_absorbance_product,
         EXPERIMENTAL_PARAMETERS["epsilon_product_at_lambda2_L_per_mol_cm"],
         EXPERIMENTAL_PARAMETERS["pathlength_cm"],
+        reactor_bed_concentration_uM / 1e6,  # Convert uM to mol/L
     )
 
     # We want product concentration in the reactor bed; use PRODUCT absorbance, not reactant
