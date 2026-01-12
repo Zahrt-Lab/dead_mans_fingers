@@ -1,0 +1,5 @@
+Component,Action,Parameters,Notes,delay
+Temperature_1,set_temperature,temp=25,,0.5
+Temperature_1,wait_convergence,"target_temp=25,tolerance=2,duration=30",,0.5
+VICI_M6_Pump_1,dispense,"flow_rate=1000,volume=2000",,0.5
+SYNC,wait_for_pumps,,,0.5
