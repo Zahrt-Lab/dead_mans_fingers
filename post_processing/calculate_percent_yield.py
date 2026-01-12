@@ -10,6 +10,7 @@ def calculate_percent_yield(
     product_absorbance: float,
     epsilon_product_at_lambda2_L_per_mol_cm: float,
     pathlength_cm: float,
+    initial_concentration_mol_per_L: float,
 ) -> float:
     """
     Calculate percent yield based on absorbance of reactant and product.
@@ -18,7 +19,7 @@ def calculate_percent_yield(
       C_reactant = reactant_absorbance / (epsilon_reactant * pathlength_cm)
       C_product  = product_absorbance  / (epsilon_product * pathlength_cm)
     
-    Percent yield = (C_product / (C_reactant + C_product)) * 100
+    Percent yield = (C_product / initial_concentration_mol_per_L) * 100
     
     Parameters:
         reactant_absorbance: Absorbance at reactant wavelength
@@ -26,7 +27,7 @@ def calculate_percent_yield(
         product_absorbance: Absorbance at product wavelength  
         epsilon_product_at_lambda2_L_per_mol_cm: Molar absorptivity of product
         pathlength_cm: Pathlength of UV detector cuvette
-        
+        initial_concentration_mol_per_L: Initial concentration of reactant
     Returns:
         Percent yield (0-100%)
     """
@@ -50,15 +51,10 @@ def calculate_percent_yield(
     concentration_reactant_mol_per_L = max(concentration_reactant_mol_per_L, 0.0)
     concentration_product_mol_per_L = max(concentration_product_mol_per_L, 0.0)
     
-    # Total material = unreacted + reacted
-    total_concentration = (
-        concentration_reactant_mol_per_L + concentration_product_mol_per_L
-    )
+    if initial_concentration_mol_per_L <= 0:
+        raise ValueError("initial_concentration_mol_per_L must be > 0 mol/L.")
     
-    if total_concentration <= 0:
-        return 0.00
-    
-    percent_yield = (concentration_product_mol_per_L / total_concentration) * 100
+    percent_yield = (concentration_product_mol_per_L / initial_concentration_mol_per_L) * 100
     
     # Clamp to 0-100% range (noise protection)
     return max(0.0, min(100.0, percent_yield))
