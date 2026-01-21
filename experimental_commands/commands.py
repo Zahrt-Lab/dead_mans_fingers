@@ -8,7 +8,7 @@ from experimental_commands.generate_temperature_commands import (
 from experimental_commands.generate_wash_commands import generate_wash_commands
 
 # Import AutoZahrt GeneralExperimentMethod from local Auto_Zahrt_v3 package
-from Auto_Zahrt_v3.methods.methods import GeneralExperimentMethod
+from methods import GeneralExperimentMethod
 
 # TODO : Update the current experimental commands to match the new experimental setup
 

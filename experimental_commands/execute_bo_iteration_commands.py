@@ -1,9 +1,18 @@
+# ------------------------------------------------------------------------------
+# Software: AUTO_ZAHRT
+# Copyright: (C) 2026 by Professor Andrew Zahrt
+# This software is the intellectual property of Professor Andrew Zahrt
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
+# All rights reserved.
+# ------------------------------------------------------------------------------
+
 # TODO: The purpose of this code is to execute all hardware commands generated for the experimental setup per iteration
 
 # TODO: This will need to have a better future interface with light source control
 
 import time
 from typing import Tuple, Sequence
+from pathlib import Path
 
 from bayesian_optimizer.state import (
     EXPERIMENTAL_PARAMETERS,
@@ -12,8 +21,31 @@ from bayesian_optimizer.state import (
     SIMULATION_MODE,
 )
 
+from experimental_commands.generate_instrument_config import save_instrument_config_csv
+from preprocessing.constrain_to_search_space import constrain_to_search_space
+from preprocessing.standardize_input import standardize_input
+from preprocessing.parameters_to_commands import parameters_to_commands
+from preprocessing.check_volume import check_volume
+
 from experimental_commands.commands import save_commands_csv, run_commands
-from utils.run_simulation import run_simulation
+# TODO : This code has been incorporated into the new UV-VIS detector class in AutoZahrt no longer needed within code
+#from experimental_commands.uv_vis_detector_control import (
+#    begin_uv_vis_measurement,
+#    end_uv_vis_measurement,
+#)
+
+from post_processing.calculate_concentration_in_reactor_bed import (
+    calculate_concentration_in_the_reactor_bed,
+)
+from post_processing.calculate_percent_yield import calculate_percent_yield
+from post_processing.calculate_product_throughput import calculate_product_throughput
+from post_processing.average_absorbance import average_absorbance
+from post_processing.append_bayesian_experimental_results import (
+    append_bayesian_experimental_results,
+)
+from post_processing.post_process_uv_recording import post_process_uv_recording 
+
+from utils.experiment_aborted import ExperimentAborted
 
 def run_bayesian_optimization_iteration(
     experiment: Sequence[float],
@@ -33,16 +65,12 @@ def run_bayesian_optimization_iteration(
 
     """
 
-    #TODO : Constrain to search space function needs to be defined
-    reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, fraction_of_cosolvent = constrain_to_search_space(
+    reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, fraction_of_cosolvent, light_intensity = constrain_to_search_space(
         experiment
     )
 
-    #TODO: Define standardize input function
-    # Standardizes the input before checking if this experiment was done by the 2nd
-    # objective function
     experiment_check = standardize_input(
-        (reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, fraction_of_cosolvent)
+        (reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, fraction_of_cosolvent, light_intensity)
     )
 
     # TODO: Need to figure out how to load cache of results from previous experiments from state.py and all other parameters
@@ -57,12 +85,13 @@ def run_bayesian_optimization_iteration(
     print(
         f"Beginning experiment{k} with flow rate: {reactor_bed_flow_rate} uL/min; "
         f"concentration: {reactor_bed_concentration_uM} uM; "
-        f"temperature= {temperature} °C"
+        f"temperature= {temperature} °C; "
+        f"light intensity= {light_intensity} %"
     )
 
     # The instrument config files and experiment files will be generated within these files
     base_directory = Path(EXPERIMENTAL_PARAMETERS["base_directory"])
-    base_directory.mkdir(parents=True, exist_ok=True)
+    base_directory.mkdir(parents=True, exist_ok=False)
     instrument_config = base_directory / "Instrument_Config_File.csv"
     fluorescent_reaction_command_path = (
         base_directory / f"Fluorescent_Optimization_Iteration_{k}"
@@ -101,6 +130,7 @@ def run_bayesian_optimization_iteration(
         flow_rate_pump4,
         volume_pump4,
 
+
     ) = parameters_to_commands(
         reactor_bed_flow_rate,
         dilution_factor,
@@ -108,7 +138,6 @@ def run_bayesian_optimization_iteration(
         EXPERIMENTAL_PARAMETERS["target_absorbance_in_the_uv_detector"],
         EXPERIMENTAL_PARAMETERS["max_absorbance_concentration_uM_uv_detector"],
         volume,
-        number_of_syringes=EXPERIMENTAL_PARAMETERS["number_of_syringes"],
     )
 
     print("Completed calculating parameters for experimental equipment")
@@ -137,16 +166,20 @@ def run_bayesian_optimization_iteration(
 
     # TODO : Need to define check volume function for co-solvents
     if iteration["iteration #"] == 1:
+        # TODO: Need to figure out a more flexible way to define xylopyridine analog stock solutions since we will have multiple cosolvents
         iteration["volume_stock_solution1"] = EXPERIMENTAL_PARAMETERS[
             "volume_stock_solution1"
         ]
         iteration["volume_stock_solution2"] = EXPERIMENTAL_PARAMETERS[
             "volume_stock_solution2"
         ]
+        # TODO : Need to figure out how to define co-solvent stock solutions here since we will have multiple co-solvents
         iteration["volume_stock_solution3"] = EXPERIMENTAL_PARAMETERS[
             "volume_stock_solution3"
         ]
-
+        iteration["volume_stock_solution4"] = EXPERIMENTAL_PARAMETERS[
+            "volume_stock_solution4"
+        ]
 
     # TODO: Need to define experimental parameters to add more volume to the co-solvent stock solution
     try:
@@ -184,42 +217,34 @@ def run_bayesian_optimization_iteration(
     print(
         f"There is {iteration['volume_stock_solution3']} in stock solution 3 after the experiment"
     )
-
-    # This creates Instrument config directory
-    if not os.path.exists(instrument_config):
-        save_instrument_config_csv(instrument_config)
-
-    syringe_size = EXPERIMENTAL_PARAMETERS["syringe_size"]
-    number_of_syringes = EXPERIMENTAL_PARAMETERS["number_of_syringes"]
-
     print(
-        f"There are {number_of_syringes} syringes in our harvard aparatus with "
-        f"a syringe size of {syringe_size} mL"
+        f"There is {iteration['volume_stock_solution4']} in stock solution 4 after the experiment"
     )
 
-    previous_temperature = (
-        iteration["last_temperature"]
-        if iteration["last_temperature"] is not None
-        else temperature
-    )
+   # This creates Instrument config directory
+    instrument_config_path = Path(instrument_config)
+
+    if not instrument_config_path.exists():
+        save_instrument_config_csv(instrument_config_path)
 
     print(
-        f"The previous temperature of our system was {previous_temperature};"
         f"the system will be heated or cooled to {temperature}."
     )
 
     save_commands_csv(
         fluorescent_reaction_command_path,
-        syringe_size,
-        number_of_syringes,
         flow_rate_pump1,
         flow_rate_pump2,
         flow_rate_pump3,
+        flow_rate_pump4,
         volume_pump1,
         volume_pump2,
         volume_pump3,
+        volume_pump4
         temperature,
-        previous_temperature,
+        cosolvent_valve_position,
+        fraction_of_cosolvent,
+        light_intensity,
     )
 
     print(f"Setting temperature to {temperature} celsius")

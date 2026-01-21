@@ -47,7 +47,7 @@ def get_cosolvent_volumes() -> Dict[str, float]:
     return {k: v for k, v in iteration.items() if k.startswith("cosolvent_")}
 
 # Cache for multi-objective BO results
-RESULTS_CACHE: Dict[Tuple[float, float, float, float], Tuple[float, float]] = {}
+RESULTS_CACHE: Dict[Tuple[float, float, float, float, float, float], Tuple[float, float]] = {}
 
 # Ax noise (SEM) used when reporting metrics
 NOISE_SEM: float = 1e-3

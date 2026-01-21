@@ -15,8 +15,6 @@ and continue to the next Bayesian Optimization iteration.
 '''
 
 from typing import Tuple, Any
-from pathlib import Path
-from Auto_Zahrt_v3.uv_detectors.uv_detector import Ocean_Optics_UV_vis
 
 # Will create UV-detector object and return UV-VIS start time
 def begin_uv_vis_measurement(
@@ -29,7 +27,7 @@ def begin_uv_vis_measurement(
     target_wavelengths: Tuple[float, float] = (409.0, 506.0),
     file_name: str = "Fluorescent_Bayesian_Optimization",
     measurement_interval: int = 5,
-) -> Tuple[Any, bool]:
+) -> Any:
     """
     The role of this script is to begin the UV measurements which will use the default
     parameters for this experiment
@@ -45,7 +43,6 @@ def begin_uv_vis_measurement(
      - measurement_interval:
     return:
      - UV_VIS_detector_object: UV_VIS_detector python object
-     - converged_early: Boolean indicating if convergence was detected (True = converged, stop experiment)
     """
 
     print(
@@ -83,10 +80,8 @@ def begin_uv_vis_measurement(
         print(f"Error: {e}")
 
     # This will begin the continous UV-measurements for this iteration of the Bayesian Optimization
-    # start_continuous() now returns True if convergence detected, False otherwise
-    converged_early = uv_vis_detector_object.start_continuous(stop_upon_convergence=True)
-    
-    return uv_vis_detector_object, converged_early
+    uv_vis_detector_object.start_continuous(stop_upon_convergence=True)
+    return uv_vis_detector_object
 
 
 def end_uv_vis_measurement(uv_vis_detector_object: Any) -> None:

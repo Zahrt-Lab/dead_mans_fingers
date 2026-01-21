@@ -1,6 +1,0 @@
-Time,Component,Action,Parameters,Output,Notes
-8.16,0,load_method,input=ax_optimization_demo_results\Fluorescent_Optimization_Iteration_2_temperature.csv,Loading input file: ax_optimization_demo_results\Fluorescent_Optimization_Iteration_2_temperature.csv,
-8.16,Temperature_1,set_temperature,"temp=26, temp_id=1",Temperature controller set to 26.0°C,
-8.66,Temperature_1,wait_convergence,"target_temp=26,tolerance=1,duration=60",Waiting for temperature to converge to 26.0±1.0°C for 60.0s,
-276.46,Temperature_1,wait_convergence,"target_temp=26,tolerance=1,duration=60",Temperature converged to 26.0±1.0°C,
-276.96,SYNC,wait_for_pumps,,All pumps finished,

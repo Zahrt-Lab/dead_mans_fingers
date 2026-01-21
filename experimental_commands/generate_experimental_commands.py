@@ -20,7 +20,6 @@ def generate_experimental_commands(
     volume_pump2: float,
     volume_pump3: float,
     volume_pump4: float,
-    valve_position_pump3: int,
     *,
     zero_tolerance: float = 1e-6,  # treat |x| <= zero_tol as zero
     log_skips: bool = True,
@@ -109,6 +108,14 @@ def generate_experimental_commands(
             "",
             "Waiting for XYLO and WATER pumps to complete",
             0.5,
+        ]
+    )
+    commands.append([
+        "PhdUltraPump_1",
+        "stop",
+        "",
+        "The pump should have stopped but this is a safety check",
+        0.5,
         ]
     )
 

@@ -1,3 +1,11 @@
+# ------------------------------------------------------------------------------
+# Software: project_dead_mans_fingers
+# Copyright: (C) 2026 by Professor Andrew Zahrt
+# This software is the intellectual property of Professor Andrew Zahrt
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
+# All rights reserved.
+# -----------------------------------------------------------------------------
+
 import csv
 import os
 
@@ -25,6 +33,7 @@ def append_bayesian_experimental_results(
         "temperature",
         "co_solvent",
         "co_solvent_volume",
+        "light_intensity",
         "target_volume",
         "reactant_wavelength",
         "product_wavelength",

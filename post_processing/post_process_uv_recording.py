@@ -1,8 +1,49 @@
+# ------------------------------------------------------------------------------
+# Software: project_dead_mans_fingers
+# Copyright: (C) 2026 by Professor Andrew Zahrt
+# This software is the intellectual property of Professor Andrew Zahrt
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
+# All rights reserved.
+# -----------------------------------------------------------------------------
+
 import os
 import pandas as pd
 from preprocessing.time_to_reach_target_volume import time_to_reach_target_volume
 
 
+def post_process_uv_recording(
+    flow_rate: int,
+    target_volume: int,
+    uv_vis_absorbance_over_time_csv_file: str,
+) -> pd.DataFrame:
+    """
+    Extract all UV-Vis points after the target volume is reached.
+    """
+    time_target_volume_is_reached = time_to_reach_target_volume(flow_rate, target_volume)
+    uv_vis_recording = pd.read_csv(uv_vis_absorbance_over_time_csv_file)
+
+    if "Time(s)" not in uv_vis_recording.columns:
+        raise ValueError(
+            f"Expected a Time(s) column in {uv_vis_absorbance_over_time_csv_file}"
+        )
+
+    # Keep only time points after the target volume is reached
+    uv_vis_recording_after_target_volume = uv_vis_recording[
+        uv_vis_recording["Time(s)"] >= time_target_volume_is_reached
+    ].reset_index(drop=True)
+
+    base_name, iteration = os.path.splitext(uv_vis_absorbance_over_time_csv_file)
+    uv_vis_recording_post_processed_filename = f"{base_name}_post_processed{iteration}"
+
+    uv_vis_recording_after_target_volume.to_csv(
+        uv_vis_recording_post_processed_filename, index=False
+    )
+
+    return uv_vis_recording_after_target_volume
+
+# TODO: Remove this old code version after verifying new code works correctly
+# Old code version for reference
+'''
 def post_process_uv_recording(
     flow_rate: int,
     target_volume: int,
@@ -63,3 +104,4 @@ def post_process_uv_recording(
     )
 
     return uv_vis_recording_after_target_volume
+'''

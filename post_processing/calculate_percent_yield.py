@@ -1,3 +1,11 @@
+# ------------------------------------------------------------------------------
+# Software: project_dead_mans_fingers
+# Copyright: (C) 2026 by Professor Andrew Zahrt
+# This software is the intellectual property of Professor Andrew Zahrt
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
+# All rights reserved.
+# -----------------------------------------------------------------------------
+
 """
 Calculate percent yield from reactant and product absorbance measurements.
 Uses Beer-Lambert law to determine concentrations.
@@ -37,8 +45,14 @@ def calculate_percent_yield(
         epsilon_reactant_at_lambda1_L_per_mol_cm <= 0
         or epsilon_product_at_lambda2_L_per_mol_cm <= 0
     ):
-        raise ValueError("Molar absorptivities must be >= 0.")
-    
+        raise ValueError("Molar absorptivities must be > 0.")
+    if reactant_absorbance < 0:
+        raise ValueError("reactant_absorbance must be >= 0.")
+    if product_absorbance < 0:
+        raise ValueError("product_absorbance must be >= 0.")
+    if initial_concentration_mol_per_L < 0:
+        raise ValueError("initial_concentration_mol_per_L must be >= 0 mol/L.")
+
     # Beer-Lambert law: C = A / (ε * l)
     concentration_reactant_mol_per_L = reactant_absorbance / (
         epsilon_reactant_at_lambda1_L_per_mol_cm * pathlength_cm

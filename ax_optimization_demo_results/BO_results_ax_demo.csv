@@ -1,1 +1,0 @@
-iteration,flow_rate,concentration,reactor_concentration_uM,temperature,co_solvent,co_solvent_volume,target_volume,reactant_wavelength,product_wavelength,average_absorbance_reactant,average_absorbance_product,percent_yield,throughput_nmol_per_min,timestamp,status,error_message

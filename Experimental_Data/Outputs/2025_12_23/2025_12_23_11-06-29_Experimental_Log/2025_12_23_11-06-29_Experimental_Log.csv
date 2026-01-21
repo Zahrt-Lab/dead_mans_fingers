@@ -1,6 +1,0 @@
-Time,Component,Action,Parameters,Output,Notes
-8.18,0,load_method,input=./test_temperature_output/temperature_commands.csv,Loading input file: ./test_temperature_output/temperature_commands.csv,
-8.18,Temperature_1,set_temperature,"temp=40.0, temp_id=1",Temperature controller set to 40.0°C,
-8.68,Temperature_1,wait_convergence,"target_temp=40.0,tolerance=1,duration=60",Waiting for temperature to converge to 40.0±1.0°C for 60.0s,
-114.81,Temperature_1,wait_convergence,"target_temp=40.0,tolerance=1,duration=60",Temperature converged to 40.0±1.0°C,
-115.31,SYNC,wait_for_pumps,,All pumps finished,

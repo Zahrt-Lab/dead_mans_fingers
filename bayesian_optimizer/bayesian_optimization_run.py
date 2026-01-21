@@ -74,14 +74,14 @@ def run_bayesian_optimization_iteration(
 
     """
 
-    reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, fraction_of_cosolvent = constrain_to_search_space(
+    reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, fraction_of_cosolvent, light_intensity = constrain_to_search_space(
         experiment
     )
 
     # Standardizes the input before checking if this experiment was done by the 2nd
     # objective function
     experiment_check = standardize_input(
-        (reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, fraction_of_cosolvent)
+        (reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, fraction_of_cosolvent, light_intensity)
     )
 
     # TODO: Need to figure out how to load cache of results from previous experiments from state.py and all other parameters
@@ -96,16 +96,18 @@ def run_bayesian_optimization_iteration(
     print(
         f"Beginning experiment{k} with flow rate: {reactor_bed_flow_rate} uL/min; "
         f"concentration: {reactor_bed_concentration_uM} uM; "
-        f"temperature= {temperature} °C"
+        f"temperature= {temperature} °C; "
     )
 
-    # TODO : Need to change this script here so if the directory does not exist it creates it and 
-    # if it does exist it just uses the existing directory return an error message that it exists and a new directory 
-    # needs to be created
     print("Setting up directories and file paths for this experiment")
     # The instrument config files and experiment files will be generated within these files
     base_directory = Path(EXPERIMENTAL_PARAMETERS["base_directory"])
-    base_directory.mkdir(parents=True, exist_ok=True)
+    # If the base directory does not exist it will create it here if it does exist it will have an error
+    try:
+        base_directory.mkdir(parents=True, exist_ok=False)
+    except FileExistsError as e:
+        print(f"Error creating base directory {base_directory}: {e}")
+        raise
     instrument_config = base_directory / "Instrument_Config_File.csv"
     fluorescent_reaction_command_path = (
         base_directory / f"Fluorescent_Optimization_Iteration_{k}"
@@ -139,6 +141,7 @@ def run_bayesian_optimization_iteration(
         dilution_factor=dilution_factor,
         cosolvent_valve_position=int(cosolvent_valve_position),
         cosolvent_fraction=fraction_of_cosolvent,
+        light_intensity=light_intensity,
         stock_concentration_uM=EXPERIMENTAL_PARAMETERS["stock_concentration_uM"],
         target_absorbance_in_the_uv_detector=EXPERIMENTAL_PARAMETERS["target_absorbance_in_the_uv_detector"],
         max_absorbance_concentration_uM_uv_detector=EXPERIMENTAL_PARAMETERS["max_absorbance_concentration_uM_uv_detector"],
@@ -302,7 +305,7 @@ def run_bayesian_optimization_iteration(
         volume_pump4,
         cosolvent_valve_position_output,
         temperature,
-        fraction_of_cosolvent,
+        temperature,
     )
 
     print(f"Setting temperature to {temperature} celsius")
@@ -314,8 +317,7 @@ def run_bayesian_optimization_iteration(
         print("Finished setting temperature of the thermocouple")
     else:
         print("Skipping hardware temperature commands (simulation mode)")
-
-    #TODO: Wash reactor based on fraction of cosolvents used
+    
     print("Running experimental wash commands to clear out the UV-detector")
     # Run the experimental commands to wash the UV-detector to clear it out
     if not state.SIMULATION_MODE:
@@ -345,24 +347,19 @@ def run_bayesian_optimization_iteration(
 
     if not state.SIMULATION_MODE:
         print("Running experiment on experimental hardware")
-        uv_vis_detection_object, converged_early = begin_uv_vis_measurement(
+        uv_vis_detection_object = begin_uv_vis_measurement(
             base_directory, k, target_wavelengths=(reactant_wavelength, product_wavelength)
         )
-        
-        if converged_early:
-            print(f"✓ UV-VIS detector converged early - experiment complete for iteration {k}")
-            print("Skipping pump commands as reaction has already completed")
-        else:
-            try:
-                print(
-                    "Beginning flowing our compound through the reactor bed recording the product"
-                )
-                run_commands(
-                    f"{fluorescent_reaction_command_path}_experiment.csv", instrument_config
-                )
-            finally:
-                print(f"Experiment completing, turning off UV recordings for iteration {k}")
-                end_uv_vis_measurement(uv_vis_detection_object)
+        try:
+            print(
+                "Beginning flowing our compound through the reactor bed recording the product"
+            )
+            run_commands(
+                f"{fluorescent_reaction_command_path}_experiment.csv", instrument_config
+            )
+        finally:
+            print(f"Experiment completing, turning off UV recordings for iteration {k}")
+            end_uv_vis_measurement(uv_vis_detection_object)
             
 
     else:
@@ -396,7 +393,7 @@ def run_bayesian_optimization_iteration(
     )
     '''
 
-    # Think of a smarter way to program this later
+    # TODO: Think of a smarter way to program this later
     reactor_bed_target_volume = volume - 500
 
     print(
@@ -408,12 +405,10 @@ def run_bayesian_optimization_iteration(
 
     if not state.SIMULATION_MODE:
         # Real hardware mode: post-process UV recordings from hardware
-        # Construct the path to the iteration-specific UV-Vis timecourse file
-        uv_vis_iteration_file = str(base_directory / f"Fluorescent_Bayesian_Optimization_iteration_{k}.csv")
         uv_vis_recording_post_processing_df = post_process_uv_recording(
             reactor_bed_flow_rate,
             reactor_bed_target_volume,
-            uv_vis_iteration_file,
+            bayesian_optimization_csv_file_path,
         )
 
         average_absorbance_reactant = average_absorbance(
@@ -437,13 +432,13 @@ def run_bayesian_optimization_iteration(
         f"Average absorbance of our product at the end of the reaction is {average_absorbance_product}"
     )
 
+    # TODO : Need to evaluate this calculate percent yield function here to make sure it is accurate
     product_percent_yield = calculate_percent_yield(
         average_absorbance_reactant,
         EXPERIMENTAL_PARAMETERS["epsilon_reactant_at_lambda1_L_per_mol_cm"],
         average_absorbance_product,
         EXPERIMENTAL_PARAMETERS["epsilon_product_at_lambda2_L_per_mol_cm"],
         EXPERIMENTAL_PARAMETERS["pathlength_cm"],
-        reactor_bed_concentration_uM / 1e6,  # Convert uM to mol/L
     )
 
     # We want product concentration in the reactor bed; use PRODUCT absorbance, not reactant
@@ -457,9 +452,6 @@ def run_bayesian_optimization_iteration(
 
     product_throughput_nmol_per_min = calculate_product_throughput(
         concentration_product_mol_per_uL_reactor_bed,
-        EXPERIMENTAL_PARAMETERS["epsilon_product_at_lambda2_L_per_mol_cm"],
-        # kept for validation or remove from signature
-        EXPERIMENTAL_PARAMETERS["pathlength_cm"],  # not actually needed if concentration was already computed
         reactor_flow_rate_uL_per_min= (flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3),
     )
 
@@ -477,6 +469,7 @@ def run_bayesian_optimization_iteration(
             "temperature": experiment_check[2],
             "co_solvent": experiment_check[3],
             "co_solvent_volume": experiment_check[4],
+            "light_intensity": experiment_check[5],
             "target_volume": reactor_bed_target_volume,
             "reactant_wavelength": reactant_wavelength,
             "product_wavelength": product_wavelength,

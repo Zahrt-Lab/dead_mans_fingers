@@ -1,3 +1,0 @@
-Timestamp,Elapsed_Time_s,Isametic_1,PhdUltraPump_1,Temperature_1,VICI_M6_Pump_1,VICI_M6_Pump_2,Valve6Way_1
-2026-01-12 11:18:05,8.18,994.5,1000.0,24.56,Error: invalid velocity response 'PR V0',VICI M6 Pump - Disconnected,VICI Valve - Position: CP01
-2026-01-12 11:19:07,69.83,994.5,1000.0,24.86,Error: invalid velocity response '>PR V0',VICI M6 Pump - Disconnected,VICI Valve - Position: CP01

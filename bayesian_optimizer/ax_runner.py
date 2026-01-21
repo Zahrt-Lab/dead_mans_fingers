@@ -52,6 +52,8 @@ def _init_or_load_ax(
     cosolvents_valve_position_max: float,
     co_solvent_volume_min: float,
     co_solvent_volume_max: float,
+    light_intensity_min: float,
+    light_intensity_max: float,
     percent_yield_threshold: float,
     throughput_threshold: float,
 ) -> AxClient:
@@ -97,6 +99,12 @@ def _init_or_load_ax(
                 "bounds": [co_solvent_volume_min, co_solvent_volume_max],
                 "value_type": "float",
             },
+            {
+                "name": "light_intensity",
+                "type": "range",
+                "bounds": [light_intensity_min, light_intensity_max],
+                "value_type": "float",
+            },
         ],
         # This will set the objective functions and their thresholds to maximize both percent yield and throughput
         objectives={
@@ -125,11 +133,11 @@ def evaluate_ax(params: Dict[str, float]) -> Dict[str, tuple[float, float]]:
     temperature = float(params["temperature"])
     co_solvent = float(params["co_solvent"])
     co_solvent_volume = float(params["co_solvent_volume"])
-
+    light_intensity = float(params["light_intensity"])
     # It then tries to run the experiment using the run_bayesian_optimization_iteration function, catching errors
     try:
         percent_yield, throughput = run_bayesian_optimization_iteration(
-            (flow_rate, dilution_factor, temperature, co_solvent, co_solvent_volume)
+            (flow_rate, dilution_factor, temperature, co_solvent, co_solvent_volume, light_intensity)
         )
 
         return {
@@ -158,6 +166,7 @@ def evaluate_ax(params: Dict[str, float]) -> Dict[str, tuple[float, float]]:
                 "temperature": temperature,
                 "co_solvent": co_solvent,
                 "co_solvent_volume": co_solvent_volume,
+                "light_intensity": light_intensity,
                 "target_volume": "",
                 "reactant_wavelength": reactant_wavelength,
                 "product_wavelength": product_wavelength,
@@ -173,9 +182,8 @@ def evaluate_ax(params: Dict[str, float]) -> Dict[str, tuple[float, float]]:
             },
         )
 
-        # TODO: Should we return a zero or should a N/A value be used here? If zero I believe it won't 
-        # a factor in the bayesian optimization since it would be below the cutoff thresholds.
-
+        # A value of 0 for both percent yield and throughput indicates a failed experiment to Ax and will not be considered
+        # within future optimization steps and it shouldn't crash the optimization loop
         return {
             "percent_yield": (0.0, state.NOISE_SEM),
             "throughput": (0.0, state.NOISE_SEM),
@@ -215,9 +223,9 @@ def run_bo_campaign(
     conc_min, conc_max = EXPERIMENTAL_PARAMETERS["dilution_factor"]
     temp_min, temp_max = EXPERIMENTAL_PARAMETERS["temperature"]
     co_solvent_min, co_solvent_max = EXPERIMENTAL_PARAMETERS["cosolvents_valve_position"]
-    co_solvent_volume_min, co_solvent_volume_max = EXPERIMENTAL_PARAMETERS[
-        "co_solvent_dilution_factor"
-    ]
+    co_solvent_volume_min, co_solvent_volume_max = EXPERIMENTAL_PARAMETERS["co_solvent_dilution_factor"]
+    light_intensity_min, light_intensity_max = EXPERIMENTAL_PARAMETERS["light_intensity"]
+
     # 2) Ax init/load
     ax = _init_or_load_ax(
         state_path,
@@ -231,14 +239,17 @@ def run_bo_campaign(
         co_solvent_max,
         co_solvent_volume_min,
         co_solvent_volume_max,
+        light_intensity_min,
+        light_intensity_max,
         objA_threshold,
         objB_threshold,
     )
 
     # 3) Run the loop
     step = 0
-    # TODO:Should the trials be set to a max of 30 iterations if 0 is provided instead of infinity?
-    target = "∞" if trials == 0 else str(trials)
+
+    # If trial count is 0, this will run for 30 iterations
+    target = "30" if trials == 0 else str(trials)
     try:
         while True if trials == 0 else (step < trials):
             experimental_parameters_dictionary, trial_index = ax.get_next_trial()

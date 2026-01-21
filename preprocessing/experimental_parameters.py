@@ -22,6 +22,7 @@ import math
 import pandas as pd
 import argparse
 from ax.service.ax_client import AxClient, ObjectiveProperties
+from utils.experiment_aborted import ExperimentAborted
 
 # TODO Fix imports below
 #from AUTO_ZAHRT.Methods.General_Methods_v9 import GeneralExperimentMethod
@@ -102,5 +103,4 @@ def check_required_experimental_parameters(
             f"Missing required EXPERIMENTAL_PARAMETERS keys: {missing_experimental_parameter}"
         )
 
-class ExperimentAborted(Exception):
-    pass
+
