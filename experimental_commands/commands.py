@@ -6,17 +6,22 @@ from experimental_commands.generate_temperature_commands import (
     generate_temperature_commands,
 )
 from experimental_commands.generate_wash_commands import generate_wash_commands
+from experimental_commands.generate_calibration_commands import generate_lamp_switch_commands
+from experimental_commands.generate_set_light_intensity_commands import generate_light_intensity_commands
 
+# TODO : Need to edit this code so that it pip installs the AutoZahrt_v3 package
 # Import AutoZahrt GeneralExperimentMethod from local Auto_Zahrt_v3 package
-from methods import GeneralExperimentMethod
+try:
+    from methods import GeneralExperimentMethod
+except ImportError:
+    # Stub for simulation mode or when AutoZahrt hardware is not available
+    GeneralExperimentMethod = None
 
 # TODO : Update the current experimental commands to match the new experimental setup
 
 # This saves all the instrument commands to a csv file
 def save_commands_csv(
     commands_path: str,
-    syringe_size: int,
-    number_of_syringes: int,
     flow_rate_pump1: float,
     flow_rate_pump2: float,
     flow_rate_pump3: float,
@@ -28,6 +33,7 @@ def save_commands_csv(
     valve_position_pump3: int,
     temperature: float,
     fraction_of_cosolvent: float,
+    light_intensity: float,
 ) -> None:
     """
     The role of this csv file is to generate the csv commands for each individual
@@ -37,7 +43,6 @@ def save_commands_csv(
 
     parameters:
      - commands_path: Output directory and csv prefix for all our instrument commands
-     - syringe_size: The type of syringe being used for the harvard aparatus
      - flow_rate_pump1: Flow rate of harvard apparatus with our XYLO compound
      - flow_rate_pump2: Flow rate of 0.1 M HCl water for diluting our compound
      before it reaches the detector using the VICI M6 Pump 1
@@ -55,21 +60,34 @@ def save_commands_csv(
     return:
      - None
     """
-
-    temperature_commands_csv = f"{commands_path}_temperature.csv"
-    experiment_commands_csv = f"{commands_path}_experiment.csv"
     wash_commands_csv = f"{commands_path}_wash.csv"
+    temperature_commands_csv = f"{commands_path}_temperature.csv"
+    calibration_commands_csv = f"{commands_path}_calibration.csv"
+    light_intensity_commands_csv = f"{commands_path}_light_intensity.csv"
+    experiment_commands_csv = f"{commands_path}_experiment.csv"
 
+    # Generate temperature commands
     with open(temperature_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
             generate_temperature_commands(temperature)
         )
 
+    # Generate calibration (lamp) commands
+    with open(calibration_commands_csv, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(
+            generate_lamp_switch_commands("on")
+        )
+
+    # Generate light intensity commands
+    with open(light_intensity_commands_csv, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(
+            generate_light_intensity_commands(light_intensity)
+        )
+
+    # Generate experiment commands
     with open(experiment_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
             generate_experimental_commands(
-                syringe_size,
-                number_of_syringes,
                 flow_rate_pump1,
                 flow_rate_pump2,
                 flow_rate_pump3,
@@ -78,22 +96,24 @@ def save_commands_csv(
                 volume_pump2,
                 volume_pump3,
                 volume_pump4,
+            )
+        )
+
+    # Generate wash commands
+    with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(
+            generate_wash_commands(
+                flow_rate_pump2,
+                volume_pump2,
+                flow_rate_pump3,
+                volume_pump3,
+                flow_rate_pump4,
+                volume_pump4,
                 valve_position_pump3,
             )
         )
 
-    with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
-        csv.writer(f).writerows(
-            generate_wash_commands(
-                2000 * (1- fraction_of_cosolvent),
-                6000 * (1- fraction_of_cosolvent),
-                2000  * fraction_of_cosolvent,
-                6000 * fraction_of_cosolvent,
-                2000,
-                6000,
-                valve_position_pump3,
-            )
-        )
+
 
 
 def run_commands(experiment_commands, instrument_config_file) -> None:
@@ -107,6 +127,19 @@ def run_commands(experiment_commands, instrument_config_file) -> None:
     """
 
     # TODO: Need to connect this code to the AutoZahrt GeneralExperimentMethod
+    
+    # Check if we're in simulation mode by importing the flag
+    from bayesian_optimizer.state import SIMULATION_MODE
+    
+    if SIMULATION_MODE:
+        print(f"[SIMULATION] Would run commands from: {experiment_commands}")
+        return
+    
+    if GeneralExperimentMethod is None:
+        raise RuntimeError(
+            "GeneralExperimentMethod not available. "
+            "Run in simulation mode with --simulation flag or install AutoZahrt hardware package."
+        )
 
     fluorescent_reaction_optimization_experiment = GeneralExperimentMethod(
         experiment_commands, instrument_config_file

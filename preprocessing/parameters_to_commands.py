@@ -14,11 +14,12 @@ def parameters_to_commands(
     dilution_factor: float,
     cosolvent_valve_position: int,
     cosolvent_fraction: float,
+    light_intensity: float,
     stock_concentration_uM: float,
     target_absorbance_in_the_uv_detector: float,
     max_absorbance_concentration_uM_uv_detector: float,
     volume_uL: int,
-    number_of_syringes: int,
+    number_of_syringes: int = 1,
 ) -> Dict[str, int]:
     # Validation
     if flow_rate_uL_per_min <= 0:
@@ -27,8 +28,6 @@ def parameters_to_commands(
         raise ValueError("volume must be > 0 µL.")
     if not (0.0 <= dilution_factor <= 1.0):
         raise ValueError("dilution_factor must be in [0, 1].")
-    if not (1 <= number_of_syringes <= 2):
-        raise ValueError("number_of_syringes must be in [1, 2].")
     if not (1 <= cosolvent_valve_position <= 6):
         raise ValueError(f"cosolvent valve position must be in [1, 6], got {cosolvent_valve_position}.")
     if not (0.0 <= cosolvent_fraction <= 1.0):
@@ -37,7 +36,8 @@ def parameters_to_commands(
         raise ValueError(
             "cosolvent_fraction cannot exceed (1 - dilution_factor) because pump2 would go negative."
         )
-
+    if not (0.0 <= light_intensity <= 100.0):
+        raise ValueError("light_intensity must be in [0, 100].")
     if stock_concentration_uM <= 0:
         raise ValueError("stock_concentration_uM must be > 0.")
     if max_absorbance_concentration_uM_uv_detector <= 0:
@@ -48,8 +48,8 @@ def parameters_to_commands(
     # Pump 1 (reactant): compute TOTAL, then per-syringe command
     pump1_total_flow = flow_rate_uL_per_min * dilution_factor
     pump1_total_volume = volume_uL * dilution_factor
-    flow_rate_pump1_uL_per_min = pump1_total_flow / number_of_syringes
-    volume_pump1_uL = pump1_total_volume / number_of_syringes
+    flow_rate_pump1_uL_per_min = pump1_total_flow 
+    volume_pump1_uL = pump1_total_volume 
 
     # Pump 2: 0.1 M HCl water for reactor bed (remainder after pump1 + cosolvent)
     pump2_dilution_fraction = (1.0 - dilution_factor) - cosolvent_fraction

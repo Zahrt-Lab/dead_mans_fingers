@@ -1,3 +1,11 @@
+# ------------------------------------------------------------------------------
+# Software: project_dead_mans_fingers
+# Copyright: (C) 2025 by Professor Andrew Zahrt
+# This software is the intellectual property of Professor Andrew Zahrt
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
+# All rights reserved.
+# ------------------------------------------------------------------------------
+
 """
 Constrains experimental parameters to valid search space ranges.
 Ensures Bayesian optimization suggestions stay within specified experimental boundaries limits.
@@ -9,7 +17,7 @@ from bayesian_optimizer.state import EXPERIMENTAL_PARAMETERS
 
 def constrain_to_search_space(
     experiment_conditions: Sequence[float],
-) -> Tuple[float, float, float, float, float]:
+) -> Tuple[float, float, float, float, float, float]:
     """
     Keep Bayesian optimization suggestions within valid parameter ranges.
     
@@ -19,18 +27,20 @@ def constrain_to_search_space(
     - temperature: rounds to int, clamps to [min, max]
     - cosolvent_valve_position: rounds to int, clamps to [min, max]
     - fraction_of_cosolvent: clamps to [min, max] float
+    - light_intensity: clamps to [min, max] float
     
     Parameters:
         experiment_conditions: (flow_rate, dilution_factor, temperature, 
-                               cosolvent_valve_position, fraction_of_cosolvent)
-    
+                               cosolvent_valve_position, fraction_of_cosolvent, light_intensity)
+    Note: fraction_of_cosolvent refers to the experimental_dilution_factor of the co-solvent.
+                                 
     Returns:
         Tuple of constrained values matching input order
     """
-    if len(experiment_conditions) != 5:
+    if len(experiment_conditions) != 6:
         raise ValueError(
-            f"Expected 5 parameters (flow_rate, dilution_factor, temperature, "
-            f"cosolvent_valve_position, fraction_of_cosolvent), got {len(experiment_conditions)}"
+            f"Expected 6 parameters (flow_rate, dilution_factor, temperature, "
+            f"cosolvent_valve_position, fraction_of_cosolvent, light_intensity), got {len(experiment_conditions)}"
         )
     
     # Extract and constrain flow_rate
@@ -71,6 +81,11 @@ def constrain_to_search_space(
     fraction_of_cosolvent = float(
         min(max(experiment_conditions[4], fraction_min), fraction_max)
     )
+
+    light_intensity_min, light_intensity_max = EXPERIMENTAL_PARAMETERS["light_intensity"]
+    light_intensity = float(
+        min(max(experiment_conditions[5], light_intensity_min), light_intensity_max)
+    )
     
     return (
         flow_rate,
@@ -78,4 +93,5 @@ def constrain_to_search_space(
         temperature,
         cosolvent_valve_position,
         fraction_of_cosolvent,
+        light_intensity,
     )

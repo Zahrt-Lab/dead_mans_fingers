@@ -46,7 +46,17 @@ from preprocessing.experimental_parameters import ExperimentAborted
 
 from experimental_commands.commands import save_commands_csv, run_commands
 from experimental_commands.generate_instrument_config import generate_instrument_config, save_instrument_config_csv
-from experimental_commands.uv_vis_detector import begin_uv_vis_measurement, end_uv_vis_measurement
+# TODO : This is outdated code and will be removed now that the UV-VIS detector class is implemented in AutoZahrt_v3
+
+# UV-VIS detector imports - only needed for real hardware mode
+try:
+    from experimental_commands.uv_vis_detector import begin_uv_vis_measurement, end_uv_vis_measurement
+except ImportError:
+    # Stub functions for simulation mode
+    def begin_uv_vis_measurement(*args, **kwargs):
+        raise NotImplementedError("UV-VIS hardware not available - use --simulation mode")
+    def end_uv_vis_measurement(*args, **kwargs):
+        pass
 
 from post_processing.post_process_uv_recording import post_process_uv_recording
 from post_processing.average_absorbance import average_absorbance
@@ -102,12 +112,8 @@ def run_bayesian_optimization_iteration(
     print("Setting up directories and file paths for this experiment")
     # The instrument config files and experiment files will be generated within these files
     base_directory = Path(EXPERIMENTAL_PARAMETERS["base_directory"])
-    # If the base directory does not exist it will create it here if it does exist it will have an error
-    try:
-        base_directory.mkdir(parents=True, exist_ok=False)
-    except FileExistsError as e:
-        print(f"Error creating base directory {base_directory}: {e}")
-        raise
+    # Create the base directory if it doesn't exist (allow it to exist for subsequent iterations)
+    base_directory.mkdir(parents=True, exist_ok=True)
     instrument_config = base_directory / "Instrument_Config_File.csv"
     fluorescent_reaction_command_path = (
         base_directory / f"Fluorescent_Optimization_Iteration_{k}"
@@ -293,8 +299,6 @@ def run_bayesian_optimization_iteration(
 
     save_commands_csv(
         fluorescent_reaction_command_path,
-        syringe_size,
-        number_of_syringes,
         flow_rate_pump1,
         flow_rate_pump2,
         flow_rate_pump3,
@@ -305,7 +309,8 @@ def run_bayesian_optimization_iteration(
         volume_pump4,
         cosolvent_valve_position_output,
         temperature,
-        temperature,
+        fraction_of_cosolvent,
+        light_intensity,
     )
 
     print(f"Setting temperature to {temperature} celsius")

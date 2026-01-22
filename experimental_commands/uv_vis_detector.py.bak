@@ -2,7 +2,7 @@
 # Software: project_dead_mans_fingers
 # Copyright: (C) 2025 by Professor Andrew Zahrt
 # This software is the intellectual property of Professor Andrew Zahrt
-# Contributions by graduate students Scott Laverty are acknowledged.
+# Contributions by graduate students Scott Laverty and Joaoare acknowledged.
 # All rights reserved.
 # ------------------------------------------------------------------------------
 
@@ -14,6 +14,11 @@ converge and return stop recording and return false to the AutoZahrt framework t
 and continue to the next Bayesian Optimization iteration.
 '''
 
+# TODO : This code has become obsolete with the new UV-VIS detector class implementation in the AutoZahrt
+# TODO : Refactor this code to use the new UV-VIS detector class and its methods and remove this python script
+
+
+from pathlib import Path
 from typing import Tuple, Any
 
 # Will create UV-detector object and return UV-VIS start time

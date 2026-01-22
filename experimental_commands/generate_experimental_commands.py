@@ -10,8 +10,6 @@ from typing import List
 
 # TODO: Need to double check which pump is pump 1 and pump 2 for VICI M6 pumps
 def generate_experimental_commands(
-    syringe_size: int,
-    number_of_syringes: int,
     flow_rate_pump1: float,
     flow_rate_pump2: float,
     flow_rate_pump3: float,
@@ -20,6 +18,8 @@ def generate_experimental_commands(
     volume_pump2: float,
     volume_pump3: float,
     volume_pump4: float,
+    syringe_size: float = 20.0,
+    number_of_syringes: int = 1,
     *,
     zero_tolerance: float = 1e-6,  # treat |x| <= zero_tol as zero
     log_skips: bool = True,

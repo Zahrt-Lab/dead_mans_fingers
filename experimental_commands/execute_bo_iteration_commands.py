@@ -10,6 +10,7 @@
 
 # TODO: This will need to have a better future interface with light source control
 
+import os
 import time
 from typing import Tuple, Sequence
 from pathlib import Path
@@ -26,6 +27,7 @@ from preprocessing.constrain_to_search_space import constrain_to_search_space
 from preprocessing.standardize_input import standardize_input
 from preprocessing.parameters_to_commands import parameters_to_commands
 from preprocessing.check_volume import check_volume
+from preprocessing.experimental_parameters import ExperimentAborted
 
 from experimental_commands.commands import save_commands_csv, run_commands
 # TODO : This code has been incorporated into the new UV-VIS detector class in AutoZahrt no longer needed within code
@@ -45,7 +47,17 @@ from post_processing.append_bayesian_experimental_results import (
 )
 from post_processing.post_process_uv_recording import post_process_uv_recording 
 
-from utils.experiment_aborted import ExperimentAborted
+# TODO : Remove this old code version after verifying new code works correctly
+# This is left to prevent the current code from erroring out while new code is tested
+def begin_uv_vis_measurement(*args, **kwargs):
+    """Stub for UV-VIS hardware measurement (only used in non-simulation mode)"""
+    raise NotImplementedError("UV-VIS hardware measurement not available - use --simulation mode")
+
+
+def end_uv_vis_measurement(*args, **kwargs):
+    """Stub for ending UV-VIS hardware measurement (only used in non-simulation mode)"""
+    pass
+
 
 def run_bayesian_optimization_iteration(
     experiment: Sequence[float],
@@ -91,7 +103,7 @@ def run_bayesian_optimization_iteration(
 
     # The instrument config files and experiment files will be generated within these files
     base_directory = Path(EXPERIMENTAL_PARAMETERS["base_directory"])
-    base_directory.mkdir(parents=True, exist_ok=False)
+    base_directory.mkdir(parents=True, exist_ok=True)
     instrument_config = base_directory / "Instrument_Config_File.csv"
     fluorescent_reaction_command_path = (
         base_directory / f"Fluorescent_Optimization_Iteration_{k}"
@@ -240,20 +252,23 @@ def run_bayesian_optimization_iteration(
         volume_pump1,
         volume_pump2,
         volume_pump3,
-        volume_pump4
-        temperature,
+        volume_pump4,
         cosolvent_valve_position,
+        temperature,
         fraction_of_cosolvent,
         light_intensity,
     )
 
     print(f"Setting temperature to {temperature} celsius")
-    # Run the experimental commands to set the temperature of the instrument
-    run_commands(
-        f"{fluorescent_reaction_command_path}_temperature.csv", instrument_config
-    )
-
-    print("Finished setting temperature of the thermocouple")
+    
+    if not SIMULATION_MODE:
+        # Run the experimental commands to set the temperature of the instrument
+        run_commands(
+            f"{fluorescent_reaction_command_path}_temperature.csv", instrument_config
+        )
+        print("Finished setting temperature of the thermocouple")
+    else:
+        print("[SIMULATION] Skipping temperature commands - would run: _temperature.csv")
 
     reactant_wavelength = EXPERIMENTAL_PARAMETERS["reactant_wavelength"]
     product_wavelength = EXPERIMENTAL_PARAMETERS["product_wavelength"]
@@ -261,29 +276,66 @@ def run_bayesian_optimization_iteration(
     print(f"Reactant wavelength set to {reactant_wavelength}")
     print(f"Product wavelength set to {product_wavelength}")
 
-    print(
-        f"Beginning UV recording at reactant wavelength {reactant_wavelength}"
-        f"and product wavelength {product_wavelength}"
-    )
-
-    uv_vis_detection_object = begin_uv_vis_measurement(
-        base_directory, k, target_wavelengths=(reactant_wavelength, product_wavelength)
-    )
-    try:
+    if not SIMULATION_MODE:
         print(
-            "Beginning flowing our compound through the reactor bed recording the product"
+            f"Beginning UV recording at reactant wavelength {reactant_wavelength}"
+            f"and product wavelength {product_wavelength}"
         )
-        run_commands(
-            f"{fluorescent_reaction_command_path}_experiment.csv", instrument_config
+        # UV-VIS hardware measurement (real mode only)
+        uv_vis_detection_object = begin_uv_vis_measurement(
+            base_directory, k, target_wavelengths=(reactant_wavelength, product_wavelength)
         )
-    finally:
-        print(f"Experiment completing, turning off UV recordings for iteration {k}")
-
-        end_uv_vis_measurement(uv_vis_detection_object)
-
-        print("Run he experimental commands to wash the UV-detector to clear it out")
-
-        run_commands(f"{fluorescent_reaction_command_path}_wash.csv", instrument_config)
+        try:
+            print(
+                "Beginning flowing our compound through the reactor bed recording the product"
+            )
+            run_commands(
+                f"{fluorescent_reaction_command_path}_experiment.csv", instrument_config
+            )
+        finally:
+            print(f"Experiment completing, turning off UV recordings for iteration {k}")
+            end_uv_vis_measurement(uv_vis_detection_object)
+            print("Run he experimental commands to wash the UV-detector to clear it out")
+            run_commands(f"{fluorescent_reaction_command_path}_wash.csv", instrument_config)
+    else:
+        print("[SIMULATION] Skipping UV-VIS hardware and running simulated experiment")
+        print("[SIMULATION] Skipping run_commands - would run: _experiment.csv and _wash.csv")
+        
+        # Generate simulated UV-VIS data and save to CSV for post-processing
+        from utils.simulated_data import simulate_uvvis_data
+        print("[SIMULATION] Generating simulated UV-VIS data...")
+        
+        # Calculate experiment time based on flow rate and volume
+        experiment_time_seconds = (volume / reactor_bed_flow_rate) * 60 if reactor_bed_flow_rate > 0 else 600
+        
+        # Simulate rate constant based on temperature and concentration
+        base_rate = 0.01
+        temp_factor = (temperature - 5) / 85
+        dilution_norm = (dilution_factor - 0.1) / 0.9
+        rate_constant = base_rate + (0.04 * temp_factor) + (0.02 * dilution_norm)
+        rate_constant = max(0.005, min(0.08, rate_constant))
+        
+        simulated_data_df = simulate_uvvis_data(
+            time_end=int(experiment_time_seconds),
+            time_step=5,
+            rate_constant=rate_constant,
+            initial_absorbance=1.0,
+            noise_level=0.01,
+            random_seed=42 + k,
+            start_delay=min(60, experiment_time_seconds * 0.2),
+        )
+        
+        # Rename columns to match expected format for post_process_uv_recording
+        # Column format: "Time(s)" and wavelength as string (e.g., "409", "506")
+        simulated_data_df = simulated_data_df.rename(columns={
+            "Time_s": "Time(s)",
+            "Absorbance_409nm": str(reactant_wavelength),
+            "Absorbance_506nm": str(product_wavelength),
+        })
+        
+        # Save simulated data to CSV (same path post_process_uv_recording expects)
+        simulated_data_df.to_csv(bayesian_optimization_csv_file_path, index=False)
+        print(f"[SIMULATION] Saved simulated UV-VIS data to {bayesian_optimization_csv_file_path}")
 
     print(f"Setting Last temperature to {temperature}")
 

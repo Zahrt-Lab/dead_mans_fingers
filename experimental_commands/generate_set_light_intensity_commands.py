@@ -8,21 +8,17 @@
 
 from typing import List
 
-def generate_temperature_commands(
+def generate_light_intensity_commands(
     light_intensity: float
     ) -> List[List[str]]:
     """
     The light intensity is an experimental parameter to feed into our bayesian optimizer
 
     parameters:
-     - temperature: The temperature to set our experiment to for this experiment
-     - previous_temperature: The temperature our temperature controller was
-     previously set to
+     - light_intensity: The light intensity to set our experiment to (0-100%)
     return:
-     - commands: The instrument commands to heat the reaction will be used
+     - commands: The instrument commands to set the light intensity
     """
-
-
 
     header = ["Component", "Action", "Parameters", "Output", "Notes", "delay"]
     commands = [
