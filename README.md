@@ -1,4 +1,4 @@
-# Dead Man’s Fingers  
+# Project Dead Man’s Fingers  
 ## Automated Flow Platform for Bayesian Optimization (Xylopyridine Analogs)
 
 This repository controls an automated flow-chemistry platform that optimizes photochemical reactions of xylopyridine analogs using Bayesian optimization. In each campaign, the platform:
@@ -85,19 +85,19 @@ This repository controls an automated flow-chemistry platform that optimizes pho
   Aggregates all prior experimental results and proposes the next set of experimental conditions.
  
 
-2) Variables, notation, and assumptions
+## Variables, notation, and assumptions
 Flow rates (use consistent units)
 
 
 Flow rates (use consistent units)
 
-- **$F_1$**: Pump 1 flow rate (substrate feed), e.g., µL/min or mL/min
+- **$F_1$**: Pump 1 flow rate (substrate feed), e.g., µL/min 
 
-- **$F_2$**: Pump 2 flow rate (acid dilution), e.g., µL/min or mL/min
+- **$F_2$**: Pump 2 flow rate (acid dilution), e.g., µL/min 
 
-- **$F_3$**: Pump 3 flow rate (co-solvent dilution), e.g., µL/min or mL/min
+- **$F_3$**: Pump 3 flow rate (co-solvent dilution), e.g., µL/min
 
-- **$F_4$**: Pump 4 flow rate (post-reactor dilution before UV-Vis), e.g., µL/min or mL/min
+- **$F_4$**: Pump 4 flow rate (post-reactor dilution before UV-Vis), e.g., µL/min
 
 - **$F_{123}$**: Total flow through the reactor (sum of Pumps 1–3): $F_{123} = F_1 + F_2 + F_3$
 
@@ -114,62 +114,9 @@ Concentrations
 
 - **$C_{P,\text{out}}$**: product concentration exiting the reactor bed(nmol/L)
 
-- **$C_{S,UV}$**: substrate concentration in the UV cell after Pump 4 (mol/L)
+- **$C_{S,UV}$**: substrate concentration in the UV cell after Pump 4 (nmol/L)
 
-- **$C_{P,UV}$**: product concentration in the UV cell after Pump 4 (mol/L)
-
-Dilutions
-
-- **$D_4$**: Pump 4 dilution factor, $D_4 = \frac{F_{123} + F_4}{F_{123}}$
-
-## Dilution and UV–Vis Normalization
-
-To ensure reliable UV–Vis quantification, the  is diluted post-reactor
-to achieve a target absorbance (typically **A ≈ 1**) of the substrate, 
-**$C_{S,UV}$** assuming no reaction occurred in the photochemical bed.
-
-The dilution is calculated using a continuous-flow form of:
-
-\[
-C_1 V_1 = C_2 V_2
-\]
-
-where concentration is controlled by relative flow rates.
-
-### Post-Reactor Dilution (Pump 4)
-
-- **Known**
-  - Reactor outlet concentration entering Pump 4: \( C_{S,\text{out}} \)
-  - Total reactor flow:  
-    \[
-    F_{123} = F_1 + F_2 + F_3
-    \]
-
-- **Target**
-  - UV–Vis cell concentration \( C_{S,UV} \) corresponding to an absorbance of ~1
-
-- **Calculated**
-  - Pump 4 flow rate \( F_4 \)
-
-### Dilution Factor Definition
-
-The post-reactor dilution factor is defined as:
-
-\[
-D_4 = \frac{F_{1234}}{F_{123}} = \frac{F_{123} + F_4}{F_{123}}
-\]
-
-The concentration entering the UV–Vis detector is therefore:
-
-\[
-C_{S,UV} = \frac{C_{S,\text{out}}}{D_4}
-\]
-
-Solving for \( F_4 \):
-
-\[
-F_4 = F_{123} \left( \frac{C_{S,\text{out}}}{C_{S,UV}} - 1 \right)
-\]
+- **$C_{P,UV}$**: product concentration in the UV cell after Pump 4 (nmol/L)
 
 Temperature
 
@@ -180,8 +127,8 @@ Light Intensity
 - **$I$**: Light intensity (W or % of maximum)
 
 
-3) Step-by-step: one optimization iteration (with math)
-Step 0 — Prepare and prime (one-time per run)
+## Step-by-step: one optimization iteration (with math)
+### Step 0 — Prepare and prime (one-time per run)
 
 Fill reservoirs (analogs, 0.1 M HCl, co-solvents, Pump 4 diluent).
 
@@ -191,7 +138,7 @@ Set safe defaults (Peltier setpoint, light off/standby).
 
 Verify the post-reactor valve can switch between Collect and Analyze.
 
-Step 1 — Optimizer proposes an experiment
+### Step 1 — Optimizer proposes an experiment
 
 For iteration k, the optimizer proposes a condition vector xk, typically including:
 
@@ -211,7 +158,7 @@ mode: Collect vs Analyze
 
 Pump 4: F4, V4 (if analyzing)
 
-Step 2 — Select analog + co-solvent (valves)
+### Step 2 — Select analog + co-solvent (valves)
 
 Set the analog selection valve to the chosen xylopyridine analog.
 
@@ -219,7 +166,7 @@ Set the co-solvent selection valve to the chosen co-solvent reservoir.
 
 If switching streams, perform a short flush before starting the UV acquisition window.
 
-Step 3 — Compute substrate concentration entering the reactor (dilution math)
+### Step 3 — Compute substrate concentration entering the reactor (dilution math)
 
 
 After Pump 2 (acid dilution):
@@ -246,19 +193,19 @@ $$
 C_{S,\text{in}} = C_3
 $$
 
-Step 4 — Configure reactor conditions
+### Step 4 — Configure reactor conditions
 
 Set Peltier to T and allow stabilization (your tolerance/time).
 
 Apply light settings and turn the light on for the experiment window.
 
-Step 5 — Choose post-reactor routing (Collect vs Analyze)
+### Step 5 — Choose post-reactor routing (Collect vs Analyze)
 
 Collect mode: route to fraction collector for offline sampling.
 
 Analyze mode: route to Pump 4 → UV-Vis.
 
-Step 6 — If analyzing: Pump 4 dilution factor
+### Step 6 — If analyzing: Pump 4 dilution factor
 
 Pump 4 dilutes the reactor effluent before UV-Vis.
 
