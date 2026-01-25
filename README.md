@@ -124,8 +124,9 @@ Dilutions
 
 ## Dilution and UV–Vis Normalization
 
-To ensure reliable UV–Vis quantification, the reactor effluent is diluted post-reactor
-to achieve a target absorbance (typically **A ≈ 1**).
+To ensure reliable UV–Vis quantification, the  is diluted post-reactor
+to achieve a target absorbance (typically **A ≈ 1**) of the substrate, 
+**$C_{S,UV}$** assuming no reaction occurred in the photochemical bed.
 
 The dilution is calculated using a continuous-flow form of:
 
@@ -169,10 +170,6 @@ Solving for \( F_4 \):
 \[
 F_4 = F_{123} \left( \frac{C_{S,\text{out}}}{C_{S,UV}} - 1 \right)
 \]
-
-Pump 4 is **not optimized** by the Bayesian optimizer; it is calculated deterministically
-to normalize absorbance prior to UV–Vis analysis.
-
 
 Temperature
 
