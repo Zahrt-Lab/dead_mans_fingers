@@ -282,6 +282,32 @@ bed prior to Pump 4 dilution.
 
   Note: This code calculates throughput in nmol/min
 
-### Step 12 - Feed back into the bayesian optimizer
+### Step 12 — Feed results back into the Bayesian optimizer (domain + objectives)
+
+**Search domain (inputs):**  
+The optimizer proposes a new parameter set  
+**$x = (F_{123}, D_{\mathrm{aq}}, T, V_{\mathrm{cosolvent}}, D_{\mathrm{cosolvent}}, I)$**  
+within the bounds defined in `EXPERIMENTAL_PARAMETERS`:
+
+- **$F_{123}$**: total reactor flow rate (`flow_rate`)
+- **$D_{\mathrm{aq}}$**: aqueous dilution factor (`dilution_factor`)
+- **$T$**: reactor temperature (`temperature`)
+- **$V_{\mathrm{cosolvent}}$**: co-solvent valve position (`co_solvent`)
+- **$D_{\mathrm{cosolvent}}$**: co-solvent volume / fraction (`co_solvent_volume`)
+- **$I$**: light intensity (`light_intensity`)
+
+**Measured objectives (outputs):**  
+Each experiment returns two metrics to maximize:
+- **$y_1(x) =$ percent yield**
+- **$y_2(x) =$ throughput**
+
+**Update rule (conceptual):**  
+Given a dataset of prior trials **$\mathcal{D} = \{(x_i, y_{1,i}, y_{2,i})\}_{i=1}^n$**, the optimizer updates its surrogate model and selects the next experiment:
+
+- propose **$x_{n+1} = \arg\max_x \alpha(x \mid \mathcal{D})$**  
+  where **$\alpha$** is an acquisition function balancing exploration vs exploitation.
+
+Ax records each trial as: `params -> (percent_yield, throughput)` and uses all completed trials to propose the next parameter set.
+
 
 
