@@ -42,35 +42,35 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 - **6-Way Valve 1 (Analog Selection)**  
   Selects which xylopyridine analog is routed to the system for optimization.
-  The valve position (**V₁**) selects analog to use before the optimization begins.
+  The valve position (**$V_1$**) selects analog to use before the optimization begins.
 
 - **Pump 1 (Substrate Feed)**  
   Delivers the selected xylopyridine analog dissolved in 0.1 M HCl(aq).  
-  The flow rate (**F₁**) is a tunable optimization parameter.
+  The flow rate (**$F_1$**) is a tunable optimization parameter.
 
 - **Pump 2 (Dilution Feed)**  
   Adds 0.1 M HCl(aq) for dilution.  
-  The flow rate (**F₂**) is a tunable optimization parameter.
+  The flow rate (**$F_2$**) is a tunable optimization parameter.
 
 - **6-Way Valve 2 + Pump 3 (Co-solvent Selection)**  
   The optimizer selects the co-solvent via valve position and controls its flow rate using Pump 3.  
-  The valve position (**V₂**) flow rate (**F₃**) is a tunable optimization parameter.
+  The valve position (**$V_2$**) flow rate (**F₃**) is a tunable optimization parameter.
 
 - **Temperature Control (Peltier Module)**  
   Regulates the reactor temperature.  
-  The setpoint temperature (**T**, °C) is a tunable optimization parameter.
+  The setpoint temperature (**$T$**, °C) is a tunable optimization parameter.
 
 - **Light Source (Photoreactor)**  
   Mirror-box photoreactor providing 365 nm irradiation with a tunable power output (0–400 W).  
-  The Light intensity (**I**) is a tunable optimization parameter.
+  The Light intensity (**$I$**) is a tunable optimization parameter.
 
 - **2-Way Valve 1 (Analysis Routing)**  
   Directs the reactor effluent either to the UV–Vis detector during optimization or to an alternative outlet when analysis is not required.
-  The valve position (**V₃**) is selected before the optimization begins
+  The valve position (**$V_3$**) is selected before the optimization begins
 
 - **Pump 4 (UV Conditioning)**  
   Performs post-reactor dilution to achieve a target absorbance range prior to UV–Vis analysis, maintaining a standardized concentration before detection.
-  The flow rate (**F4**) is a tunable optimization parameter.
+  The flow rate (**$F_4$**) is a tunable optimization parameter.
 
 
 - **UV–Vis Detector and Analysis**  
@@ -79,7 +79,7 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 - **10-Way Valve 1 (Waste Selection)**  
   Routes the reactor output to the appropriate waste stream based on the selected xylopyridine analog.
-  The valve position (**V4**) is selected before the optimization begins
+  The valve position (**$V_4$**) is selected before the optimization begins
 
 - **Bayesian Optimizer**  
   Aggregates all prior experimental results and proposes the next set of experimental conditions.
