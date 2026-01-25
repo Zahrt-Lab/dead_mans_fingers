@@ -213,13 +213,13 @@ in the reactor bed.
 
 - The optimizer sets:
   - Total reactor flow rate: **$F_{123}$**
-  - Aqueous dilution factor: **$D_{\text{aq}}$**
+  - Aqueous dilution factor: **$D_{\text{substrate}}$**
   - Co-solvent fraction (or dilution factor): **$D_{\text{cosolvent}}$**
 
 - From these suggested values, the flow rate of the four pumps are calculated deterministically
 
 - Substrate concentration entering the reactor is:
-  - **$C_{S,\text{in}} = C_S \cdot D_{\text{aq}}$**
+  - **$C_{S,\text{in}} = C_S \cdot D_{\text{substrate}}$**
 
 - Flow rate of pump 1 are computed deterministically (mass balance; **$C_1V_1 = C_2V_2$** in flow form):
 
@@ -229,7 +229,7 @@ in the reactor bed.
 - Flow rate of pump 2 and 3 are computed using the dilution factor variables and the flow rate of pump 1.
 
   - **Pump 2 (aqueous diluent):**
-    - **$F_2 = F_{123} - F_1 - F_3$**
+    - **$F_2 = F_{123} - (D_{\text{substrate}} - d_{\text{cosolvent}})$**
 
   - **Pump 3 (co-solvent):**
     - **$F_3 = F_{123} \cdot D_{\text{cosolvent}}$**
