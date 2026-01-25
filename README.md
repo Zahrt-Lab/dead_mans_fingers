@@ -203,9 +203,9 @@ flow rates are then calculated deterministically to achieve the desired substrat
 in the reactor bed.
 
 - The optimizer defines:
-  - Total reactor flow rate: **\( F_{123} \)**
-  - Substrate dilution fraction: **\( d_{\text{sub}} \)**
-  - Co-solvent dilution fraction: **\( d_{\text{cosolvent}} \)**
+  - Total reactor flow rate: **$F_{123}$**
+  - Substrate dilution fraction: **$d_{\text{sub}}$**
+  - Co-solvent dilution fraction: **$d_{\text{cosolvent}}$**
 
 - The substrate concentration entering the reactor is calculated as:
   \[
