@@ -180,9 +180,9 @@ Wash the detector, to remove any xylopyridine analogs before calibration.
 
 - **$F_1$** is set to 0 uL/min 
 
-- **$F_2$** is set to 1000 uL/min
+- **$F_2$** is set to **$2000 uL/min \cdot (1 - D_{\text{cosolvent}})$**
 
-- **$F_3$** is set to 1000 uL/min
+- **$F_3$** is set to **$2000 uL/min \cdot D_{\text{cosolvent}}$**
 
 - **$F_{123}$** is set to 2000 uL/min
 
@@ -206,8 +206,8 @@ in the reactor bed.
 
 - The optimizer defines:
   - Total reactor flow rate: **$F_{123}$**
-  - Substrate dilution fraction: **$d_{\text{substrate}}$**
-  - Co-solvent dilution fraction: **$d_{\text{cosolvent}}$**
+  - Substrate dilution fraction: **$D_{\text{substrate}}$**
+  - Co-solvent dilution fraction: **$D_{\text{cosolvent}}$**
 
 ### Step 8 — Compute substrate concentration entering the reactor (dilution math)
 
@@ -229,7 +229,7 @@ in the reactor bed.
 - Flow rate of pump 2 and 3 are computed using the dilution factor variables and the flow rate of pump 1.
 
   - **Pump 2 (aqueous diluent):**
-    - **$F_2 = F_{123} - (D_{\text{substrate}} - d_{\text{cosolvent}})$**
+    - **$F_2 = F_{123} - (D_{\text{substrate}} - D_{\text{cosolvent}})$**
 
   - **Pump 3 (co-solvent):**
     - **$F_3 = F_{123} \cdot D_{\text{cosolvent}}$**
