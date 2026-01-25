@@ -106,7 +106,7 @@ Flow rates (use consistent units)
 
 Concentrations
 
-- **$C_1$**: xylopyridine concentration in Pump 1 feed (nmol/L)
+- **$C_{S}$**: xylopyridine concentration in Pump 1 feed (nmol/L)
 
 - **$C_{S,\text{in}}$**: substrate concentration entering the reactor bed(nmol/L)
 
@@ -122,6 +122,58 @@ Dilutions
 
 - **$D_4$**: Pump 4 dilution factor, $D_4 = \frac{F_{123} + F_4}{F_{123}}$
 
+## Dilution and UV–Vis Normalization
+
+To ensure reliable UV–Vis quantification, the reactor effluent is diluted post-reactor
+to achieve a target absorbance (typically **A ≈ 1**).
+
+The dilution is calculated using a continuous-flow form of:
+
+\[
+C_1 V_1 = C_2 V_2
+\]
+
+where concentration is controlled by relative flow rates.
+
+### Post-Reactor Dilution (Pump 4)
+
+- **Known**
+  - Reactor outlet concentration entering Pump 4: \( C_{S,\text{out}} \)
+  - Total reactor flow:  
+    \[
+    F_{123} = F_1 + F_2 + F_3
+    \]
+
+- **Target**
+  - UV–Vis cell concentration \( C_{S,UV} \) corresponding to an absorbance of ~1
+
+- **Calculated**
+  - Pump 4 flow rate \( F_4 \)
+
+### Dilution Factor Definition
+
+The post-reactor dilution factor is defined as:
+
+\[
+D_4 = \frac{F_{1234}}{F_{123}} = \frac{F_{123} + F_4}{F_{123}}
+\]
+
+The concentration entering the UV–Vis detector is therefore:
+
+\[
+C_{S,UV} = \frac{C_{S,\text{out}}}{D_4}
+\]
+
+Solving for \( F_4 \):
+
+\[
+F_4 = F_{123} \left( \frac{C_{S,\text{out}}}{C_{S,UV}} - 1 \right)
+\]
+
+Pump 4 is **not optimized** by the Bayesian optimizer; it is calculated deterministically
+to normalize absorbance prior to UV–Vis analysis.
+
+
 Temperature
 
 - **$T$**: Reactor temperature (°C)
@@ -130,13 +182,6 @@ Light Intensity
 
 - **$I$**: Light intensity (W or % of maximum)
 
-Assumptions used for dilution math
-
-Junctions are treated as well-mixed (ideal mixing).
-
-Pumps 2–4 contain no xylopyridine (diluent only).
-
-Pump 4 is post-reactor and does not change true reactor throughput.
 
 3) Step-by-step: one optimization iteration (with math)
 Step 0 — Prepare and prime (one-time per run)
