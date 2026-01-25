@@ -272,7 +272,7 @@ bed prior to Pump 4 dilution.
 
   Percent yield is defined as the fraction of substrate converted to product:
 
-  **Percent Yield = 100 × ( C_{P,out} / ( C_{S,out} + C_{P,out} ) )**
+  **$Percent Yield = 100 \cdot \dfrac{C_{S,\text{out}}}{C_{S,\text{out}}} $**
 
 - **Throughput**
 
