@@ -262,3 +262,27 @@ in the reactor bed.
 
 - Product concentration exiting the reactor:
   - **$C_{P,\text{out}} = \dfrac{C_{P,UV} \cdot F_{1234}}{F_{123}}$**
+
+### Step 11 - Calculate Percent yield and throughput
+
+- Percent yield and throughput are calculated from the concentrations exiting the reactor
+bed prior to Pump 4 dilution.
+
+- **Percent Yield (%)**
+
+  Percent yield is defined as the fraction of substrate converted to product:
+
+  **Percent Yield = 100 × ( C_{P,out} / ( C_{S,out} + C_{P,out} ) )**
+
+- **Throughput**
+
+  Throughput is defined as the molar production rate of product exiting the reactor:
+
+  **Throughput = C_{P,out} × F_{123}**
+
+  where throughput is reported in units of mol·time⁻¹ (e.g., nmol/min or mmol/hr,
+  depending on flow-rate units).
+
+### Step 12 - Feed back into the bayesian optimizer
+
+
