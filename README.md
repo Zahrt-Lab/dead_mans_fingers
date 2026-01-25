@@ -37,23 +37,6 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 ---
 
-## 1) Platform overview (hardware + data loop)
-
-```mermaid
-flowchart LR
-  A[Analog selection\n6-way valve 1\n] --> B[Pump 1: Substrate feed\n(variable flow rate)]
-  B --> C[Pump 2: Dilution\n0.1 M HCl (aq)]
-  C --> Vsolv[Co-solvent selection valve]
-  Vsolv --> D[Pump 3: Co-solvent dilution]
-  D --> E[Reactor bed\nPeltier heat/cool\n400 W tunable light]
-  E --> Vout[Post-reactor switch valve]
-  Vout -->|Collect| FC[Fraction collector]
-  Vout -->|Analyze| F[Pump 4: Post-reactor dilution\n(target absorbance)]
-  F --> G[UV-Vis detector]
-  G --> H[Compute metrics\n% yield + throughput]
-  H --> I[Bayesian optimization\npropose next experiment]
-  I --> A
-
 ## Module Descriptions
 
 - **6-Way Valve 1 (Analog Selection)**  
