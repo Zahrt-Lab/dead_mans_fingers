@@ -288,12 +288,12 @@ bed prior to Pump 4 dilution.
 The optimizer proposes a new parameter set within the defined set of bounds
 **$x_k = (F_{123}, D_{\mathrm{substrate}}, T, V_{\mathrm{cosolvent}}, D_{\mathrm{cosolvent}}, I)$**  
 
-- **$F_{123}$**: total reactor flow rate (`flow_rate`)
-- **$D_{\mathrm{substrate}}$**: aqueous dilution factor (`dilution_factor`)
-- **$T$**: reactor temperature (`temperature`)
-- **$V_{\mathrm{cosolvent}}$**: co-solvent valve position (`co_solvent`)
-- **$D_{\mathrm{cosolvent}}$**: co-solvent volume / fraction (`co_solvent_volume`)
-- **$I$**: light intensity (`light_intensity`)
+- **$x_1 = F_{123}$**: total reactor flow rate (`flow_rate`)
+- **$x_2 = D_{\mathrm{substrate}}$**: aqueous dilution factor (`dilution_factor`)
+- **$x_3 = T$**: reactor temperature (`temperature`)
+- **$x_4 = V_{\mathrm{cosolvent}}$**: co-solvent valve position (`co_solvent`)
+- **$x_5 = D_{\mathrm{cosolvent}}$**: co-solvent volume / fraction (`co_solvent_volume`)
+- **$x_6 = I$**: light intensity (`light_intensity`)
 
 **Measured objectives (outputs):**  
 Each experiment returns two metrics to maximize:
