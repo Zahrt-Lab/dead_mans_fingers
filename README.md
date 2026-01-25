@@ -278,7 +278,7 @@ bed prior to Pump 4 dilution.
 
   Throughput is defined as the molar production rate of product exiting the reactor:
 
-  **Throughput = C_{P,out} × F_{123}**
+  **$Throughput = C_{P,out} \cdot F_{123}$**
 
   Note: This code calculates throughput in nmol/min
 
