@@ -150,7 +150,7 @@ The xylopyridine analog is selected for bayesian optimization on the platform.
 
 For iteration k, the optimizer proposes a condition vector **$x_k$**, typically including:
 
-- **$C_{S,\text{in}}$**
+- **$dilution factor$**
 
 - **$F_{123}$**
 
@@ -166,13 +166,13 @@ TODO : Need a better variable name for the cosolvent dilution factor.
 
 **Note:** The optimizer will tune these parameters and remaining parameters are set deterministically.
 
-### Step 2 — Set temperature of the reactor bed
+### Step 4 — Set temperature of the reactor bed
 
 - The reactor bed is set to the temperature suggested by the optimizer.
 
 - The sensors wait for the temperature to be within +/- 1C  for 60 seconds.
 
-### Step 3 - Wash step
+### Step 5 - Wash step
 
 Wash the detector, to remove any xylopyridine analogs before calibration.
 
@@ -188,36 +188,25 @@ Wash the detector, to remove any xylopyridine analogs before calibration.
 
 - **$F_{1234}$** is set to 3000 uL/min
 
-### Step 4 - Run calibration
+### Step 6 - Run calibration
 
-Calibration step will be performed before each iteration to improve accuracy before each iteration.
+- Calibration step will be performed before each iteration to improve accuracy before each iteration.
 
-### Step 3 — Compute substrate concentration entering the reactor (dilution math)
+### Step 7 - Set light insenity
 
+- The light intensity of the lamp is set **$I$** 
 
-After Pump 2 (acid dilution):
+### Step 8 — Compute substrate concentration entering the reactor (dilution math)
 
-Pump 2 adds diluent (no xylopyridine), so the concentration after Pump 2 is:
+ - The optimizer sets the flow rate in the reactor bed, **$F_{123}$**, concentration in the reactor bed **$dilution factor$**, and **$cosolvent dilution factor$**
 
-$$
-C_2 = C_0 \cdot \frac{F_1}{F_1 + F_2}
-$$
+ - The concentration of the substrate in the reactor bed is calculated using the following formula: **$C_{S,\text{in}}$** = **$C_{S}$** * **$dilution factor$**
 
-After Pump 3 (co-solvent dilution):
-
-Pump 3 adds additional diluent (no xylopyridine), so the concentration after Pump 3 is:
-
-$$
-C_3 = C_0 \cdot \frac{F_1}{F_1 + F_2 + F_3}
-$$
-
-
-
-The substrate concentration entering the reactor is:
-
-$$
-C_{S,\text{in}} = C_3
-$$
+ - The flow rate of pump 1 is calculated deterministically, using **$C_1$** **$V_1$** = **$C_2$** **$V_2$** formula, **$F_1$** = (**$C_{S,\text{in}}$** **$F_123$**)/**$C_{S}$**
+ 
+ - The flow rate of pump 2 is calculated deterministically, using **$F_2$** = **$F_123$** * (**$dilution factor$**) - **$cosolvent dilution factor$**)
+ 
+ - The flow rate of pump 3 is calculated deterministically, using **$F_2$** = **$F_123$** * **$cosolvent dilution factor$**
 
 ### Step 4 — Configure reactor conditions
 
