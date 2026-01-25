@@ -1,9 +1,3 @@
-**$I$**: Light intensity (W or % of maximum)
-
-**$\%\text{Yield}$**: Percent yield, $\%\text{Yield} = 100 \times \frac{C_{P,\text{out}}}{C_{S,\text{in}}}$
-**$T$**: Reactor temperature (°C)
-
-**$I$**: Light intensity (W or % of maximum)
 # Dead Man’s Fingers  
 ## Automated Flow Platform for Bayesian Optimization (Xylopyridine Analogs)
 
