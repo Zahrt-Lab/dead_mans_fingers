@@ -37,7 +37,7 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 ---
 
-# TODO Need to figure out how to clean it up to make sure it clearer to the reader 
+TODO: Need to figure out how to clean it up variable names to make sure it clearer to the reader 
 ## Module Descriptions
 
 - **6-Way Valve 1 (Analog Selection)**  
@@ -126,37 +126,43 @@ Light Intensity
 
 - **$I$**: Light intensity (W or % of maximum)
 
+Dilution Factor
+
+- 
+
 
 ## Step-by-step: one optimization iteration (with math)
 ### Step 0 — Prepare and prime (one-time per run)
 
-Fill reservoirs (analogs, 0.1 M HCl, co-solvents, Pump 4 diluent).
+- Prepare and fill reservoirs (xylopyridine analogs, 0.1 M HCl water, co-solvents).
 
-Prime lines and remove bubbles (especially the UV flow cell).
+- Prime lines and remove bubbles (especially the UV flow cell).
 
-Set safe defaults (Peltier setpoint, light off/standby).
+- Set safe defaults (Peltier setpoint, light off/standby).
 
-Verify the post-reactor valve can switch between Collect and Analyze.
+### Step 1 - The xylopyridine analog
+
+- The xylopyridine analog is selected for bayesian optimization on the platform.
 
 ### Step 1 — Optimizer proposes an experiment
 
-For iteration k, the optimizer proposes a condition vector xk, typically including:
+-For iteration k, the optimizer proposes a condition vector **$x_k$**, typically including:
 
-analog identity (6-way valve position): VP1
+- **$C_{S,\text{in}}$**
 
-Pump 1: F1, V1
+- **$F_{123}$**
 
-Pump 2: F2, V2
+- **$T$**
 
-co-solvent identity (valve position) and Pump 3: VP2, F3, V3
+- **$I$**
 
-reactor temperature: T
+- **$V_2$**
 
-light settings (wavelength/intensity/time as implemented)
+- **$cosolvent dilution factor$**
 
-mode: Collect vs Analyze
+Need a better variable name for the cosolvent dilution factor
 
-Pump 4: F4, V4 (if analyzing)
+Note: The optimizer will tune these parameters and remaining parameters are set deterministically 
 
 ### Step 2 — Select analog + co-solvent (valves)
 
