@@ -54,7 +54,7 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 - **6-Way Valve 2 + Pump 3 (Co-solvent Selection)**  
   The optimizer selects the co-solvent via valve position and controls its flow rate using Pump 3.  
-  The valve position (**$V_2$**) flow rate (**F₃**) is a tunable optimization parameter.
+  The valve position (**$V_2$**) flow rate (**$F_3$**) is a tunable optimization parameter.
 
 - **Temperature Control (Peltier Module)**  
   Regulates the reactor temperature.  
@@ -75,7 +75,7 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 - **UV–Vis Detector and Analysis**  
   Measures absorbance of reactants and products and converts spectra to concentrations.  
-  These values are used to calculate reaction **yield** and **throughput**.
+  These values are used to calculate ** percent yield** and **throughput**.
 
 - **10-Way Valve 1 (Waste Selection)**  
   Routes the reactor output to the appropriate waste stream based on the selected xylopyridine analog.
@@ -106,13 +106,17 @@ Flow rates (use consistent units)
 
 Concentrations
 
-- **$C_0$**: xylopyridine concentration in Pump 1 feed (mol/L)
+- **$C_1$**: xylopyridine concentration in Pump 1 feed (nmol/L)
 
-- **$C_{S,\text{in}}$**: substrate concentration entering the reactor (mol/L)
+- **$C_{S,\text{in}}$**: substrate concentration entering the reactor bed(nmol/L)
+
+- **$C_{S,\text{out}}$**: substrate concentration exiting the reactor bed(nmol/L)
+
+- **$C_{P,\text{out}}$**: product concentration exiting the reactor bed(nmol/L)
+
+- **$C_{S,UV}$**: substrate concentration in the UV cell after Pump 4 (mol/L)
 
 - **$C_{P,UV}$**: product concentration in the UV cell after Pump 4 (mol/L)
-
-- **$C_{P,\text{out}}$**: product concentration at reactor outlet (pre Pump 4) (mol/L)
 
 Dilutions
 
