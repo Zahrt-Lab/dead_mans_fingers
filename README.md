@@ -1,11 +1,21 @@
 # Dead Man’s Fingers  
 ## Automated Flow Platform for Bayesian Optimization (Xylopyridine Analogs)
 
-This repository controls an automated flow-chemistry platform that optimizes a photochemical reaction of **xylopyridine analogs** using **Bayesian optimization**. Each iteration:
-1) selects an analog + operating conditions,  
-2) executes the experiment,  
-3) quantifies performance online via **UV-Vis**, and  
-4) proposes the next experiment.
+This repository controls an automated flow-chemistry platform that optimizes photochemical reactions of xylopyridine analogs using Bayesian optimization. In each campaign, the platform:
+
+1) Selects a set of xylopyridine analogs.
+
+2) Initializes a Bayesian optimization routine over experimental conditions.
+
+3) Executes experiments based on optimizer-proposed conditions.
+
+4) Quantifies each experiment via UV–Vis spectroscopy, calculating yield and throughput.
+
+5) Proposes the next experiment iteratively.
+
+6) Terminates when predefined stopping criteria are met.
+
+7) Optionally transitions the optimized conditions to a production run to generate a target quantity (grams or moles) of the selected analog.
 
 ---
 
@@ -31,7 +41,7 @@ This repository controls an automated flow-chemistry platform that optimizes a p
 
 ```mermaid
 flowchart LR
-  A[Analog selection\n6-way valve] --> B[Pump 1: Substrate feed\n(variable volume + flow)]
+  A[Analog selection\n6-way valve 1\n] --> B[Pump 1: Substrate feed\n(variable flow rate)]
   B --> C[Pump 2: Dilution\n0.1 M HCl (aq)]
   C --> Vsolv[Co-solvent selection valve]
   Vsolv --> D[Pump 3: Co-solvent dilution]
@@ -44,25 +54,47 @@ flowchart LR
   H --> I[Bayesian optimization\npropose next experiment]
   I --> A
 
-Module descriptions
+## Module Descriptions
 
-6-way valve (analog selection): selects which xylopyridine analog feed is connected.
+- **6-Way Valve 1 (Analog Selection)**  
+  Selects which xylopyridine analog feed is routed into the system for optimization.
 
-Pump 1 (substrate feed): meters the selected analog (flow rate and/or dose volume may be optimized).
+- **Pump 1 (Substrate Feed)**  
+  Delivers the selected xylopyridine analog dissolved in 0.1 M HCl(aq).  
+  The flow rate (**F₁**) is a tunable optimization parameter.
 
-Pump 2 (acid dilution): adds 0.1 M HCl(aq) (diluent stream).
+- **Pump 2 (Dilution Feed)**  
+  Adds 0.1 M HCl(aq) for dilution.  
+  The flow rate (**F₂**) is a tunable optimization parameter.
 
-Co-solvent selection valve + Pump 3: selects a co-solvent and adds it to reach the desired reaction composition.
+- **6-Way Valve 2 + Pump 3 (Co-solvent Selection)**  
+  The optimizer selects the co-solvent via valve position and controls its flow rate using Pump 3.  
+  The flow rate (**F₃**) is a tunable optimization parameter.
 
-Reactor bed: temperature-controlled via Peltier; irradiated by a 400 W tunable light source (software-controlled).
+- **Temperature Control (Peltier Module)**  
+  Regulates the reactor temperature.  
+  The setpoint temperature (**T**, °C) is a tunable optimization parameter.
 
-Post-reactor switch valve: routes effluent either to a fraction collector or to online UV analysis.
+- **Light Source (Photoreactor)**  
+  Mirror-box photoreactor providing 365 nm irradiation with a tunable power output (0–400 W).  
+  Light intensity is a tunable optimization parameter.
 
-Pump 4 (UV conditioning): post-reactor dilution to hit a target absorbance range before UV-Vis.
+- **2-Way Valve 1 (Analysis Routing)**  
+  Directs the reactor effluent either to the UV–Vis detector during optimization or to an alternative outlet when analysis is not required.
 
-UV-Vis + analysis: converts absorbance/spectra → concentration → % yield and throughput.
+- **Pump 4 (UV Conditioning)**  
+  Performs post-reactor dilution to achieve a target absorbance range prior to UV–Vis analysis, maintaining a standardized concentration before detection.
 
-Optimizer: uses all prior results to propose the next experiment.
+- **UV–Vis Detector and Analysis**  
+  Measures absorbance of reactants and products and converts spectra to concentrations.  
+  These values are used to calculate reaction **yield** and **throughput**.
+
+- **10-Way Valve 1 (Waste Selection)**  
+  Routes the reactor output to the appropriate waste stream based on the selected xylopyridine analog.
+
+- **Bayesian Optimizer**  
+  Aggregates all prior experimental results and proposes the next set of experimental conditions.
+ 
 
 2) Variables, notation, and assumptions
 Flow rates (use consistent units)
