@@ -272,7 +272,7 @@ bed prior to Pump 4 dilution.
 
   Percent yield is defined as the fraction of substrate converted to product:
 
-  **$Percent Yield = 100 \cdot \dfrac{C_{S,\text{out}}}{C_{S,\text{out}}} $**
+  **$Percent Yield = \dfrac{C_{P,\text{out}}}{C_{S,\text{in}}} \cdot 100%$**
 
 - **Throughput**
 
@@ -280,8 +280,7 @@ bed prior to Pump 4 dilution.
 
   **Throughput = C_{P,out} × F_{123}**
 
-  where throughput is reported in units of mol·time⁻¹ (e.g., nmol/min or mmol/hr,
-  depending on flow-rate units).
+  Note: This code calculates throughput in nmol/min
 
 ### Step 12 - Feed back into the bayesian optimizer
 
