@@ -285,12 +285,11 @@ bed prior to Pump 4 dilution.
 ### Step 12 — Feed results back into the Bayesian optimizer (domain + objectives)
 
 **Search domain (inputs):**  
-The optimizer proposes a new parameter set  
-**$x = (F_{123}, D_{\mathrm{aq}}, T, V_{\mathrm{cosolvent}}, D_{\mathrm{cosolvent}}, I)$**  
-within the bounds defined in `EXPERIMENTAL_PARAMETERS`:
+The optimizer proposes a new parameter set within the defined set of bounds
+**$x_k = (F_{123}, D_{\mathrm{substrate}}, T, V_{\mathrm{cosolvent}}, D_{\mathrm{cosolvent}}, I)$**  
 
 - **$F_{123}$**: total reactor flow rate (`flow_rate`)
-- **$D_{\mathrm{aq}}$**: aqueous dilution factor (`dilution_factor`)
+- **$D_{\mathrm{substrate}}$**: aqueous dilution factor (`dilution_factor`)
 - **$T$**: reactor temperature (`temperature`)
 - **$V_{\mathrm{cosolvent}}$**: co-solvent valve position (`co_solvent`)
 - **$D_{\mathrm{cosolvent}}$**: co-solvent volume / fraction (`co_solvent_volume`)
