@@ -37,10 +37,12 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 ---
 
+# TODO Need to figure out how to clean it up to make sure it clearer to the reader 
 ## Module Descriptions
 
 - **6-Way Valve 1 (Analog Selection)**  
-  Selects which xylopyridine analog feed is routed into the system for optimization.
+  Selects which xylopyridine analog is routed to the system for optimization.
+  The valve position (**V₁**) selects analog to use before the optimization begins.
 
 - **Pump 1 (Substrate Feed)**  
   Delivers the selected xylopyridine analog dissolved in 0.1 M HCl(aq).  
@@ -52,7 +54,7 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 - **6-Way Valve 2 + Pump 3 (Co-solvent Selection)**  
   The optimizer selects the co-solvent via valve position and controls its flow rate using Pump 3.  
-  The flow rate (**F₃**) is a tunable optimization parameter.
+  The valve position (**V₂**) flow rate (**F₃**) is a tunable optimization parameter.
 
 - **Temperature Control (Peltier Module)**  
   Regulates the reactor temperature.  
@@ -60,13 +62,16 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 - **Light Source (Photoreactor)**  
   Mirror-box photoreactor providing 365 nm irradiation with a tunable power output (0–400 W).  
-  Light intensity is a tunable optimization parameter.
+  The Light intensity (**I**) is a tunable optimization parameter.
 
 - **2-Way Valve 1 (Analysis Routing)**  
   Directs the reactor effluent either to the UV–Vis detector during optimization or to an alternative outlet when analysis is not required.
+  The valve position (**V₃**) is selected before the optimization begins
 
 - **Pump 4 (UV Conditioning)**  
   Performs post-reactor dilution to achieve a target absorbance range prior to UV–Vis analysis, maintaining a standardized concentration before detection.
+  The flow rate (**F4**) is a tunable optimization parameter.
+
 
 - **UV–Vis Detector and Analysis**  
   Measures absorbance of reactants and products and converts spectra to concentrations.  
@@ -74,6 +79,7 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 
 - **10-Way Valve 1 (Waste Selection)**  
   Routes the reactor output to the appropriate waste stream based on the selected xylopyridine analog.
+  The valve position (**V4**) is selected before the optimization begins
 
 - **Bayesian Optimizer**  
   Aggregates all prior experimental results and proposes the next set of experimental conditions.
@@ -85,40 +91,40 @@ Flow rates (use consistent units)
 
 Flow rates (use consistent units)
 
-**$F_1$**: Pump 1 flow rate (substrate feed), e.g., µL/min or mL/min
+- **$F_1$**: Pump 1 flow rate (substrate feed), e.g., µL/min or mL/min
 
-**$F_2$**: Pump 2 flow rate (acid dilution), e.g., µL/min or mL/min
+- **$F_2$**: Pump 2 flow rate (acid dilution), e.g., µL/min or mL/min
 
-**$F_3$**: Pump 3 flow rate (co-solvent dilution), e.g., µL/min or mL/min
+- **$F_3$**: Pump 3 flow rate (co-solvent dilution), e.g., µL/min or mL/min
 
-**$F_4$**: Pump 4 flow rate (post-reactor dilution before UV-Vis), e.g., µL/min or mL/min
+- **$F_4$**: Pump 4 flow rate (post-reactor dilution before UV-Vis), e.g., µL/min or mL/min
 
-**$F_{123}$**: Total flow through the reactor (sum of Pumps 1–3): $F_{123} = F_1 + F_2 + F_3$
+- **$F_{123}$**: Total flow through the reactor (sum of Pumps 1–3): $F_{123} = F_1 + F_2 + F_3$
 
-**$F_{1234}$**: Total flow through the UV-detector (sum of Pumps 1–4): $F_{1234} = F_1 + F_2 + F_3 + F_4$
+- **$F_{1234}$**: Total flow through the UV-detector (sum of Pumps 1–4): $F_{1234} = F_1 + F_2 + F_3 + F_4$
 
 
 Concentrations
 
-**$C_0$**: xylopyridine concentration in Pump 1 feed (mol/L)
+- **$C_0$**: xylopyridine concentration in Pump 1 feed (mol/L)
 
-**$C_{S,\text{in}}$**: substrate concentration entering the reactor (mol/L)
+- **$C_{S,\text{in}}$**: substrate concentration entering the reactor (mol/L)
 
-**$C_{P,UV}$**: product concentration in the UV cell after Pump 4 (mol/L)
+- **$C_{P,UV}$**: product concentration in the UV cell after Pump 4 (mol/L)
 
-**$C_{P,\text{out}}$**: product concentration at reactor outlet (pre Pump 4) (mol/L)
+- **$C_{P,\text{out}}$**: product concentration at reactor outlet (pre Pump 4) (mol/L)
 
 Dilutions
 
-**$D_4$**: Pump 4 dilution factor, $D_4 = \frac{F_{123} + F_4}{F_{123}}$
+- **$D_4$**: Pump 4 dilution factor, $D_4 = \frac{F_{123} + F_4}{F_{123}}$
 
 Temperature
 
-**$T$**: Reactor temperature (°C)
+- **$T$**: Reactor temperature (°C)
 
 Light Intensity
 
-**$I$**: Light intensity (W or % of maximum)
+- **$I$**: Light intensity (W or % of maximum)
 
 Assumptions used for dilution math
 
