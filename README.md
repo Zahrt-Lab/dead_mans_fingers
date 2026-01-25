@@ -108,6 +108,8 @@ Concentrations
 
 - **$C_{S}$**: xylopyridine concentration in Pump 1 feed (nmol/L)
 
+- **$C_{S,\text{A=1.0}}$**: substrate concentration entering the reactor bed(nmol/L)
+
 - **$C_{S,\text{in}}$**: substrate concentration entering the reactor bed(nmol/L)
 
 - **$C_{S,\text{out}}$**: substrate concentration exiting the reactor bed(nmol/L)
@@ -214,17 +216,26 @@ in the reactor bed.
   - Aqueous dilution factor: **$D_{\text{aq}}$**
   - Co-solvent fraction (or dilution factor): **$D_{\text{cosolvent}}$**
 
+- From these suggested values, the flow rate of the four pumps are calculated deterministically
+
 - Substrate concentration entering the reactor is:
   - **$C_{S,\text{in}} = C_S \cdot D_{\text{aq}}$**
 
-- Pump flow rates are computed deterministically (mass balance; **$C_1V_1 = C_2V_2$** in flow form):
+- Flow rate of pump 1 are computed deterministically (mass balance; **$C_1V_1 = C_2V_2$** in flow form):
 
   - **Pump 1 (substrate feed):**
-    - **$F_1 = \dfrac{C_{S,\text{in}} \, F_{123}}{C_S}$**
+    - **$F_1 = \dfrac{C_{S,\text{in}} \cdot F_{123}}{C_S}$**
+
+- Flow rate of pump 2 and 3 are computed using the dilution factor variables and the flow rate of pump 1.
+
+  - **Pump 2 (aqueous diluent):**
+    - **$F_2 = F_{123} - F_1 - F_3$**
 
   - **Pump 3 (co-solvent):**
     - **$F_3 = F_{123} \cdot D_{\text{cosolvent}}$**
 
-  - **Pump 2 (aqueous diluent):**
-    - **$F_2 = F_{123} - F_1 - F_3$**
+- Flow rate of pump 4 is calculated deterministically (mass balance; **$C_1V_1 = C_2V_2$** in flow form)
+
+  -  **$F_4 = \dfrac{C_{S,\text{in}} \cdot F_{123}}{C_{S,\text{A=1.0}}}$**
+
 
