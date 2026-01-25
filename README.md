@@ -196,17 +196,41 @@ Wash the detector, to remove any xylopyridine analogs before calibration.
 
 - The light intensity of the lamp is set **$I$** 
 
-### Step 8 — Compute substrate concentration entering the reactor (dilution math)
+### Step 8 — Compute Substrate Concentration Entering the Reactor
 
- - The optimizer sets the flow rate in the reactor bed, **$F_{123}$**, concentration in the reactor bed **$dilution factor$**, and **$cosolvent dilution factor$**
+The optimizer specifies the total reactor flow rate and dilution fractions. Individual pump
+flow rates are then calculated deterministically to achieve the desired substrate concentration
+in the reactor bed.
 
- - The concentration of the substrate in the reactor bed is calculated using the following formula: **$C_{S,\text{in}}$** = **$C_{S}$** * **$dilution factor$**
+- The optimizer defines:
+  - Total reactor flow rate: **\( F_{123} \)**
+  - Substrate dilution fraction: **\( d_{\text{sub}} \)**
+  - Co-solvent dilution fraction: **\( d_{\text{cosolvent}} \)**
 
- - The flow rate of pump 1 is calculated deterministically, using **$C_1$** **$V_1$** = **$C_2$** **$V_2$** formula, **$F_1$** = (**$C_{S,\text{in}}$** **$F_123$**)/**$C_{S}$**
- 
- - The flow rate of pump 2 is calculated deterministically, using **$F_2$** = **$F_123$** * (**$dilution factor$**) - **$cosolvent dilution factor$**)
- 
- - The flow rate of pump 3 is calculated deterministically, using **$F_2$** = **$F_123$** * **$cosolvent dilution factor$**
+- The substrate concentration entering the reactor is calculated as:
+  \[
+  C_{S,\text{in}} = C_S \cdot d_{\text{sub}}
+  \]
+
+- The flow rate of Pump 1 (substrate feed) is calculated using:
+  \[
+  C_1 V_1 = C_2 V_2
+  \]
+  which gives:
+  \[
+  F_1 = \frac{C_{S,\text{in}} \cdot F_{123}}{C_S}
+  \]
+
+- The flow rate of Pump 3 (co-solvent feed) is calculated as:
+  \[
+  F_3 = F_{123} \cdot d_{\text{cosolvent}}
+  \]
+
+- The flow rate of Pump 2 (aqueous dilution) is calculated by difference:
+  \[
+  F_2 = F_{123} - F_1 - F_3
+  \]
+
 
 ### Step 4 — Configure reactor conditions
 
