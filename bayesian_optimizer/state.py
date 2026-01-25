@@ -5,7 +5,8 @@ from typing import Any, Dict, Tuple
 # Global experiment parameters, filled at startup
 EXPERIMENTAL_PARAMETERS: Dict[str, Any] = {}
 
-# TODO: Check to make sure this stock volume code is working to keep track of all the solvents
+# TODO: Check to make sure the xylopyridine stock volume code is working to keep track of all the solvents
+# TODO: Check to make sure this cosolvents stock volume code is working to keep track of all the solvents
 # Iteration metadata / stock volumes
 iteration: Dict[str, Any] = {
     "iteration #": 0,
@@ -14,6 +15,7 @@ iteration: Dict[str, Any] = {
     "pump2_0.1M_HCl_water_volume_stock_solution": None,
 }
 
+# TODO : Decide if the xylopyridine stocks should be tracked here as well or in a different function on it's own
 def initialize_cosolvent_volumes(number_of_cosolvents: int) -> None:
     """
     Initialize co-solvent volume tracking in iteration dictionary which is varaible in the code
@@ -36,7 +38,7 @@ def initialize_cosolvent_volumes(number_of_cosolvents: int) -> None:
     for i in range(1, number_of_cosolvents + 1):
         iteration[f"cosolvent_{i}_volume"] = None
 
-
+# TODO : Decide if the xylopyridine stocks should be tracked here as well or in a different function on it's own
 def get_cosolvent_volumes() -> Dict[str, float]:
     """
     Get all co-solvent volumes from iteration dict.

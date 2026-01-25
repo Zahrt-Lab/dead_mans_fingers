@@ -58,6 +58,8 @@ def generate_wash_commands(
             0.5,
             ]
         )
+    # TODO: Need to remove this command since we are not using the Isametic pump anymore, need to swap it for the tricontinental pumps
+    # TODO: Also is the if statement needed if we are going to wash everything out anyway at this step?
     if not _is_zero(flow_rate_pump4, volume_pump4):
         commands.append([
             "Isametic_1",

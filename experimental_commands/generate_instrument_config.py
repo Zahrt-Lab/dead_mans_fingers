@@ -20,7 +20,10 @@ def generate_instrument_config() -> List[List[str]]:
      -rows: the config file for all the instuments to use in this experiment
     """
 
-    # TODO: Update Instruments config to match actual instruments and COM ports
+    # TODO: Update Instruments config to match actual instruments and COM ports 
+    # TODO: Need to include the code for the tricontinental pumps when available
+    # TODO: Remove the Harvard Apparatus since we are not using it anymore
+    # TODO: Remove the Isametic pump since we are using the tricontinental pumps now
     header = ["InstrumentType", "DeviceNumber", "Name", "COMPort", "OtherParams"]
     rows = [
         header,
@@ -30,7 +33,9 @@ def generate_instrument_config() -> List[List[str]]:
         ["Temperature",	1,	"Temperature",	"COM12", ""],
         ["PhdUltraPump",	1,	"PhDUltraPump",	"COM19", ""],
         ["Isametic",	1,	"Isametic",	"COM14", ""],
-    ]
+        ["DH2000", 1, "DH2000", "COM27", ""],
+        ["OceanOptics_UVVis", 1, "OceanOptics", "COM50", ""]
+        ]
     return rows
 
 def save_instrument_config_csv(config_file: str) -> None:

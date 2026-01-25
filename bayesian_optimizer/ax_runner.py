@@ -39,7 +39,8 @@ from preprocessing.experimental_parameters import (
     check_required_experimental_parameters,
 )
 
-
+# TODO : Need to verify input files needed for the bayesian optimizer code to run properly
+# TODO : Need to develop a diagram and brief readme file as a reference for future users of this code and how it works
 def _init_or_load_ax(
     state_path: str,
     flow_rate_min: float,

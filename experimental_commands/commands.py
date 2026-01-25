@@ -14,7 +14,7 @@ from experimental_commands.generate_set_light_intensity_commands import generate
 try:
     from methods import GeneralExperimentMethod
 except ImportError:
-    # Stub for simulation mode or when AutoZahrt hardware is not available
+    # Used cases when for simulation mode or when AutoZahrt hardware is not available
     GeneralExperimentMethod = None
 
 # TODO : Update the current experimental commands to match the new experimental setup

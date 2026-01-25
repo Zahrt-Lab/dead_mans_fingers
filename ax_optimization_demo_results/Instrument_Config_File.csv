@@ -1,0 +1,7 @@
+InstrumentType,DeviceNumber,Name,COMPort,OtherParams
+VICI_M6_Pump,1,Pump,COM21,
+VICI_M6_Pump,2,Pump,COM22,
+Valve6Way,1,VICI-6Way,COM7,
+Temperature,1,Temperature,COM12,
+PhdUltraPump,1,PhDUltraPump,COM19,
+Isametic,1,Isametic,COM14,

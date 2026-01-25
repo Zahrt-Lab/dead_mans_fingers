@@ -9,6 +9,7 @@
 from typing import List
 
 # TODO: Need to double check which pump is pump 1 and pump 2 for VICI M6 pumps
+# TODO: Need to get rid of number of syringes since we will be swapping it out with the tricontinental pumps
 def generate_experimental_commands(
     flow_rate_pump1: float,
     flow_rate_pump2: float,
@@ -57,6 +58,49 @@ def generate_experimental_commands(
     header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [header]
 
+    commands.append([ 
+        "DH2000_1","shutter_open","","",3.0
+        ]
+    )
+    commands.append([
+        "OceanOptics_UVVis_1","init","","",3.0
+        ]
+    )
+    # TODO : Could be useful if this was updated by the user to change the integration time but not urgent
+    commands.append([
+        "OceanOptics_UVVis_1","set_params",
+        "integration_time=30000,"
+        "num_scans=10,"
+        "measurement_interval=5,"
+        "target_wavelengths=409;506",
+        "",
+        "",
+        3.0
+        ]
+    )
+    commands.append([
+        "OceanOptics_UVVis_1","record_blank","","",3.0
+        ]
+    )
+    commands.append([
+        "DH2000_1","shutter_close","","",3.0
+        ]
+    )
+    commands.append([
+        "OceanOptics_UVVis_1","record_dark","","",3.0
+        ]
+    )
+    commands.append([
+        "DH2000_1","shutter_open","","",3.0
+        ]
+    )
+    # This begins the UV-Vis data collection in continuous mode until stopped once converged
+    # TODO: Need to verify that once convergence is reached all the pumps will stop as well
+    commands.append([
+        "OceanOptics_UVVis_1","start_continuous","stop_upon_convergence=True","","",3.0
+        ]
+    )
+    # TODO: Need to remove this command since we are not using the harvard apparatus anymore, need to swap it for the tricontinental pumps
     commands.append([
             "PhdUltraPump_1",
             "select_syringe",
@@ -65,6 +109,7 @@ def generate_experimental_commands(
             0.5,
         ]
     )
+    # TODO: Need to remove this command since we are not using the harvard apparatus anymore, need to swap it for the tricontinental pumps
     commands.append([
             "PhdUltraPump_1",
             "dispense",
@@ -83,7 +128,6 @@ def generate_experimental_commands(
             0.5,
         ]
         )
-    
     if not _is_zero(flow_rate_pump3, volume_pump3):
         commands.append([
             "VICI_M6_Pump_2",
@@ -93,6 +137,7 @@ def generate_experimental_commands(
             0.5,
         ]
         )
+    # TODO: Need to remove this command since we are not using the Isametic pump anymore, need to swap it for the tricontinental pumps
     if not _is_zero(flow_rate_pump4, volume_pump4):
         commands.append([
             "Isametic_1",
@@ -110,12 +155,17 @@ def generate_experimental_commands(
             0.5,
         ]
     )
+    # TODO: Need to remove this command since we are not using the harvard apparatus anymore, need to swap it for the tricontinental pumps
     commands.append([
         "PhdUltraPump_1",
         "stop",
         "",
         "The pump should have stopped but this is a safety check",
         0.5,
+        ]
+    )
+    commands.append([
+        "OceanOptics_UVVis_1","stop_continuous","","",3.0
         ]
     )
 
