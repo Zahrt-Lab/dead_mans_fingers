@@ -238,15 +238,18 @@ in the reactor bed.
 
   -  **$F_4 = \dfrac{C_{S,\text{in}} \cdot F_{123}}{C_{S,\text{A=1.0}}}$**.
 
-### Step 9 — Calculate concentration of substrate and product in the UV cell
+### Step 9 — Calculate substrate and product concentrations in the UV cell
 
-- The beer's law formula was used to calculate the substrate and product concentration once it enters the uv-cell 
+- Beer–Lambert law is used to calculate substrate and product concentrations after the reactor effluent enters the UV cell.
 
-- **$A_wavelength = varepsilon \cdot l \cdot C$**
+- Beer–Lambert law:
+  - **$A_\lambda = \varepsilon \cdot l \cdot C$**
 
-- **$C_{S,UV} = A_409$**
+- Substrate concentration in the UV cell (measured at 409 nm):
+  - **$C_{S,UV} = \dfrac{A_{409}}{\varepsilon_S \cdot l}$**
 
-- **$C_{P,UV}$**: product concentration in the UV cell after Pump 4 (nmol/L)
+- Product concentration in the UV cell:
+  - **$C_{P,UV} = \dfrac{A_{\lambda,P}}{\varepsilon_P \cdot l}$**
 
 ### Step 10 - Calculate concentration of substrate and product at the end of the reactor bed before pump 4 dilution.
 
