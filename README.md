@@ -140,13 +140,15 @@ Dilution Factor
 
 - Set safe defaults (Peltier setpoint, light off/standby).
 
+- Set the **$V_3$** position to send results to the uv-detector.
+
 ### Step 1 - The xylopyridine analog
 
-- The xylopyridine analog is selected for bayesian optimization on the platform.
+The xylopyridine analog is selected for bayesian optimization on the platform.
 
-### Step 1 — Optimizer proposes an experiment
+### Step 2 — Optimizer proposes an experiment
 
--For iteration k, the optimizer proposes a condition vector **$x_k$**, typically including:
+For iteration k, the optimizer proposes a condition vector **$x_k$**, typically including:
 
 - **$C_{S,\text{in}}$**
 
@@ -160,17 +162,35 @@ Dilution Factor
 
 - **$cosolvent dilution factor$**
 
-Need a better variable name for the cosolvent dilution factor
+TODO : Need a better variable name for the cosolvent dilution factor.
 
-Note: The optimizer will tune these parameters and remaining parameters are set deterministically 
+**Note:** The optimizer will tune these parameters and remaining parameters are set deterministically.
 
-### Step 2 — Select analog + co-solvent (valves)
+### Step 2 — Set temperature of the reactor bed
 
-Set the analog selection valve to the chosen xylopyridine analog.
+- The reactor bed is set to the temperature suggested by the optimizer.
 
-Set the co-solvent selection valve to the chosen co-solvent reservoir.
+- The sensors wait for the temperature to be within +/- 1C  for 60 seconds.
 
-If switching streams, perform a short flush before starting the UV acquisition window.
+### Step 3 - Wash step
+
+Wash the detector, to remove any xylopyridine analogs before calibration.
+
+- **$F_1$** is set to 0 uL/min 
+
+- **$F_2$** is set to 1000 uL/min
+
+- **$F_3$** is set to 1000 uL/min
+
+- **$F_{123}$** is set to 2000 uL/min
+
+- **$F_4$** is set to 1000 uL/min
+
+- **$F_{1234}$** is set to 3000 uL/min
+
+### Step 4 - Run calibration
+
+Calibration step will be performed before each iteration to improve accuracy before each iteration.
 
 ### Step 3 — Compute substrate concentration entering the reactor (dilution math)
 
