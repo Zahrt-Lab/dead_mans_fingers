@@ -253,4 +253,8 @@ in the reactor bed.
 
 ### Step 10 - Calculate concentration of substrate and product at the end of the reactor bed before pump 4 dilution.
 
-- 
+- The **$C_{S,\text{out}}$** and **$C_{P,\text{out}}$** is calculated deterministically (mass balance; **$C_1V_1 = C_2V_2$** in flow form)
+
+- **$C_{S,\text{out}} = \dfrac{{C_{S,UV} \cdot F_1234}F_123) $** 
+
+- **$C_{P,\text{out}} = \dfrac{{C_{P,UV} \cdot F_1234}F_123) $** 
