@@ -108,7 +108,7 @@ Concentrations
 
 - **$C_{S}$**: xylopyridine concentration in Pump 1 feed (nmol/L)
 
-- **$C_{S,\text{A=1.0}}$**: substrate concentration entering the reactor bed(nmol/L)
+- **$C_{S,\text{A=1.0}}$**: substrate concentration entering the reactor bed(nmol/L), assuming no reaction occurred
 
 - **$C_{S,\text{in}}$**: substrate concentration entering the reactor bed(nmol/L)
 
@@ -178,17 +178,17 @@ TODO : Need a better variable name for the cosolvent dilution factor.
 
 Wash the detector, to remove any xylopyridine analogs before calibration.
 
-- **$F_1$** is set to 0 uL/min 
+- **$F_1$** is set to 0 uL/min.
 
-- **$F_2$** is set to **$2000 uL/min \cdot (1 - D_{\text{cosolvent}})$**
+- **$F_2$** is set to **$2000 uL/min \cdot (1 - D_{\text{cosolvent}})$**.
 
-- **$F_3$** is set to **$2000 uL/min \cdot D_{\text{cosolvent}}$**
+- **$F_3$** is set to **$2000 uL/min \cdot D_{\text{cosolvent}}$**.
 
-- **$F_{123}$** is set to 2000 uL/min
+- **$F_{123}$** is set to 2000 uL/min.
 
-- **$F_4$** is set to 1000 uL/min
+- **$F_4$** is set to 1000 uL/min.
 
-- **$F_{1234}$** is set to 3000 uL/min
+- **$F_{1234}$** is set to 3000 uL/min.
 
 ### Step 6 - Run calibration
 
@@ -196,7 +196,7 @@ Wash the detector, to remove any xylopyridine analogs before calibration.
 
 ### Step 7 - Set light insenity
 
-- The light intensity of the lamp is set **$I$** 
+- The light intensity of the lamp is set **$I$**.
 
 ### Step 8 — Compute Substrate Concentration Entering the Reactor
 
@@ -236,6 +236,18 @@ in the reactor bed.
 
 - Flow rate of pump 4 is calculated deterministically (mass balance; **$C_1V_1 = C_2V_2$** in flow form)
 
-  -  **$F_4 = \dfrac{C_{S,\text{in}} \cdot F_{123}}{C_{S,\text{A=1.0}}}$**
+  -  **$F_4 = \dfrac{C_{S,\text{in}} \cdot F_{123}}{C_{S,\text{A=1.0}}}$**.
 
+### Step 9 — Calculate concentration of substrate and product in the UV cell
 
+- The beer's law formula was used to calculate the substrate and product concentration once it enters the uv-cell 
+
+- **$A_wavelength = varepsilon \cdot l \cdot C$**
+
+- **$C_{S,UV} = A_409$**
+
+- **$C_{P,UV}$**: product concentration in the UV cell after Pump 4 (nmol/L)
+
+### Step 10 - Calculate concentration of substrate and product at the end of the reactor bed before pump 4 dilution.
+
+- 
