@@ -204,29 +204,27 @@ in the reactor bed.
 
 - The optimizer defines:
   - Total reactor flow rate: **$F_{123}$**
-  - Substrate dilution fraction: **$d_{\text{sub}}$**
+  - Substrate dilution fraction: **$d_{\text{substrate}}$**
   - Co-solvent dilution fraction: **$d_{\text{cosolvent}}$**
 
-- The substrate concentration entering the reactor is calculated as:
-  \[
-  C_{S,\text{in}} = C_S \cdot d_{\text{sub}}
-  \]
+### Step 8 — Compute substrate concentration entering the reactor (dilution math)
 
-- The flow rate of Pump 1 (substrate feed) is calculated using:
-  \[
-  C_1 V_1 = C_2 V_2
-  \]
-  which gives:
-  \[
-  F_1 = \frac{C_{S,\text{in}} \cdot F_{123}}{C_S}
-  \]
+- The optimizer sets:
+  - Total reactor flow rate: **$F_{123}$**
+  - Aqueous dilution factor: **$D_{\text{aq}}$**
+  - Co-solvent fraction (or dilution factor): **$D_{\text{cosolvent}}$**
 
-- The flow rate of Pump 3 (co-solvent feed) is calculated as:
-  \[
-  F_3 = F_{123} \cdot d_{\text{cosolvent}}
-  \]
+- Substrate concentration entering the reactor is:
+  - **$C_{S,\text{in}} = C_S \cdot D_{\text{aq}}$**
 
-- The flow rate of Pump 2 (aqueous dilution) is calculated by difference:
-  \[
-  F_2 = F_{123} - F_1 - F_3
-  \]
+- Pump flow rates are computed deterministically (mass balance; **$C_1V_1 = C_2V_2$** in flow form):
+
+  - **Pump 1 (substrate feed):**
+    - **$F_1 = \dfrac{C_{S,\text{in}} \, F_{123}}{C_S}$**
+
+  - **Pump 3 (co-solvent):**
+    - **$F_3 = F_{123} \cdot D_{\text{cosolvent}}$**
+
+  - **Pump 2 (aqueous diluent):**
+    - **$F_2 = F_{123} - F_1 - F_3$**
+
