@@ -1,7 +1,0 @@
-Component,Action,Parameters,Notes,delay
-DH2000,shutter open,,Opening the lamp shutter,0.5
-OceanOptics_UVVis,set_params,,Setting parameters for UV-VIS detector,0.5
-OceanOptics_UVVis,record_blank,,Setting parameters for UV-VIS detector,0.5
-DH2000,shutter close,,Closing the lamp shutter,0.5
-OceanOptics_UVVis,record_dark,,Setting parameters for UV-VIS detector,0.5
-DH2000,shutter open,,Opening the lamp shutter,0.5

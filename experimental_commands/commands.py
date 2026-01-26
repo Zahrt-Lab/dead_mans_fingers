@@ -92,15 +92,25 @@ def save_commands_csv(
         )
 
     # Generate wash commands
+    # Following the README File at Step 5:
+    # F2 = 2000 * (1 - D_cosolvent), F3 = 2000 * D_cosolvent, F4 = 1000
+    # V2 = 6000 * (1 - D_cosolvent), V3 = 6000 * D_cosolvent, V4 = 3000
+    wash_flow_rate_pump2 = 2000 * (1 - fraction_of_cosolvent)
+    wash_flow_rate_pump3 = 2000 * fraction_of_cosolvent
+    wash_flow_rate_pump4 = 1000
+    wash_volume_pump2 = 6000 * (1 - fraction_of_cosolvent)
+    wash_volume_pump3 = 6000 * fraction_of_cosolvent
+    wash_volume_pump4 = 3000
+    
     with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
             generate_wash_commands(
-                flow_rate_pump2,
-                volume_pump2,
-                flow_rate_pump3,
-                volume_pump3,
-                flow_rate_pump4,
-                volume_pump4,
+                wash_flow_rate_pump2,
+                wash_volume_pump2,
+                wash_flow_rate_pump3,
+                wash_volume_pump3,
+                wash_flow_rate_pump4,
+                wash_volume_pump4,
                 valve_position_pump3,
             )
         )

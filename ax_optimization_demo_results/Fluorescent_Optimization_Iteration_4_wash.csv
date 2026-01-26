@@ -1,5 +1,0 @@
-Component,Action,Parameters,Notes,delay
-Valve6Way_2,go_to_position,position=1,,0.5
-VICI_M6_Pump_1,dispense,"flow_rate=27, volume=2668",The flow rate of our 0.1 M HCl Water is 27 uL/min and volume is 2668,0.5
-VICI_M6_Pump_2,dispense,"flow_rate=6, volume=557",The flow rate of our cosolvent is 6 uL/min and volume is 557,0.5
-SYNC,wait_for_pumps,,Waiting for XYLO and WATER pumps to complete,0.5

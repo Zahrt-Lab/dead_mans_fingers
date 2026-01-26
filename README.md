@@ -26,14 +26,14 @@ This repository controls an automated flow-chemistry platform that optimizes pho
 - [ ] Prevent overwriting prior run outputs (iteration-stamped directories + hard fails on collisions)
 - [ ] Add a live optimization GUI: progress plots + snapshot export + optional full UV-Vis spectrum export (e.g., every N runs)
 - [ ] Enable per-analog Bayesian optimization (hold analog constant; optimize within each analog)
-- [ ] Add a GUI for setting BO parameters (run count, bounds, objectives) to avoid terminal configuration
-- [ ] Add a short “Getting Started” tutorial for new users (hardware map + run procedure)
 - [ ] Provide a Linux-based production runner for stable BO execution
 - [ ] Refactor to production-grade code after a stable workflow is validated
 
 ## Low Priority TODOs
 
 - [ ] Add a pre-check valve path to UV-Vis to verify concentration prior to each reaction step
+- [ ] Add a GUI for setting BO parameters (run count, bounds, objectives) to avoid terminal configuration
+- [ ] Add a short “Getting Started” tutorial for new users (hardware map + run procedure)
 
 ---
 
@@ -209,7 +209,7 @@ in the reactor bed.
   - Substrate dilution fraction: **$D_{\text{substrate}}$**
   - Co-solvent dilution fraction: **$D_{\text{cosolvent}}$**
 
-### Step 8 — Compute substrate concentration entering the reactor (dilution math)
+### Step 9 — Compute substrate concentration entering the reactor (dilution math)
 
 - The optimizer sets:
   - Total reactor flow rate: **$F_{123}$**
@@ -224,21 +224,35 @@ in the reactor bed.
 - Flow rate of pump 1 are computed deterministically (mass balance; **$C_1V_1 = C_2V_2$** in flow form):
 
   - **Pump 1 (substrate feed):**
-    - **$F_1 = \dfrac{C_{S,\text{in}} \cdot F_{123}}{C_S}$**
+    - **$F_1 = \dfrac{C_{S,\text{in}} \cdot F_{123}}{C_S} = F_{123} \cdot D_{\text{substrate}}$**
 
 - Flow rate of pump 2 and 3 are computed using the dilution factor variables and the flow rate of pump 1.
 
   - **Pump 2 (aqueous diluent):**
-    - **$F_2 = F_{123} - (D_{\text{substrate}} - D_{\text{cosolvent}})$**
+    - **$F_2 = F_{123} \cdot (1 - D_{\text{substrate}} - D_{\text{cosolvent}})$**
 
   - **Pump 3 (co-solvent):**
     - **$F_3 = F_{123} \cdot D_{\text{cosolvent}}$**
 
 - Flow rate of pump 4 is calculated deterministically (mass balance; **$C_1V_1 = C_2V_2$** in flow form)
 
-  -  **$F_4 = \dfrac{C_{S,\text{in}} \cdot F_{123}}{C_{S,\text{A=1.0}}}$**.
+  - **$F_4 = \dfrac{C_{S,\text{in}} \cdot F_{123}}{C_{S,\text{A=1.0}}} - F_{123}$**
+  
+  - Where **$C_{S,\text{A=1.0}}$** is the substrate concentration when absorbance = 1.0 at the UV detector.
+  
+  - If **$C_{S,\text{in}} \leq C_{S,\text{A=1.0}}$**, then **$F_4 = 0$** (no additional dilution needed).
 
-### Step 9 — Calculate substrate and product concentrations in the UV cell
+- Volume calculations follow the same proportional relationships:
+
+  - **$V_1 = V_{\text{total}} \cdot D_{\text{substrate}}$**
+  
+  - **$V_2 = V_{\text{total}} \cdot (1 - D_{\text{substrate}} - D_{\text{cosolvent}})$**
+  
+  - **$V_3 = V_{\text{total}} \cdot D_{\text{cosolvent}}$**
+  
+  - **$V_4 = \left(\dfrac{C_{S,\text{in}}}{C_{S,\text{A=1.0}}} - 1\right) \cdot (V_1 + V_2 + V_3)$** if dilution is needed, else **$V_4 = 0$**.
+
+### Step 10 — Calculate substrate and product concentrations in the UV cell
 
 - Beer–Lambert law is used to calculate substrate and product concentrations after the reactor effluent enters the UV cell.
 
@@ -251,7 +265,7 @@ in the reactor bed.
 - Product concentration in the UV cell:
   - **$C_{P,UV} = \dfrac{A_{\lambda,P}}{\varepsilon_P \cdot l}$**
 
-### Step 10 — Calculate substrate and product concentrations exiting the reactor (pre–Pump 4)
+### Step 11 — Calculate substrate and product concentrations exiting the reactor (pre–Pump 4)
 
 - The substrate and product concentrations exiting the reactor bed,
   **$C_{S,\text{out}}$** and **$C_{P,\text{out}}$**, are calculated deterministically using
@@ -263,7 +277,7 @@ in the reactor bed.
 - Product concentration exiting the reactor:
   - **$C_{P,\text{out}} = \dfrac{C_{P,UV} \cdot F_{1234}}{F_{123}}$**
 
-### Step 11 - Calculate Percent yield and throughput
+### Step 12 - Calculate Percent yield and throughput
 
 - Percent yield and throughput are calculated from the concentrations exiting the reactor
 bed prior to Pump 4 dilution.
@@ -282,7 +296,7 @@ bed prior to Pump 4 dilution.
 
   Note: This code calculates throughput in nmol/min
 
-### Step 12 — Feed results back into the Bayesian optimizer (domain + objectives)
+### Step 13 — Feed results back into the Bayesian optimizer (domain + objectives)
 
 **Search domain (inputs):**  
 The optimizer proposes a new parameter set within the defined set of bounds
@@ -309,11 +323,11 @@ Given a dataset of prior trials **$\mathcal{D} = \{(x_i, y_{1,i}, y_{2,i})\}_{i=
 
 Ax records each trial as: `params -> (percent_yield, throughput)` and uses all completed trials to propose the next parameter set.
 
-### Step 13 - Bayesian Optimization Iterations
+### Step 14 - Bayesian Optimization Iterations
 
 - Repeat steps 2-12 til the optimizer reaches it's termination criteria.
 
-### Step 14 - Production run
+### Step 15 - Production run
 
 - Once the optimization criteria is met a pareto front is generated balancing both between percent yield and throughput.
 

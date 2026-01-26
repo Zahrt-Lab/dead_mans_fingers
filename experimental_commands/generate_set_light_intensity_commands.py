@@ -35,8 +35,8 @@ def generate_light_intensity_commands(
         [
             "custom_light_box_1",
             "set_light_intensity",
-            f"intensity={light_intensity}, " f"intensity_id=1",
-            f"Setting Light Intensity to {light_intensity} for the experiment",
+            f"intensity={round(light_intensity, 2)}, " f"intensity_id=1",
+            f"Setting Light Intensity to {round(light_intensity, 2)} for the experiment",
             "0.5",
         ],
 
