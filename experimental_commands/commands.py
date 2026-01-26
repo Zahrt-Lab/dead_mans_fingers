@@ -6,7 +6,6 @@ from experimental_commands.generate_temperature_commands import (
     generate_temperature_commands,
 )
 from experimental_commands.generate_wash_commands import generate_wash_commands
-from experimental_commands.generate_calibration_commands import generate_lamp_switch_commands
 from experimental_commands.generate_set_light_intensity_commands import generate_light_intensity_commands
 
 # TODO : Need to edit this code so that it pip installs the AutoZahrt_v3 package
@@ -60,9 +59,8 @@ def save_commands_csv(
     return:
      - None
     """
-    wash_commands_csv = f"{commands_path}_wash.csv"
     temperature_commands_csv = f"{commands_path}_temperature.csv"
-    calibration_commands_csv = f"{commands_path}_calibration.csv"
+    wash_commands_csv = f"{commands_path}_wash.csv"
     light_intensity_commands_csv = f"{commands_path}_light_intensity.csv"
     experiment_commands_csv = f"{commands_path}_experiment.csv"
 
@@ -70,12 +68,6 @@ def save_commands_csv(
     with open(temperature_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
             generate_temperature_commands(temperature)
-        )
-
-    # Generate calibration (lamp) commands
-    with open(calibration_commands_csv, "w", newline="", encoding="utf-8") as f:
-        csv.writer(f).writerows(
-            generate_lamp_switch_commands("on")
         )
 
     # Generate light intensity commands

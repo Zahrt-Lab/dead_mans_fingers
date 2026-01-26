@@ -76,8 +76,6 @@ def check_required_experimental_parameters(
           "pump4_0.1M_HCl_water_volume_stock_solution",
           "name_of_co-solvent_stock_solutions",
           "Fluorescent_Bayesian_Optimization_results_filename",
-          "syringe_size",
-          "number_of_syringes",
           "flow_rate",
           "dilution_factor",
           "cosolvents_valve_position",

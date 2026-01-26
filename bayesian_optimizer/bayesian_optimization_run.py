@@ -152,7 +152,6 @@ def run_bayesian_optimization_iteration(
         target_absorbance_in_the_uv_detector=EXPERIMENTAL_PARAMETERS["target_absorbance_in_the_uv_detector"],
         max_absorbance_concentration_uM_uv_detector=EXPERIMENTAL_PARAMETERS["max_absorbance_concentration_uM_uv_detector"],
         volume_uL=volume,
-        number_of_syringes=EXPERIMENTAL_PARAMETERS["number_of_syringes"],
     )
     
     flow_rate_pump1 = instrument_parameter["flow_rate_pump1"]
@@ -288,14 +287,6 @@ def run_bayesian_optimization_iteration(
     # This creates Instrument config directory
     if not os.path.exists(instrument_config):
         save_instrument_config_csv(instrument_config)
-
-    syringe_size = EXPERIMENTAL_PARAMETERS["syringe_size"]
-    number_of_syringes = EXPERIMENTAL_PARAMETERS["number_of_syringes"]
-
-    print(
-        f"There are {number_of_syringes} syringes in our harvard aparatus with "
-        f"a syringe size of {syringe_size} mL"
-    )
 
     save_commands_csv(
         fluorescent_reaction_command_path,
@@ -437,6 +428,9 @@ def run_bayesian_optimization_iteration(
         f"Average absorbance of our product at the end of the reaction is {average_absorbance_product}"
     )
 
+    # Calculate initial concentration in mol/L for percent yield calculation
+    initial_concentration_mol_per_L = reactor_bed_concentration_uM * 1e-6  # Convert µM to mol/L
+
     # TODO : Need to evaluate this calculate percent yield function here to make sure it is accurate
     product_percent_yield = calculate_percent_yield(
         average_absorbance_reactant,
@@ -444,6 +438,7 @@ def run_bayesian_optimization_iteration(
         average_absorbance_product,
         EXPERIMENTAL_PARAMETERS["epsilon_product_at_lambda2_L_per_mol_cm"],
         EXPERIMENTAL_PARAMETERS["pathlength_cm"],
+        initial_concentration_mol_per_L,
     )
 
     # We want product concentration in the reactor bed; use PRODUCT absorbance, not reactant

@@ -300,6 +300,7 @@ Each experiment returns two metrics to maximize:
 - **$y_1(x) =$ percent yield**
 - **$y_2(x) =$ throughput**
 
+TODO : Need to update the section below
 **Update rule (conceptual):**  
 Given a dataset of prior trials **$\mathcal{D} = \{(x_i, y_{1,i}, y_{2,i})\}_{i=1}^n$**, the optimizer updates its surrogate model and selects the next experiment:
 
@@ -307,6 +308,20 @@ Given a dataset of prior trials **$\mathcal{D} = \{(x_i, y_{1,i}, y_{2,i})\}_{i=
   where **$\alpha$** is an acquisition function balancing exploration vs exploitation.
 
 Ax records each trial as: `params -> (percent_yield, throughput)` and uses all completed trials to propose the next parameter set.
+
+### Step 13 - Bayesian Optimization Iterations
+
+- Repeat steps 2-12 til the optimizer reaches it's termination criteria.
+
+### Step 14 - Production run
+
+- Once the optimization criteria is met a pareto front is generated balancing both between percent yield and throughput.
+
+- The user can select which experimental conditions they wish to perform the product run and the user can select the amount of grams or nmols of compound.
+
+- For this part the UV-detector will be off and no dilutions will be performed with pump4.
+
+- The 2-Way Valve 1 will be routed away from the UV-detector 
 
 
 

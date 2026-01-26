@@ -19,7 +19,6 @@ def parameters_to_commands(
     target_absorbance_in_the_uv_detector: float,
     max_absorbance_concentration_uM_uv_detector: float,
     volume_uL: int,
-    number_of_syringes: int = 1,
 ) -> Dict[str, int]:
     # Validation
     if flow_rate_uL_per_min <= 0:

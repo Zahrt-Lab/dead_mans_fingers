@@ -23,16 +23,16 @@ def generate_instrument_config() -> List[List[str]]:
     # TODO: Update Instruments config to match actual instruments and COM ports 
     # TODO: Need to include the code for the tricontinental pumps when available
     # TODO: Remove the Harvard Apparatus since we are not using it anymore
-    # TODO: Remove the Isametic pump since we are using the tricontinental pumps now
     header = ["InstrumentType", "DeviceNumber", "Name", "COMPort", "OtherParams"]
     rows = [
         header,
         ["VICI_M6_Pump",	1,	"Pump",	"COM21", ""],
         ["VICI_M6_Pump",	2,	"Pump",	"COM22", ""],
-        ["Valve6Way",	1,	"VICI-6Way",	"COM7", ""],
+        ["Valve6Way",	2,	"Xylopyridine-Valve",	"COM8", ""],
+        ["Valve6Way",	2,	"Cosolvent-Valve",	"COM8", ""],
         ["Temperature",	1,	"Temperature",	"COM12", ""],
-        ["PhdUltraPump",	1,	"PhDUltraPump",	"COM19", ""],
-        ["Isametic",	1,	"Isametic",	"COM14", ""],
+        ["Tricontinental_Pump_C24000",	1,	"Tricontinental_Pump_C24000",	"COM19", ""],
+        ["Tricontinental_Pump_C24000",	2,	"Tricontinental_Pump_C24000",	"COM14", ""],
         ["DH2000", 1, "DH2000", "COM27", ""],
         ["OceanOptics_UVVis", 1, "OceanOptics", "COM50", ""]
         ]

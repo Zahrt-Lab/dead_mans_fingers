@@ -19,8 +19,6 @@ def generate_experimental_commands(
     volume_pump2: float,
     volume_pump3: float,
     volume_pump4: float,
-    syringe_size: float = 20.0,
-    number_of_syringes: int = 1,
     *,
     zero_tolerance: float = 1e-6,  # treat |x| <= zero_tol as zero
     log_skips: bool = True,
@@ -30,17 +28,15 @@ def generate_experimental_commands(
     This will generate the experimental flow reaction commands for this reactor bed
 
     parameters:
-    - syringe_size: The type of syringe being used for the harvard aparatus
-    - number_of_syringes: The number of syringes loaded on the harvard aparatus syringe
-    - flow_rate_pump1: Flow rate of harvard apparatus with our XYLO compound
+    - flow_rate_pump1: Flow rate of tricontinental pump 1 with our XYLO compound
     - flow_rate_pump2: Flow rate of 0.1 M HCl water for diluting our compound
     before it reaches the detector using the VICI M6 Pump 1
     - flow_rate_pump3: Flow rate of co-solvents for diluting our compound before it reaches the reactor bed
     using the VICI M6 Pump 2
     - flow_rate_pump4: Flow rate of 0.1 M HCL water for diluting our compound
     before it reaches the UV-detector and after the reactor bed using the
-    Isamate pump 1
-    - volume_pump1: Volume of Xylo compound to pump using harvard aparatus
+    Tricontinental Pump C24000 2
+    - volume_pump1: Volume of Xylo compound to pump using tricontinental pump 1
     - volume_pump2: volume 0.1 M HCl water to dilute our Xylo compound solution
     before it reaches the UV-detector
     - volume_pump3: volume of co-solvents to dilute our Xylo compound before
@@ -100,18 +96,9 @@ def generate_experimental_commands(
         "OceanOptics_UVVis_1","start_continuous","stop_upon_convergence=True","","",3.0
         ]
     )
-    # TODO: Need to remove this command since we are not using the harvard apparatus anymore, need to swap it for the tricontinental pumps
+    # TODO: Need to validate and add these tricontinental pump commands
     commands.append([
-            "PhdUltraPump_1",
-            "select_syringe",
-            f"syringe={syringe_size},pump_id=1",
-            f"The selected syringe size is {syringe_size}, loaded with {number_of_syringes} syringes",
-            0.5,
-        ]
-    )
-    # TODO: Need to remove this command since we are not using the harvard apparatus anymore, need to swap it for the tricontinental pumps
-    commands.append([
-            "PhdUltraPump_1",
+            "Tricontinental_Pump_C24000_1",
             "dispense",
             f"flow_rate={flow_rate_pump1},volume={volume_pump1}",
             f"The flow rate of our Xylo compund is {flow_rate_pump1} uL/min and volume is {volume_pump1}",
@@ -137,10 +124,10 @@ def generate_experimental_commands(
             0.5,
         ]
         )
-    # TODO: Need to remove this command since we are not using the Isametic pump anymore, need to swap it for the tricontinental pumps
+    # TODO: Need to validate and add these tricontinental pump commands
     if not _is_zero(flow_rate_pump4, volume_pump4):
         commands.append([
-            "Isametic_1",
+            "Tricontinental_Pump_C24000_2",
             "aspirate",
             f"flow_rate={flow_rate_pump4}, volume={volume_pump4}",
             f"The flow rate of our 0.1 M HCl water pump is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
@@ -153,15 +140,6 @@ def generate_experimental_commands(
             "",
             "Waiting for XYLO and WATER pumps to complete",
             0.5,
-        ]
-    )
-    # TODO: Need to remove this command since we are not using the harvard apparatus anymore, need to swap it for the tricontinental pumps
-    commands.append([
-        "PhdUltraPump_1",
-        "stop",
-        "",
-        "The pump should have stopped but this is a safety check",
-        0.5,
         ]
     )
     commands.append([
