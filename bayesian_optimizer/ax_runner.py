@@ -26,7 +26,7 @@ from bayesian_optimizer.state import (
     bayesian_optimization_results_csv_path,
     SIMULATION_MODE,
 )
-from bayesian_optimizer.bayesian_optimization_run import (
+from bayesian_optimizer.experiment_executor import (
     run_bayesian_optimization_iteration,
     objective_function_percent_yield,
     objective_function_throughput,

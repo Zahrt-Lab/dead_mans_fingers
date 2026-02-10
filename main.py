@@ -13,7 +13,7 @@ This is the main script used to run and control the bayesian optimizater and exp
 # main.py
 import argparse
 
-from bayesian_optimizer.ax_runner import run_bo_campaign
+from bayesian_optimizer.run_bo_campaign import run_bo_campaign
 
 
 def parse_args() -> argparse.Namespace:
