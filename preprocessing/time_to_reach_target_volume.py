@@ -6,6 +6,10 @@
 # All rights reserved.
 # ------------------------------------------------------------------------------
 
+"""
+Calculates the time required to reach a target volume on the reactor bed.
+"""
+
 def time_to_reach_target_volume(
     reactor_bed_flow_rate: int,
     volume_to_flow_through_the_reactor_bed: int,
@@ -14,13 +18,19 @@ def time_to_reach_target_volume(
     Time to flow the target volume based on the flow rate of the pumps
 
     parameters:
-     - reactor_bed_flow_rate: Measures the amount of fluid that travels through the pumps tubes in a given time
-     - volume_to_flow_through_the_reactor_bed: Target Volume for the pumps to flow through the reaction bed
+     - reactor_bed_flow_rate: Measures the amount of fluid that travels 
+       through the pumps tubes in a given time
+     - volume_to_flow_through_the_reactor_bed: Target Volume for the 
+       pumps to flow through the reaction bed
     return:
-     - time_target_volume_is_reached - Calculates time to flow total volume for the experiment
+     - time_target_volume_is_reached - Calculates time to flow total volume 
+       for the experiment
     """
     if reactor_bed_flow_rate <= 0:
         raise ValueError("reactor_bed_flow_rate must be > 0 to compute residence time.")
 
-    time_target_volume_is_reached = (volume_to_flow_through_the_reactor_bed / reactor_bed_flow_rate) * 60
+    time_target_volume_is_reached = (
+        volume_to_flow_through_the_reactor_bed / reactor_bed_flow_rate
+    ) * 60
+    
     return time_target_volume_is_reached

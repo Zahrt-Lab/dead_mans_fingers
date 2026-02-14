@@ -14,8 +14,8 @@ throughout the Bayesian optimization campaign.
 """
 
 from typing import Dict, Any, Union, List
-from bayesian_optimizer import state
-from bayesian_optimizer.state import iteration, EXPERIMENTAL_PARAMETERS
+from bayesian_optimizer.deterministic_commands import state
+from bayesian_optimizer.deterministic_commands.state import iteration, EXPERIMENTAL_PARAMETERS
 from preprocessing.check_volume import check_volume
 from preprocessing.experimental_parameters import ExperimentAborted
 

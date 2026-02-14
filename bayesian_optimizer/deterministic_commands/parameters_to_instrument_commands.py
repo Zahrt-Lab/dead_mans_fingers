@@ -18,17 +18,17 @@ from typing import Tuple, Dict, Any
 from preprocessing.constrain_to_search_space import constrain_to_search_space
 from preprocessing.standardize_input import standardize_input
 from preprocessing.parameters_to_commands import parameters_to_commands
-from bayesian_optimizer.state import EXPERIMENTAL_PARAMETERS
+from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS
 
 
-def setup_experiment_parameters(experiment: Tuple[float, ...]) -> Dict[str, Any]:
+def parameters_to_instrument_commands(experiment: Tuple[float, ...]) -> Dict[str, Any]:
     """
     Process and validate experimental parameters.
     
     Constrains parameters to search space, standardizes input, and calculates
     instrument parameters needed for the experiment.
     
-    Args:
+    Parameters:
         experiment: Tuple containing (flow_rate, dilution_factor, temperature, 
                     cosolvent_valve_position, fraction_of_cosolvent, light_intensity)
     
@@ -39,20 +39,21 @@ def setup_experiment_parameters(experiment: Tuple[float, ...]) -> Dict[str, Any]
             - experiment_check (standardized tuple for caching)
             - instrument_parameter (dict of pump flow rates, volumes, etc.)
     """
-    # Constrain parameters to search space
+    # Constrain parameters to set search space bounds in case anything went out of bounds
     reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, \
         fraction_of_cosolvent, light_intensity = constrain_to_search_space(experiment)
     
-    # Standardize for cache checking
+    # Standardize for cache checking to make sure they are in the desired input format
     experiment_check = standardize_input(
         (reactor_bed_flow_rate, dilution_factor, temperature, cosolvent_valve_position, 
          fraction_of_cosolvent, light_intensity)
     )
     
-    # Calculate reactor bed concentration
+    # Calculate reactor bed concentration based on dilution factor suggested by ax's BO
     reactor_bed_concentration_uM = dilution_factor * EXPERIMENTAL_PARAMETERS["stock_concentration_uM"]
     
-    # Volume to flow through the reactor bed
+    # Volume to flow through reactor which is deterministic, 
+    # Can be less if the UV-detector finds the experiment meets termination conditions early
     volume = int(round(EXPERIMENTAL_PARAMETERS["volume"], 0))
     
     # Calculate instrument parameters

@@ -15,7 +15,7 @@ import time
 from typing import Tuple, Sequence
 from pathlib import Path
 
-from bayesian_optimizer.state import (
+from bayesian_optimizer.deterministic_commands.state import (
     EXPERIMENTAL_PARAMETERS,
     iteration,
     RESULTS_CACHE,

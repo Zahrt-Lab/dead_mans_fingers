@@ -16,35 +16,42 @@ from __future__ import annotations
 import time
 from typing import Dict
 
-from bayesian_optimizer import state
-from bayesian_optimizer.state import (
+from bayesian_optimizer.deterministic_commands import state
+from bayesian_optimizer.deterministic_commands.state import (
     EXPERIMENTAL_PARAMETERS,
     iteration,
     bayesian_optimization_results_csv_path,
 )
-from bayesian_optimizer.experiment_executor import run_bayesian_optimization_iteration
+from bayesian_optimizer.ax.run_bo_trial import run_bayesian_optimization_iteration
 
 
 from post_processing.append_bayesian_experimental_results import (
     append_bayesian_experimental_results,
 )
 
-# TODO : Need to verify input files needed for the bayesian optimizer code to run properly
-# TODO : Need to develop a diagram and brief readme file as a reference for future users of this code and how it works
-
-def evaluate_ax(params: Dict[str, float]) -> Dict[str, tuple[float, float]]:
+def ax_suggested_experiment(
+        ax_suggested_experimental_parameters: Dict[str, float]
+        ) -> Dict[str, tuple[float, float]]:
     """
     Runs ONE lab experiment using your existing pipeline.
     Returns the two objective metrics with (mean, sem) for Ax.
+
+    Parameters:
+     ax_suggested_experimental_parameters: Dictionary of experimental parameters suggested 
+     by Ax for this iteration, with parameter names as keys and parameter values as floats.
+    Returns:
+        Dictionary with keys "percent_yield" and "throughput", each mapping to a tuple of (mean, sem) 
+        for that objective metric to return to Ax.
     """
 
     # This first checks experimental cache to avoid redundant experiments
-    flow_rate = float(params["flow_rate"])
-    dilution_factor = float(params["dilution_factor"])
-    temperature = float(params["temperature"])
-    co_solvent = float(params["co_solvent"])
-    co_solvent_volume = float(params["co_solvent_volume"])
-    light_intensity = float(params["light_intensity"])
+    flow_rate = float(ax_suggested_experimental_parameters["flow_rate"])
+    dilution_factor = float(ax_suggested_experimental_parameters["dilution_factor"])
+    temperature = float(ax_suggested_experimental_parameters["temperature"])
+    co_solvent = float(ax_suggested_experimental_parameters["co_solvent"])
+    co_solvent_volume = float(ax_suggested_experimental_parameters["co_solvent_volume"])
+    light_intensity = float(ax_suggested_experimental_parameters["light_intensity"])
+    
     # It then tries to run the experiment using the run_bayesian_optimization_iteration function, catching errors
     try:
         percent_yield, throughput = run_bayesian_optimization_iteration(

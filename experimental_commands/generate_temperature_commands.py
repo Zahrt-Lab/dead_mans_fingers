@@ -24,7 +24,7 @@ def generate_temperature_commands(
 
 
 
-    header = ["Component", "Action", "Parameters", "Output", "Notes", "delay"]
+    header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [
         header,
         [

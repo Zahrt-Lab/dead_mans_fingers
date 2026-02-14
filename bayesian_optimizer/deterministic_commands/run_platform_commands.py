@@ -2,7 +2,7 @@
 # Software: project_dead_mans_fingers
 # Copyright: (C) 2025 by Professor Andrew Zahrt
 # This software is the intellectual property of Professor Andrew Zahrt
-# Contributions by graduate students Scott Laverty are acknowledged.
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
 # All rights reserved.
 # ------------------------------------------------------------------------------
 
@@ -16,8 +16,8 @@ washing, and UV-Vis measurement for both hardware and simulation modes.
 import os
 from pathlib import Path
 from typing import Dict, Any, Tuple, Optional
-from bayesian_optimizer import state
-from bayesian_optimizer.state import EXPERIMENTAL_PARAMETERS
+from bayesian_optimizer.deterministic_commands import state
+from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS
 from experimental_commands.commands import save_commands_csv, run_commands
 from experimental_commands.generate_instrument_config import save_instrument_config_csv
 from utils.run_simulation import run_simulation

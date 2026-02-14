@@ -7,7 +7,8 @@
 # ------------------------------------------------------------------------------
 
 '''
-This module initializes or loads an Ax client for Bayesian Optimization campaigns
+The purpose of this module is to initialize a new AxClient or load an existing one from a JSON file,
+setting up the experiment parameters and objectives for the Bayesian optimization campaign.
 '''
 
 # bayesian_optimizer/init_or_load_ax.py
@@ -17,10 +18,8 @@ import os
 
 from ax.service.ax_client import AxClient, ObjectiveProperties
 
-# TODO : Need to verify input files needed for the bayesian optimizer code to run properly
-# TODO : Need to develop a diagram and brief readme file as a reference for future users of this code and how it works
 def _init_or_load_ax(
-    state_path: str,
+    ax_previous_run_json_file_path: str,
     flow_rate_min: float,
     flow_rate_max: float,
     dilution_factor_min: float,
@@ -38,9 +37,23 @@ def _init_or_load_ax(
 ) -> AxClient:
     """
     Initialize a new AxClient or resume from a JSON state file to begin a bayesian optimization campaign.
+
+    Parameters:
+        ax_previous_run_json_file_path: Path to JSON file to load Ax state from (if exists)
+        flow_rate_min, flow_rate_max: Bounds for flow rate parameter
+        dilution_factor_min, dilution_factor_max: Bounds for dilution factor parameter
+        temperature_min, temperature_max: Bounds for temperature parameter
+        cosolvents_valve_position_min, cosolvents_valve_position_max: Bounds for co-solvent valve position parameter
+        co_solvent_volume_min, co_solvent_volume_max: Bounds for co-solvent volume parameter
+        light_intensity_min, light_intensity_max: Bounds for light intensity parameter
+        percent_yield_threshold: Threshold for percent yield objective (for Ax)
+        throughput_threshold: Threshold for throughput objective (for Ax)
+
+    Returns:
+        AxClient: AxClient instance ready for optimization campaign (with experiment created and objectives set)
     """
-    if os.path.exists(state_path):
-        ax = AxClient.load_from_json_file(state_path)
+    if os.path.exists(ax_previous_run_json_file_path):
+        ax = AxClient.load_from_json_file(ax_previous_run_json_file_path)
         print(f"Resumed Ax experiment with {len(ax.get_trials_data_frame())} trials.")
         return ax
 

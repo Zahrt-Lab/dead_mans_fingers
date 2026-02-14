@@ -10,7 +10,7 @@
 Calculate product concentration in reactor bed from UV detector measurements.
 Accounts for dilution that occurs after the reactor but before the detector.
 """
-from bayesian_optimizer.state import EXPERIMENTAL_PARAMETERS
+from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS
 
 
 def calculate_concentration_in_the_reactor_bed(

@@ -2,7 +2,7 @@
 # Software: project_dead_mans_fingers
 # Copyright: (C) 2025 by Professor Andrew Zahrt
 # This software is the intellectual property of Professor Andrew Zahrt
-# Contributions by graduate students Scott Laverty are acknowledged.
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
 # All rights reserved.
 # ------------------------------------------------------------------------------
 
@@ -16,8 +16,8 @@ and throughput, and appending results to the CSV file.
 import time
 from typing import Dict, Any, Tuple
 from pathlib import Path
-from bayesian_optimizer import state
-from bayesian_optimizer.state import EXPERIMENTAL_PARAMETERS, RESULTS_CACHE
+from bayesian_optimizer.deterministic_commands import state
+from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS, RESULTS_CACHE
 from post_processing.post_process_uv_recording import post_process_uv_recording
 from post_processing.average_absorbance import average_absorbance
 from post_processing.calculate_percent_yield import calculate_percent_yield

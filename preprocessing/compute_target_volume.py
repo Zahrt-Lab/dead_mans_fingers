@@ -6,6 +6,13 @@
 # All rights reserved.
 # ------------------------------------------------------------------------------
 
+"""
+Computes the target volume to pass through the reactor before the UV-Vis signal
+stabilizes and we can start averaging readings for our optimization to calculate
+the conversion and throughput.
+"""
+
+
 def compute_target_volume(
     total_reactor_volume_uL: float,
     *,

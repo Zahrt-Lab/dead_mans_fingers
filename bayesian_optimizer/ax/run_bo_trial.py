@@ -2,7 +2,7 @@
 # Software: project_dead_mans_fingers
 # Copyright: (C) 2025 by Professor Andrew Zahrt
 # This software is the intellectual property of Professor Andrew Zahrt
-# Contributions by graduate students Scott Laverty are acknowledged.
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
 # All rights reserved.
 # ------------------------------------------------------------------------------
 
@@ -23,15 +23,15 @@ The main function run_bayesian_optimization_iteration() delegates to specialized
 """
 
 from typing import Tuple, Sequence
-from bayesian_optimizer import state
-from bayesian_optimizer.state import EXPERIMENTAL_PARAMETERS, iteration, RESULTS_CACHE
+from bayesian_optimizer.deterministic_commands import state
+from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS, iteration, RESULTS_CACHE
 from preprocessing.experimental_parameters import ExperimentAborted
 
 # Import the new modular components
-from bayesian_optimizer.experiment_setup import setup_experiment_parameters, setup_directories_and_paths
-from bayesian_optimizer.volume_manager import initialize_stock_volumes, check_and_update_volumes
-from bayesian_optimizer.experiment_runner import prepare_command_files, run_experiment
-from bayesian_optimizer.results_processor import process_results, save_results_to_csv, update_cache
+from bayesian_optimizer.deterministic_commands.parameters_to_instrument_commands import setup_experiment_parameters, setup_directories_and_paths
+from bayesian_optimizer.deterministic_commands.volume_manager import initialize_stock_volumes, check_and_update_volumes
+from bayesian_optimizer.deterministic_commands.run_platform_commands import prepare_command_files, run_experiment
+from bayesian_optimizer.deterministic_commands.process_results import process_results, save_results_to_csv, update_cache
 
 def run_bayesian_optimization_iteration(
     experiment: Sequence[float],
@@ -48,32 +48,33 @@ def run_bayesian_optimization_iteration(
     
     Args:
         experiment: Tuple containing (flow_rate, dilution_factor, temperature,
-                    cosolvent_valve_position, fraction_of_cosolvent, light_intensity)
+                    cosolvent_valve_position, fraction_of_cosolvent, light_intensity) 
+                    which will be converted to instrument commands.
     
     Returns:
         Tuple of (percent_yield, throughput_nmol_per_min)
     """
-    # Step 1: Setup experiment parameters
-    exp_params = setup_experiment_parameters(experiment)
+    # Step 1: Setup experiment parameter
+    experimental_parameters = setup_experiment_parameters(experiment)
     
     # Check cache before running experiment
-    if exp_params["experiment_check"] in RESULTS_CACHE:
-        return RESULTS_CACHE[exp_params["experiment_check"]]
+    if experimental_parameters["experiment_check"] in RESULTS_CACHE:
+        return RESULTS_CACHE[experimental_parameters["experiment_check"]]
     
     # Increment iteration counter
     iteration["iteration #"] += 1
     k = iteration["iteration #"]
     
-    print(f"Beginning experiment {k} with flow rate: {exp_params['reactor_bed_flow_rate']} uL/min; "
-          f"concentration: {exp_params['reactor_bed_concentration_uM']} uM; "
-          f"temperature= {exp_params['temperature']} °C;")
+    print(f"Beginning experiment {k} with flow rate: {experimental_parameters['reactor_bed_flow_rate']} uL/min; "
+          f"concentration: {experimental_parameters['reactor_bed_concentration_uM']} uM; "
+          f"temperature= {experimental_parameters['temperature']} °C;")
     
     # Step 2: Setup directories and paths
     print("Setting up directories and file paths for this experiment")
     paths = setup_directories_and_paths(k)
     
     # Step 3: Calculate and display flow rates
-    instrument_params = exp_params["instrument_parameter"]
+    instrument_params = experimental_parameters["instrument_parameter"]
     print("Completed calculating parameters for experimental equipment")
     print(f"The flow rate of pump 1 is {instrument_params['flow_rate_pump1']}")
     print(f"The flow rate of pump 2 is {instrument_params['flow_rate_pump2']}")
@@ -88,7 +89,7 @@ def run_bayesian_optimization_iteration(
     initialize_stock_volumes()
     
     try:
-        check_and_update_volumes(instrument_params, exp_params["cosolvent_valve_position"])
+        check_and_update_volumes(instrument_params, experimental_parameters["cosolvent_valve_position"])
     except ExperimentAborted as e:
         print(f"[PAUSED] {e}. Safe to resume once stock is topped up.")
         # Recursively retry after user tops up stock
@@ -100,19 +101,19 @@ def run_bayesian_optimization_iteration(
         paths["command_path_template"],
         paths["instrument_config"],
         instrument_params,
-        exp_params["temperature"]
+        experimental_parameters["temperature"]
     )
     
     # Step 6: Run experiment (hardware or simulation)
     print(f"Bayesian Optimization results will be appended to {paths['results_csv']}")
     
-    # Add experiment context to exp_params for runner and processor
-    exp_params["base_directory"] = paths["base_directory"]
+    # Add experiment context to experimental_parameters for runner and processor
+    experimental_parameters["base_directory"] = paths["base_directory"]
     
     simulation_result = run_experiment(
         paths["command_path_template"],
         paths["instrument_config"],
-        exp_params,
+        experimental_parameters,
         k,
         paths["results_csv"]
     )
@@ -125,7 +126,7 @@ def run_bayesian_optimization_iteration(
     else:
         # Hardware mode requires post-processing
         percent_yield, throughput = process_results(
-            exp_params,
+            experimental_parameters,
             k,
             paths["reactor_bed_target_volume"],
             paths["results_csv"]
@@ -134,7 +135,7 @@ def run_bayesian_optimization_iteration(
         # Save results to CSV (simulation already saved during run_simulation)
         save_results_to_csv(
             paths["results_csv"],
-            exp_params,
+            experimental_parameters,
             k,
             paths["reactor_bed_target_volume"],
             percent_yield,
@@ -142,7 +143,7 @@ def run_bayesian_optimization_iteration(
         )
     
     # Step 8: Update cache and return
-    update_cache(exp_params["experiment_check"], percent_yield, throughput)
+    update_cache(experimental_parameters["experiment_check"], percent_yield, throughput)
     return percent_yield, throughput
 
 def objective_function_percent_yield(

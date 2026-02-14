@@ -131,7 +131,7 @@ def run_commands(experiment_commands, instrument_config_file) -> None:
     # TODO: Need to connect this code to the AutoZahrt GeneralExperimentMethod
     
     # Check if we're in simulation mode by importing the flag
-    from bayesian_optimizer.state import SIMULATION_MODE
+    from bayesian_optimizer.deterministic_commands.state import SIMULATION_MODE
     
     if SIMULATION_MODE:
         print(f"[SIMULATION] Would run commands from: {experiment_commands}")

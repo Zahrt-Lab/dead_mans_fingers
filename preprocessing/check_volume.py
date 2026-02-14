@@ -9,6 +9,12 @@
 import math
 from utils.experiment_aborted import ExperimentAborted
 
+"""
+Checks if there is sufficient volume of stock solution to perform the next experiment, 
+and prompts user to add more if needed.
+"""
+
+
 def check_volume(
     current_volume_uL,
     required_volume_uL,
@@ -33,7 +39,7 @@ def check_volume(
     required_volume_uL = float(required_volume_uL)
     minimum_volume_remaining_uL = float(minimum_volume_remaining_uL)
 
-    # Need at least this much BEFORE withdrawing
+    # Need at least this many uL of solution much BEFORE withdrawing
     threshold_uL = required_volume_uL + minimum_volume_remaining_uL
 
     # Prompt only if insufficient
