@@ -1,6 +1,7 @@
 {
   "trials" : 30,
-  "volume": 3000,
+  "total_volume_through_reactor_bed": 3000,
+  "target_volume_through_reactor_bed": 2500,
   "base_directory": "./optimization_and_production_run_data",
   "name_of_xylopyridine_analogs_stock_solutions": ["Xylopyridine_Analog_1", "Xylopyridine_Analog_2", "Xylopyridine_Analog_3", "Xylopyridine_Analog_4", "Xylopyridine_Analog_5"],
   "name_of_stock_solution2": ["0.1M HCl Water"],
@@ -27,5 +28,7 @@
   "epsilon_product_at_lambda1_L_per_mol_cm": [5, 5, 5, 5, 5],
   "epsilon_reactant_at_lambda2_L_per_mol_cm": [1962, 1962, 1962, 1962, 1962],
   "epsilon_product_at_lambda2_L_per_mol_cm": [12994.57, 12994.57, 12994.57, 12994.57, 12994.57],
-  "pathlength_cm": 1.0
+  "pathlength_cm": 1.0,
+  "product_run": "True",
+  "production_run_quantity_nmol": [1000, 1000, 1000, 1000, 1000]
 }

@@ -8,8 +8,8 @@ from experimental_commands.generate_temperature_commands import (
 from experimental_commands.generate_wash_commands import generate_wash_commands
 from experimental_commands.generate_set_light_intensity_commands import generate_light_intensity_commands
 
-# TODO : Need to edit this code so that it pip installs the AutoZahrt_v3 package
-# Import AutoZahrt GeneralExperimentMethod from local Auto_Zahrt_v3 package
+from bayesian_optimizer.deterministic_commands import state
+
 try:
     from methods import GeneralExperimentMethod
 except ImportError:
@@ -36,9 +36,9 @@ def save_commands_csv(
 ) -> None:
     """
     The role of this csv file is to generate the csv commands for each individual
-    iteration of our bayesian optimization and will have three different commands
-    to set temperture, flow our compound at various concentrations, and wash the
-    system after the experiment is complete
+    iteration of our bayesian optimization and will have four different commands
+    to set temperture, set the light intesnity, flow our compound at various 
+    concentrations, and wash the system after the experiment is complete
 
     parameters:
      - commands_path: Output directory and csv prefix for all our instrument commands
@@ -91,6 +91,8 @@ def save_commands_csv(
             )
         )
 
+    # TODO : Currently we our used fixed volumes for wash commands but we may want to 
+    # update this in the future to be more dynamic 
     # Generate wash commands
     # Following the README File at Step 5:
     # F2 = 2000 * (1 - D_cosolvent), F3 = 2000 * D_cosolvent, F4 = 1000
@@ -115,9 +117,6 @@ def save_commands_csv(
             )
         )
 
-
-
-
 def run_commands(experiment_commands, instrument_config_file) -> None:
     """
     This runs all of our experimental commands given the command and instrument config files
@@ -129,11 +128,8 @@ def run_commands(experiment_commands, instrument_config_file) -> None:
     """
 
     # TODO: Need to connect this code to the AutoZahrt GeneralExperimentMethod
-    
-    # Check if we're in simulation mode by importing the flag
-    from bayesian_optimizer.deterministic_commands.state import SIMULATION_MODE
-    
-    if SIMULATION_MODE:
+        
+    if state.SIMULATION_MODE:
         print(f"[SIMULATION] Would run commands from: {experiment_commands}")
         return
     
@@ -143,6 +139,7 @@ def run_commands(experiment_commands, instrument_config_file) -> None:
             "Run in simulation mode with --simulation flag or install AutoZahrt hardware package."
         )
 
+    # TODO: I think this needs an output directory to save the results of the experiments as well.
     fluorescent_reaction_optimization_experiment = GeneralExperimentMethod(
         experiment_commands, instrument_config_file
     )

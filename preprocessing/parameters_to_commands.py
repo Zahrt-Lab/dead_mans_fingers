@@ -76,9 +76,8 @@ def parameters_to_commands(
     if not (0.0 <= light_intensity <= 100.0):
         raise ValueError("light_intensity must be in [0, 100].")
     
-    for xylopyridine_analog_concentration in xylopyridine_analogs_concentrations_uM:
-        if xylopyridine_analog_concentration <= 0:
-            raise ValueError("xylopyridine_analog_concentration_uM must be > 0.")
+    if xylopyridine_analogs_concentrations_uM <= 0:
+        raise ValueError("xylopyridine_analog_concentration_uM must be > 0.")
     
     if max_absorbance_concentration_uM_uv_detector <= 0:
         raise ValueError("max_absorbance_concentration_uM_uv_detector must be > 0.")

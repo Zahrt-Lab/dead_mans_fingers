@@ -1,0 +1,26 @@
+</component>
+  </configuration>
+    <method v="2" />
+    <option name="INPUT_FILE" value="" />
+    <option name="REDIRECT_INPUT" value="false" />
+    <option name="MODULE_MODE" value="false" />
+    <option name="EMULATE_TERMINAL" value="false" />
+    <option name="SHOW_COMMAND_LINE" value="false" />
+    <option name="PARAMETERS" value="test_config_ax_demo.json --simulation" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="SDK_NAME" value="Python 3.9 (project_dead_mans_fingers)" />
+    <option name="SDK_HOME" value="/home/scott/anaconda3/envs/project_dead_mans_fingers/bin/python" />
+    </envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+    <envs>
+    <option name="PARENT_ENVS" value="true" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="ENV_FILES" value="" />
+    <module name="project_dead_mans_fingers" />
+  <configuration default="false" name="Debug main.py (simulation)" type="PythonConfigurationType" factoryName="Python">
+

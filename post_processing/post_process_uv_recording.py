@@ -6,6 +6,18 @@
 # All rights reserved.
 # -----------------------------------------------------------------------------
 
+"""
+The purpose of this script is for post-processing the raw UV-Vis absorbance data
+recorded during an experiment by extracting the points after the target volume is
+reached.
+
+Post-process UV-Vis absorbance data by extracting points after target volume
+is reached.
+
+This is used in the results processing step of Bayesian optimization to
+calculate percent yield and throughput based on steady-state absorbance values.
+"""
+
 import os
 import pandas as pd
 from preprocessing.time_to_reach_target_volume import time_to_reach_target_volume
@@ -14,94 +26,57 @@ from preprocessing.time_to_reach_target_volume import time_to_reach_target_volum
 def post_process_uv_recording(
     flow_rate: int,
     target_volume: int,
-    uv_vis_absorbance_over_time_csv_file: str,
+    uv_vis_absorbance_results_csv: str,
+    experiment_converged_early: bool = False,
 ) -> pd.DataFrame:
     """
     Extract all UV-Vis points after the target volume is reached.
     """
-    time_target_volume_is_reached = time_to_reach_target_volume(flow_rate, target_volume)
-    uv_vis_recording = pd.read_csv(uv_vis_absorbance_over_time_csv_file)
 
-    if "Time(s)" not in uv_vis_recording.columns:
-        raise ValueError(
-            f"Expected a Time(s) column in {uv_vis_absorbance_over_time_csv_file}"
+    if experiment_converged_early:
+
+        print(
+            "Experiment converged early, " \
+            "we selected the last 5 minutes of data for post-processing."
+        )
+        uv_vis_recording = pd.read_csv(uv_vis_absorbance_results_csv)
+
+        # Find the last time point in the UV-VIS data recording
+        max_time = uv_vis_recording["Time(s)"].max()
+
+        # Select only rows where Time(s) is within the last 5 minutes (300 seconds)
+        uv_vis_recording_after_target_volume = uv_vis_recording[
+            uv_vis_recording["Time(s)"] >= max_time - 300
+        ]
+
+        return uv_vis_recording_after_target_volume
+    
+    # If early convergence criteria is not met, 
+    # proceed with normal post-processing based on target volume
+    else:
+
+        time_target_volume_is_reached = time_to_reach_target_volume(
+            flow_rate, target_volume
+        )
+        uv_vis_recording = pd.read_csv(uv_vis_absorbance_results_csv)
+
+        if "Time(s)" not in uv_vis_recording.columns:
+            raise ValueError(
+                f"Expected a Time(s) column in {uv_vis_absorbance_results_csv}"
+            )
+
+        # Keep only time points after the target volume is reached
+        uv_vis_recording_after_target_volume = uv_vis_recording[
+            uv_vis_recording["Time(s)"] >= time_target_volume_is_reached
+        ].reset_index(drop=True)
+
+        base_name, iteration = os.path.splitext(uv_vis_absorbance_results_csv)
+        uv_vis_recording_post_processed_filename = (
+            f"{base_name}_post_processed{iteration}"
         )
 
-    # Keep only time points after the target volume is reached
-    uv_vis_recording_after_target_volume = uv_vis_recording[
-        uv_vis_recording["Time(s)"] >= time_target_volume_is_reached
-    ].reset_index(drop=True)
-
-    base_name, iteration = os.path.splitext(uv_vis_absorbance_over_time_csv_file)
-    uv_vis_recording_post_processed_filename = f"{base_name}_post_processed{iteration}"
-
-    uv_vis_recording_after_target_volume.to_csv(
-        uv_vis_recording_post_processed_filename, index=False
-    )
-
-    return uv_vis_recording_after_target_volume
-
-# TODO: Remove this old code version after verifying new code works correctly
-# Old code version for reference
-'''
-def post_process_uv_recording(
-    flow_rate: int,
-    target_volume: int,
-    uv_vis_absorbance_over_time_csv_file: str,
-    *,
-    baseline_points: int = 10,
-) -> pd.DataFrame:
-    """
-    The role of this script is to run post-processing to extract all the points
-    after the target volume is reached
-
-    parameters:
-     -flow_rate: volume of fluid exiting the pumps at a given time period
-     -target_volume: target volume to reach after our reactor bed has experienced
-      3-5 residence times
-     -uv_vis_absorbance_over_time_csv_file:
-    return:
-     -uv_vis_recording_after_target_volume
-    """
-
-    time_target_volume_is_reached = time_to_reach_target_volume(
-        flow_rate, target_volume
-    )
-    uv_vis_recording = pd.read_csv(uv_vis_absorbance_over_time_csv_file)
-
-    if "Time(s)" not in uv_vis_recording.columns:
-        raise ValueError(
-            f"Expected a Time(s) column in {uv_vis_absorbance_over_time_csv_file}"
+        uv_vis_recording_after_target_volume.to_csv(
+            uv_vis_recording_post_processed_filename, index=False
         )
 
-    absorbance_columns = [
-        absorbance_column for absorbance_column in uv_vis_recording.columns if absorbance_column != "Time(s)"
-    ]
-
-    # Baseline-correct all absorbance columns (everything except Time)
-    for absorbance_column in absorbance_columns:
-        absorbance_pd_series = pd.to_numeric(uv_vis_recording[absorbance_column], errors="coerce")
-        baseline_shift = min(len(absorbance_pd_series), baseline_points)
-        if baseline_shift == 0:
-            continue
-        absorbance_baseline = absorbance_pd_series.iloc[:baseline_shift].mean()
-        uv_vis_recording[absorbance_column] = absorbance_pd_series - absorbance_baseline
-
-    # This performs the filtering to only keep time points after the target volume is reached
-    uv_vis_recording_after_target_volume = uv_vis_recording[
-        uv_vis_recording["Time(s)"] >= time_target_volume_is_reached
-    ].reset_index(drop=True)
-
-    base, ext = os.path.splitext(uv_vis_absorbance_over_time_csv_file)
-    uv_vis_recording_baseline_corrected_filename = f"{base}_baseline_corrected{ext}"
-    uv_vis_recording_baseline_corrected_after_target_volume_filename = f"{base}_post_processed{ext}"
-
-    uv_vis_recording.to_csv(
-        uv_vis_recording_baseline_corrected_filename, index=False
-    )
-    uv_vis_recording_after_target_volume.to_csv(
-        uv_vis_recording_baseline_corrected_after_target_volume_filename, index=False
-    )
-
-    return uv_vis_recording_after_target_volume
-'''
+        return uv_vis_recording_after_target_volume

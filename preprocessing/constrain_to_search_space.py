@@ -12,7 +12,7 @@ Ensures Bayesian optimization suggestions stay within specified experimental bou
 """
 
 from typing import Sequence, Tuple
-from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS
+from bayesian_optimizer.deterministic_commands.state import BO_EXPERIMENTAL_PARAMETERS
 
 
 def constrain_to_search_space(
@@ -45,25 +45,24 @@ def constrain_to_search_space(
         )
 
     # Extract and constrain flow_rate based on user input bounds
-    flow_rate_min, flow_rate_max = EXPERIMENTAL_PARAMETERS["flow_rate"]
-    flow_rate = int(round(experiment_conditions[0]))
-    flow_rate = int(min(flow_rate_max, max(flow_rate_min, flow_rate)))
+    flow_rate_min, flow_rate_max = BO_EXPERIMENTAL_PARAMETERS["flow_rate"]
+    flow_rate = round(experiment_conditions[0],2)
+    flow_rate = round(min(flow_rate_max, max(flow_rate_min, flow_rate)),2)
 
     # Extract and constrain dilution_factor (concentration fraction)
-    dilution_min, dilution_max = EXPERIMENTAL_PARAMETERS["dilution_factor"]
+    dilution_min, dilution_max = BO_EXPERIMENTAL_PARAMETERS["dilution_factor"]
     if dilution_min < 0 or dilution_max > 1:
         raise ValueError(
             f"Dilution factor bounds must be between 0 and 1."
             f"Got min: {dilution_min}, max: {dilution_max}"
         )
-    dilution_factor = float(
-        min(max(experiment_conditions[1], dilution_min), dilution_max)
-    )
+    dilution_factor = round(float(
+        min(max(experiment_conditions[1], dilution_min), dilution_max)), 2)
 
     # Extract and constrain temperature
-    temp_min, temp_max = EXPERIMENTAL_PARAMETERS["temperature"]
-    temperature = int(round(experiment_conditions[2]))
-    temperature = int(min(temp_max, max(temp_min, temperature)))
+    temp_min, temp_max = BO_EXPERIMENTAL_PARAMETERS["temperature"]
+    temperature = round(float(experiment_conditions[2]),2)
+    temperature = round(min(temp_max, max(temp_min, temperature)),2)
 
     # Validate against physical instrument limits (0-100°C)
     if temperature < 0 or temperature > 100:
@@ -72,9 +71,9 @@ def constrain_to_search_space(
         )
 
     # Extract and constrain cosolvent valve position
-    cosolvent_min, cosolvent_max = EXPERIMENTAL_PARAMETERS["cosolvents_valve_position"]
-    cosolvent_valve_position = int(round(experiment_conditions[3]))
-    cosolvent_valve_position = int(
+    cosolvent_min, cosolvent_max = BO_EXPERIMENTAL_PARAMETERS["cosolvents_valve_position"]
+    cosolvent_valve_position = float(round(experiment_conditions[3]))
+    cosolvent_valve_position = float(
         min(cosolvent_max, max(cosolvent_min, cosolvent_valve_position))
     )
 
@@ -85,21 +84,21 @@ def constrain_to_search_space(
         )
 
     # Extract and constrain co-solvent fraction
-    fraction_min, fraction_max = EXPERIMENTAL_PARAMETERS["co_solvent_dilution_factor"]
-    fraction_of_cosolvent = float(
+    fraction_min, fraction_max = BO_EXPERIMENTAL_PARAMETERS["co_solvent_dilution_factor"]
+    fraction_of_cosolvent = round(float(
         min(max(experiment_conditions[4], fraction_min), fraction_max)
-    )
+    ), 2)
     if fraction_of_cosolvent < 0 or fraction_of_cosolvent > 1:
         raise ValueError(
             f"Fraction of co-solvent {fraction_of_cosolvent} must be between 0 and 1"
         )
 
-    light_intensity_min, light_intensity_max = EXPERIMENTAL_PARAMETERS[
+    light_intensity_min, light_intensity_max = BO_EXPERIMENTAL_PARAMETERS[
         "light_intensity"
     ]
-    light_intensity = float(
+    light_intensity = round(float(
         min(max(experiment_conditions[5], light_intensity_min), light_intensity_max)
-    )
+    ), 2)
     if light_intensity < 0 and light_intensity > 100:
         raise ValueError(
             f"Light intensity {light_intensity} must be between 0 and 100%"

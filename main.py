@@ -12,9 +12,16 @@ This is the main script used to run and control the bayesian optimizater and exp
 
 # main.py
 import argparse
+import json
 
 from bayesian_optimizer.ax.run_bo_campaign import run_bo_campaign
-from production_run.production_run import production_run
+from preprocessing.generate_bo_input import generate_bo_input_file
+
+# Conditional import for production_run (may not be available in all environments)
+try:
+    from production_run.production_run import production_run
+except (ImportError, ModuleNotFoundError):
+    production_run = None
 
 
 def parse_args() -> argparse.Namespace:
@@ -25,12 +32,6 @@ def parse_args() -> argparse.Namespace:
         "--state-path",
         default="ax_state.json",
         help="Where the ax_state locaton of all our bayesian optimizations our stored (default: ax_state.json)",
-    )
-    parser.add_argument(
-        "--save-every",
-        type=int,
-        default=1,
-        help="Persist state every K trials (default: 1)",
     )
     parser.add_argument(
         "--objA-threshold",
@@ -54,7 +55,8 @@ def parse_args() -> argparse.Namespace:
         "--production-run-percent-yield-threshold",
         type=float,
         default=80.0,
-        help="Percent-yield threshold for production run.  (default: 80.0)",
+        help="Percent-yield threshold for production run, if greater than this value."
+        "and has highest throughput it is selected for the production run (default: 80.0).",
     )
     parser.add_argument(
         "--simulation",
@@ -67,26 +69,32 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
-    input_experimental_parameters = args.input_experimental_parameters[]
+    # Load the experimental parameters JSON to get the list of xylopyridine analogs
+    with open(args.input_experimental_parameters, 'r') as f:
+        experiment_config = json.load(f)
 
-    for xylopyridine_analog in input_experimental_parameters["name_of_xylopyridine_analogs_stock_solutions"]:
+    for xylopyridine_analog in experiment_config["name_of_xylopyridine_analogs_stock_solutions"]:
         print(f"Running Bayesian Optimization Campaign for xylopyridine analog: {xylopyridine_analog}")
+        bo_input = generate_bo_input_file(args.input_experimental_parameters, xylopyridine_analog)
 
         run_bo_campaign(
-            input_experimental_parameters=args.input_experimental_parameters,
+            input_experimental_parameters=bo_input,
             ax_previous_run_json_file_path=args.state_path,
-            save_every=args.save_every,
-            objA_threshold=args.objA_threshold,
-            objB_threshold=args.objB_threshold,
+            percent_yield_threshold=args.objA_threshold,
+            throughput_threshold=args.objB_threshold,
             noise_sem=args.noise_sem,
             simulation_mode=args.simulation,
+            xylopyridine_analog=xylopyridine_analog,
         )
-    
-    for xylopyridine_analog in input_experimental_parameters["name_of_xylopyridine_analogs_stock_solutions"]:
+'''
+    for xylopyridine_analog in experiment_config["name_of_xylopyridine_analogs_stock_solutions"]:
         print(f"Beginning production run for xylopyridine analog: {xylopyridine_analog}")
         # TODO : Will likely need to update the input parameters based on final form of code 
-        production_run()
-
+        if production_run is not None:
+            production_run()
+        else:
+            print("Skipping production_run - not available in this environment")
+'''
 
 if __name__ == "__main__":
     main()

@@ -6,9 +6,19 @@
 # All rights reserved.
 # -----------------------------------------------------------------------------
 
+"""
+The purpose of this code is to append the results of each experiment to a
+CSV file that the Bayesian Optimization code can read from to update its
+surrogate model and propose the next experiment.
+This code will be called at the end of each experiment iteration after
+we have analyzed the results and calculated the percent yield and throughput.
+"""
+
 import csv
 import os
+from pathlib import Path
 
+from bayesian_optimizer.deterministic_commands import state
 
 def append_bayesian_experimental_results(
     bayesian_optimization_csv_path: str, results: dict
@@ -23,12 +33,20 @@ def append_bayesian_experimental_results(
      -None
     """
 
+    print("Hey Hey you you where are the csv files,"
+          f"{bayesian_optimization_csv_path}")
+    print(state.BO_EXPERIMENTAL_PARAMETERS["base_directory"])
+    print(type(bayesian_optimization_csv_path))
+    print(type(state.BO_EXPERIMENTAL_PARAMETERS["base_directory"]))
+    bayesian_optimization_csv_path = str(
+        Path(state.BO_EXPERIMENTAL_PARAMETERS["base_directory"]) / bayesian_optimization_csv_path
+    )
     file_exists = os.path.exists(bayesian_optimization_csv_path)
     # define a stable column order
     column_names = [
         "iteration",
         "flow_rate",
-        "concentration",
+        "dilution_factor",
         "reactor_concentration_uM",
         "temperature",
         "co_solvent",
@@ -55,14 +73,4 @@ def append_bayesian_experimental_results(
         bayesian_optimization_file.flush()
         os.fsync(
             bayesian_optimization_file.fileno()
-        )  # ensure it hits disk (useful on Windows)
-
-
-# ---------------- Iteration counter for filenames ----------------
-iteration = {
-    "iteration #": 0,
-    "last_temperature": None,
-    "volume_stock_solution1": None,
-    "volume_stock_solution2": None,
-    "volume_stock_solution3": None,
-}
+        ) 

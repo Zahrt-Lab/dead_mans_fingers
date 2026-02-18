@@ -17,22 +17,11 @@ import os
 from pathlib import Path
 from typing import Dict, Any, Tuple, Optional
 from bayesian_optimizer.deterministic_commands import state
-from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS
+from bayesian_optimizer.deterministic_commands.state import BO_EXPERIMENTAL_PARAMETERS
 from experimental_commands.commands import save_commands_csv, run_commands
 from experimental_commands.generate_instrument_config import save_instrument_config_csv
 from utils.run_simulation import run_simulation
 from post_processing.append_bayesian_experimental_results import append_bayesian_experimental_results
-
-# UV-VIS detector imports - only needed for real hardware mode
-try:
-    from experimental_commands.uv_vis_detector import begin_uv_vis_measurement, end_uv_vis_measurement
-except ImportError:
-    # Stub functions for simulation mode
-    def begin_uv_vis_measurement(*args, **kwargs):
-        raise NotImplementedError("UV-VIS hardware not available - use --simulation mode")
-    def end_uv_vis_measurement(*args, **kwargs):
-        pass
-
 
 def prepare_command_files(command_path_template: Path, instrument_config: Path,
                           instrument_params: Dict[str, float], temperature: float) -> None:
@@ -88,8 +77,8 @@ def run_experiment(command_path_template: Path, instrument_config: Path,
         In hardware mode: None (post-processing happens later)
     """
     temperature = experiment_params["temperature"]
-    reactant_wavelength = EXPERIMENTAL_PARAMETERS["reactant_wavelength"]
-    product_wavelength = EXPERIMENTAL_PARAMETERS["product_wavelength"]
+    reactant_wavelength = BO_EXPERIMENTAL_PARAMETERS["reactant_wavelength"]
+    product_wavelength = BO_EXPERIMENTAL_PARAMETERS["product_wavelength"]
     
     # Set temperature
     print(f"Setting temperature to {temperature} celsius")
@@ -141,7 +130,7 @@ def run_experiment(command_path_template: Path, instrument_config: Path,
             co_solvent_volume=experiment_params["fraction_of_cosolvent"],
             reactor_concentration_uM=experiment_params["reactor_bed_concentration_uM"],
             iteration_num=iteration_num,
-            experimental_parameters=EXPERIMENTAL_PARAMETERS,
+            experimental_parameters=BO_EXPERIMENTAL_PARAMETERS,
             csv_path=results_csv,
             append_results_func=append_bayesian_experimental_results,
             volume_pump1=instrument_params["volume_pump1"],

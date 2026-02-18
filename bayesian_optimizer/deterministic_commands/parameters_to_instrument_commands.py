@@ -18,7 +18,7 @@ from typing import Tuple, Dict, Any
 from preprocessing.constrain_to_search_space import constrain_to_search_space
 from preprocessing.standardize_input import standardize_input
 from preprocessing.parameters_to_commands import parameters_to_commands
-from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS
+from bayesian_optimizer.deterministic_commands.state import BO_EXPERIMENTAL_PARAMETERS
 
 
 def parameters_to_instrument_commands(experiment: Tuple[float, ...]) -> Dict[str, Any]:
@@ -50,11 +50,11 @@ def parameters_to_instrument_commands(experiment: Tuple[float, ...]) -> Dict[str
     )
     
     # Calculate reactor bed concentration based on dilution factor suggested by ax's BO
-    reactor_bed_concentration_uM = dilution_factor * EXPERIMENTAL_PARAMETERS["stock_concentration_uM"]
+    reactor_bed_concentration_uM = dilution_factor * BO_EXPERIMENTAL_PARAMETERS["xylopyridine_analogs_concentrations_uM"]
     
     # Volume to flow through reactor which is deterministic, 
     # Can be less if the UV-detector finds the experiment meets termination conditions early
-    volume = int(round(EXPERIMENTAL_PARAMETERS["volume"], 0))
+    volume = int(round(BO_EXPERIMENTAL_PARAMETERS["total_volume_through_reactor_bed"], 0))
     
     # Calculate instrument parameters
     instrument_parameter = parameters_to_commands(
@@ -63,9 +63,9 @@ def parameters_to_instrument_commands(experiment: Tuple[float, ...]) -> Dict[str
         cosolvent_valve_position=int(cosolvent_valve_position),
         cosolvent_fraction=fraction_of_cosolvent,
         light_intensity=light_intensity,
-        stock_concentration_uM=EXPERIMENTAL_PARAMETERS["stock_concentration_uM"],
-        target_absorbance_in_the_uv_detector=EXPERIMENTAL_PARAMETERS["target_absorbance_in_the_uv_detector"],
-        max_absorbance_concentration_uM_uv_detector=EXPERIMENTAL_PARAMETERS["max_absorbance_concentration_uM_uv_detector"],
+        stock_concentration_uM=BO_EXPERIMENTAL_PARAMETERS["xylopyridine_analogs_concentrations_uM"],
+        target_absorbance_in_the_uv_detector=BO_EXPERIMENTAL_PARAMETERS["target_absorbance_in_the_uv_detector"],
+        max_absorbance_concentration_uM_uv_detector=BO_EXPERIMENTAL_PARAMETERS["max_absorbance_concentration_uM_uv_detector"],
         volume_uL=volume,
     )
     
@@ -98,15 +98,18 @@ def setup_directories_and_paths(iteration_num: int) -> Dict[str, Path]:
             - results_csv
             - reactor_bed_target_volume
     """
-    base_directory = Path(EXPERIMENTAL_PARAMETERS["base_directory"])
+    base_directory = Path(BO_EXPERIMENTAL_PARAMETERS["base_directory"])
     base_directory.mkdir(parents=True, exist_ok=True)
     
     instrument_config = base_directory / "Instrument_Config_File.csv"
     command_path_template = base_directory / f"Fluorescent_Optimization_Iteration_{iteration_num}"
-    results_csv = base_directory / EXPERIMENTAL_PARAMETERS["Fluorescent_Bayesian_Optimization_results_filename"]
+    
+    # Build results CSV path using prefix and current analog name
+    from bayesian_optimizer.deterministic_commands.state import CURRENT_XYLOPYRIDINE_ANALOG, bayesian_optimization_results_csv_path
+    results_csv = Path(bayesian_optimization_results_csv_path(CURRENT_XYLOPYRIDINE_ANALOG))
     
     # Calculate reactor bed target volume
-    volume = int(round(EXPERIMENTAL_PARAMETERS["volume"], 0))
+    volume = int(round(BO_EXPERIMENTAL_PARAMETERS["total_volume_through_reactor_bed"], 0))
     reactor_bed_target_volume = volume - 500
     
     print(f"The base directory is {base_directory}")

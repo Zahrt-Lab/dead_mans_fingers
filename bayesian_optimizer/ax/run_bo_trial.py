@@ -24,7 +24,7 @@ The main function run_bayesian_optimization_iteration() delegates to specialized
 
 from typing import Tuple, Sequence
 from bayesian_optimizer.deterministic_commands import state
-from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS, iteration, RESULTS_CACHE
+from bayesian_optimizer.deterministic_commands.state import BO_EXPERIMENTAL_PARAMETERS, ITERATION, RESULTS_CACHE
 from preprocessing.experimental_parameters import ExperimentAborted
 
 # Import the new modular components
@@ -62,8 +62,8 @@ def run_bayesian_optimization_iteration(
         return RESULTS_CACHE[experimental_parameters["experiment_check"]]
     
     # Increment iteration counter
-    iteration["iteration #"] += 1
-    k = iteration["iteration #"]
+    ITERATION["iteration #"] += 1
+    k = ITERATION["iteration #"]
     
     print(f"Beginning experiment {k} with flow rate: {experimental_parameters['reactor_bed_flow_rate']} uL/min; "
           f"concentration: {experimental_parameters['reactor_bed_concentration_uM']} uM; "

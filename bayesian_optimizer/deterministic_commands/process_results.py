@@ -17,7 +17,7 @@ import time
 from typing import Dict, Any, Tuple
 from pathlib import Path
 from bayesian_optimizer.deterministic_commands import state
-from bayesian_optimizer.deterministic_commands.state import EXPERIMENTAL_PARAMETERS, RESULTS_CACHE
+from bayesian_optimizer.deterministic_commands.state import BO_EXPERIMENTAL_PARAMETERS, RESULTS_CACHE
 from post_processing.post_process_uv_recording import post_process_uv_recording
 from post_processing.average_absorbance import average_absorbance
 from post_processing.calculate_percent_yield import calculate_percent_yield
@@ -43,8 +43,8 @@ def process_results(experiment_params: Dict[str, Any], iteration_num: int,
     Returns:
         Tuple of (percent_yield, throughput_nmol_per_min)
     """
-    reactant_wavelength = EXPERIMENTAL_PARAMETERS["reactant_wavelength"]
-    product_wavelength = EXPERIMENTAL_PARAMETERS["product_wavelength"]
+    reactant_wavelength = BO_EXPERIMENTAL_PARAMETERS["reactant_wavelength"]
+    product_wavelength = BO_EXPERIMENTAL_PARAMETERS["product_wavelength"]
     reactor_bed_flow_rate = experiment_params["reactor_bed_flow_rate"]
     reactor_bed_concentration_uM = experiment_params["reactor_bed_concentration_uM"]
     experiment_check = experiment_params["experiment_check"]
@@ -75,10 +75,10 @@ def process_results(experiment_params: Dict[str, Any], iteration_num: int,
     # Calculate percent yield
     product_percent_yield = calculate_percent_yield(
         average_absorbance_reactant,
-        EXPERIMENTAL_PARAMETERS["epsilon_reactant_at_lambda1_L_per_mol_cm"],
+        BO_EXPERIMENTAL_PARAMETERS["epsilon_reactant_at_lambda1_L_per_mol_cm"],
         average_absorbance_product,
-        EXPERIMENTAL_PARAMETERS["epsilon_product_at_lambda2_L_per_mol_cm"],
-        EXPERIMENTAL_PARAMETERS["pathlength_cm"],
+        BO_EXPERIMENTAL_PARAMETERS["epsilon_product_at_lambda2_L_per_mol_cm"],
+        BO_EXPERIMENTAL_PARAMETERS["pathlength_cm"],
         initial_concentration_mol_per_L,
     )
     
@@ -121,7 +121,7 @@ def save_results_to_csv(results_csv: Path, experiment_params: Dict[str, Any],
         percent_yield: Calculated percent yield
         throughput: Calculated throughput in nmol/min
     """
-    reactant_wavelength = EXPERIMENTAL_PARAMETERS["reactant_wavelength"]
+    reactant_wavelength = BO_EXPERIMENTAL_PARAMETERS["reactant_wavelength"]
     product_wavelength = EXPERIMENTAL_PARAMETERS["product_wavelength"]
     experiment_check = experiment_params["experiment_check"]
     reactor_bed_concentration_uM = experiment_params["reactor_bed_concentration_uM"]

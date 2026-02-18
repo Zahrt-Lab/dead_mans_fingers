@@ -15,15 +15,7 @@ with supporting modules for setup, volume management, execution, and processing.
 """
 
 # Re-export main public API for backward compatibility
-from bayesian_optimizer.ax.run_bo_trial import (
-    run_bayesian_optimization_iteration,
-    objective_function_percent_yield,
-    objective_function_throughput,
-)
+# Circular import removed - import directly from experimental_commands.execute_bo_iteration_commands if needed
 
-__all__ = [
-    "run_bayesian_optimization_iteration",
-    "objective_function_percent_yield", 
-    "objective_function_throughput",
-]
+__all__ = []
 

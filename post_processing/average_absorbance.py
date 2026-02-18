@@ -6,8 +6,13 @@
 # All rights reserved.
 # -----------------------------------------------------------------------------
 
-import pandas as pd
+"""
+The purpose of this code is to take the UV-VIS absorbance data recorded over 
+time after the photochemical reaction has reached steady state, 
+and average the absorbance.
+"""
 
+import pandas as pd
 
 def average_absorbance(
     uv_vis_absorbance_over_time_df: pd.DataFrame,
@@ -34,6 +39,7 @@ def average_absorbance(
             f"{list(uv_vis_absorbance_over_time_df.columns)}"
         )
 
+    # Calculates the average absorbance at the specified wavelength
     average_absorbance_recorded = uv_vis_absorbance_over_time_df[
         wavelength_column
     ].mean()
