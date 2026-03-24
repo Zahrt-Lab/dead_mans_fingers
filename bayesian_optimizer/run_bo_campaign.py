@@ -122,11 +122,9 @@ def run_bo_campaign(
     iteration = IterationState()
     step = 0
 
-    # If trial count is 0, this will run for 30 iterations
-    if iteration.iteration == 0:
-        target = "30"
-    else:
-        target = str(bo_campaign_state.bo_parameters["trials"])
+    # If configured trial count is 0, default to 30 iterations.
+    configured_trials = int(bo_campaign_state.bo_parameters["trials"])
+    target = "30" if configured_trials == 0 else str(configured_trials)
     try:
         while True if int(bo_campaign_state.bo_parameters["trials"]) == 0 else (step < int(target)):
             experiment_trial_conditions, trial_index = ax.get_next_trial()

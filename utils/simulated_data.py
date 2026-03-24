@@ -23,7 +23,7 @@ def simulate_uvvis_data(
     initial_absorbance=1.0,
     noise_level=0.01,
     random_seed=42,
-    start_delay=180,  # delay before reaction starts (in seconds)
+    start_delay=180,  # delay before reaction starts (in seconds)],
 ):
     """
     Simulate UV-Vis absorbance data for a reactant-to-product conversion.
