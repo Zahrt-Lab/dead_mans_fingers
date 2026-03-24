@@ -118,6 +118,7 @@ def save_commands_csv(
             )
         )
 
+# TODO : We need to update this function to properly run the experimental commands
 def run_commands(bo_experimental_state: BoCampaignState, 
                  instrument_config_file) -> None:
     """
