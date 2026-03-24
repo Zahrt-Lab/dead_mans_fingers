@@ -18,10 +18,11 @@ import csv
 import os
 from pathlib import Path
 
-from bayesian_optimizer.deterministic_commands import state
+from bayesian_optimizer.experiment_state import BoCampaignState
 
 def append_bayesian_experimental_results(
-    bayesian_optimization_csv_path: str, results: dict
+    results: dict, 
+    bo_campaign_state: BoCampaignState
 ) -> None:
     """
     Append one result row to the Bayesian Optimization code; write header if file is new/empty.
@@ -32,14 +33,13 @@ def append_bayesian_experimental_results(
     return:
      -None
     """
+    bo_parameters =bo_campaign_state.bo_parameters
 
-    print("Hey Hey you you where are the csv files,"
-          f"{bayesian_optimization_csv_path}")
-    print(state.BO_EXPERIMENTAL_PARAMETERS["base_directory"])
-    print(type(bayesian_optimization_csv_path))
-    print(type(state.BO_EXPERIMENTAL_PARAMETERS["base_directory"]))
+    print("What's here")
+    print(Path(bo_parameters["base_directory"]) / 
+          Path(bo_parameters["Fluorescent_Bayesian_Optimization_results_filename"]))
     bayesian_optimization_csv_path = str(
-        Path(state.BO_EXPERIMENTAL_PARAMETERS["base_directory"]) / bayesian_optimization_csv_path
+        Path(bo_parameters["base_directory"]) / bo_parameters["Fluorescent_Bayesian_Optimization_results_filename"]
     )
     file_exists = os.path.exists(bayesian_optimization_csv_path)
     # define a stable column order

@@ -1,4 +1,7 @@
 import csv
+
+from bayesian_optimizer.experiment_state import BoCampaignState
+
 from experimental_commands.generate_experimental_commands import (
     generate_experimental_commands,
 )
@@ -7,8 +10,6 @@ from experimental_commands.generate_temperature_commands import (
 )
 from experimental_commands.generate_wash_commands import generate_wash_commands
 from experimental_commands.generate_set_light_intensity_commands import generate_light_intensity_commands
-
-from bayesian_optimizer.deterministic_commands import state
 
 try:
     from methods import GeneralExperimentMethod
@@ -117,7 +118,8 @@ def save_commands_csv(
             )
         )
 
-def run_commands(experiment_commands, instrument_config_file) -> None:
+def run_commands(bo_experimental_state: BoCampaignState, 
+                 instrument_config_file) -> None:
     """
     This runs all of our experimental commands given the command and instrument config files
 
@@ -127,10 +129,10 @@ def run_commands(experiment_commands, instrument_config_file) -> None:
      is being used
     """
 
-    # TODO: Need to connect this code to the AutoZahrt GeneralExperimentMethod
+    # TODO: There is no experiment_commands_csv need to make this
         
-    if state.SIMULATION_MODE:
-        print(f"[SIMULATION] Would run commands from: {experiment_commands}")
+    if bo_experimental_state.simulation_mode:
+        print(f"[SIMULATION] Would run commands from: {experiment_commands_csv} with instrument config: {instrument_config_file}")
         return
     
     if GeneralExperimentMethod is None:
@@ -141,7 +143,7 @@ def run_commands(experiment_commands, instrument_config_file) -> None:
 
     # TODO: I think this needs an output directory to save the results of the experiments as well.
     fluorescent_reaction_optimization_experiment = GeneralExperimentMethod(
-        experiment_commands, instrument_config_file
+        experiment_commands_csv, instrument_config_file
     )
     fluorescent_reaction_optimization_experiment.run_experiment()
 

@@ -24,12 +24,6 @@ def run_hardware_experiment(
     """
     Run the physical hardware experiment with UV-VIS detection.
     
-    This function:
-    1. Starts UV-VIS measurement at specified wavelengths
-    2. Runs the experiment commands (flows solutions through reactor)
-    3. Stops UV-VIS measurement
-    4. Runs wash commands to clean the detector
-    
     Parameters:
         command_path_base: Base path for command files
         instrument_config: Path to instrument configuration CSV

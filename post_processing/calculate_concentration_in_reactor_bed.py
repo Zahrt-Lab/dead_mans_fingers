@@ -10,17 +10,13 @@
 Calculate product concentration in reactor bed from UV detector measurements.
 Accounts for dilution that occurs after the reactor but before the detector.
 """
-from bayesian_optimizer.deterministic_commands.state import BO_EXPERIMENTAL_PARAMETERS
-
-from bayesian_optimizer.deterministic_commands import state
+from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 
 def calculate_concentration_in_the_reactor_bed(
     absorbance: float,
-    volume_pump1_uL: float,
-    volume_pump2_uL: float,
-    volume_pump3_uL: float,
-    volume_pump4_uL: float,
-) -> float:
+    experiment_state: BoCampaignState,
+    iteration_state: IterationState
+    ) -> float:
     """
     Calculate product concentration in reactor bed from detector absorbance.
 
@@ -36,11 +32,7 @@ def calculate_concentration_in_the_reactor_bed(
 
     Parameters:
         absorbance: Measured absorbance of product at UV detector
-        volume_pump1_uL: Volume from pump 1 (Xylopyridine Analogs)
-        volume_pump2_uL: Volume from pump 2 (pre-reactor dilution)
-        volume_pump3_uL: Volume from pump 3 (co-solvent)
-        volume_pump4_uL: Volume from pump 4 (post-reactor bed dilution to detector)
-
+        experiment_state: ExperimentState object containing experimental parameters
     Returns:
         Product concentration in reactor bed (mol/µL)
     """
@@ -48,19 +40,21 @@ def calculate_concentration_in_the_reactor_bed(
     A = max(0.0, absorbance)
 
     # Convert epsilon from L/(mol·cm) to µL/(mol·cm)
-    epsilon = state.BO_EXPERIMENTAL_PARAMETERS["epsilon_product_at_lambda2_L_per_mol_cm"] * 1e6
+    epsilon = experiment_state.bo_parameters["epsilon_product_at_lambda2_L_per_mol_cm"] * 1e6
 
-    l = state.BO_EXPERIMENTAL_PARAMETERS["pathlength_cm"]
+    l = experiment_state.bo_parameters["pathlength_cm"]
 
     # Beer–Lambert at detector: C = A / (ε * l)
     c_cuvette = A / (epsilon * l)
 
-    volume_reactor_uL = volume_pump1_uL + volume_pump2_uL + volume_pump3_uL
+    volume_reactor_uL = iteration_state.instrument_parameters["volume_pump1"] + \
+                        iteration_state.instrument_parameters["volume_pump2"] + \
+                        iteration_state.instrument_parameters["volume_pump3"]
 
-    if volume_pump4_uL < 0:
-        raise ValueError(f"volume_pump4_uL must be >= 0, got {volume_pump4_uL}")
+    if iteration_state.instrument_parameters["volume_pump4"] < 0:
+        raise ValueError(f"volume_pump4 must be >= 0, got {iteration_state.instrument_parameters['volume_pump4']}")
 
-    volume_detector_uL = volume_reactor_uL + volume_pump4_uL
+    volume_detector_uL = volume_reactor_uL + iteration_state.instrument_parameters["volume_pump4"]
 
     c_reactor = c_cuvette * (volume_detector_uL / volume_reactor_uL)
 

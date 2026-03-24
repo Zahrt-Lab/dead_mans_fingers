@@ -83,7 +83,7 @@ def run_simulated_experiment(
     
     # Save simulated data to CSV (same path post_process_uv_recording expects)
     csv_filename = f"Fluorescent_Bayesian_Optimization_iteration_{iteration_number}.csv"
-    csv_filepath = base_directory / csv_filename
+    csv_filepath = Path(base_directory) / Path(csv_filename)
     simulated_data_df.to_csv(csv_filepath, index=False)
     
     print(f"[SIMULATION] Saved simulated UV-VIS data to {csv_filepath}")

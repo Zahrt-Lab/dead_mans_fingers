@@ -6,5 +6,17 @@
 # All rights reserved.
 # ------------------------------------------------------------------------------
 
+
+
 class ExperimentAborted(Exception):
     pass
+
+class HardwareFailure(ExperimentAborted):
+    pass
+
+class ValidationError(ExperimentAborted):
+    pass
+
+class keyboard_interrupt(ExperimentAborted):
+    def __init__(self):
+        super().__init__("Experiment was aborted by keyboard interrupt.")

@@ -55,7 +55,7 @@ def check_required_complete_workflow_parameters(
     # TODO : Make sure the final specified inputs match the actual inputs 
     # we need for our campaign and update this function accordingly. 
     # This is just a placeholder for now.
-    experimental_parameters = [
+    experimental_parameters_check = [
         "trials",
         "total_volume_through_reactor_bed",
         "target_volume_through_reactor_bed",
@@ -93,7 +93,7 @@ def check_required_complete_workflow_parameters(
     missing_experimental_parameter = [
         parameter
         for parameter in experimental_parameters
-        if parameter not in experimental_parameters
+        if parameter not in experimental_parameters_check
     ]
     if missing_experimental_parameter:
         raise KeyError(

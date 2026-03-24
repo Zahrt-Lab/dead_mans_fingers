@@ -8,8 +8,7 @@
 
 from typing import List
 
-# TODO: Need to double check which pump is pump 1 and pump 2 for VICI M6 pumps
-# TODO: Need to get rid of number of syringes since we will be swapping it out with the tricontinental pumps
+# TODO: Should make is_zero function more robust and move it to a utils file since we will be using it in multiple places
 def generate_experimental_commands(
     flow_rate_pump1: float,
     flow_rate_pump2: float,
@@ -20,8 +19,7 @@ def generate_experimental_commands(
     volume_pump3: float,
     volume_pump4: float,
     *,
-    zero_tolerance: float = 1e-6,  # treat |x| <= zero_tol as zero
-    log_skips: bool = True,
+    zero_tolerance: float = 1e-6,
 ) -> List[List[str]]:
     
     """
@@ -48,18 +46,18 @@ def generate_experimental_commands(
     - commands: Experimental commands for reacting the flow reaction
     """
 
-    def _is_zero(rate: float, vol: float) -> bool:
-        return (abs(rate) <= zero_tolerance) or (abs(vol) <= zero_tolerance)
+    def _is_zero(flow_rate: float, volume: float) -> bool:
+        return (abs(flow_rate) <= zero_tolerance) or (abs(volume) <= zero_tolerance)
 
     header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [header]
 
     commands.append([ 
-        "DH2000_1","shutter_open","","",3.0
+        "DH2000_1","shutter_open","","","3.0"
         ]
     )
     commands.append([
-        "OceanOptics_UVVis_1","init","","",3.0
+        "OceanOptics_UVVis_1","init","","","3.0"
         ]
     )
     # TODO : Could be useful if this was updated by the user to change the integration time but not urgent
@@ -71,38 +69,37 @@ def generate_experimental_commands(
         "target_wavelengths=409;506",
         "",
         "",
-        3.0
+        "3.0"
         ]
     )
     commands.append([
-        "OceanOptics_UVVis_1","record_blank","","",3.0
+        "OceanOptics_UVVis_1","record_blank","","","3.0"
         ]
     )
     commands.append([
-        "DH2000_1","shutter_close","","",3.0
+        "DH2000_1","shutter_close","","","3.0"
         ]
     )
     commands.append([
-        "OceanOptics_UVVis_1","record_dark","","",3.0
+        "OceanOptics_UVVis_1","record_dark","","","3.0"
         ]
     )
     commands.append([
-        "DH2000_1","shutter_open","","",3.0
+        "DH2000_1","shutter_open","","","3.0"
         ]
     )
     # This begins the UV-Vis data collection in continuous mode until stopped once converged
     # TODO: Need to verify that once convergence is reached all the pumps will stop as well
     commands.append([
-        "OceanOptics_UVVis_1","start_continuous","stop_upon_convergence=True","","",3.0
+        "OceanOptics_UVVis_1","start_continuous","stop_upon_convergence=True","","","3.0"
         ]
     )
-    # TODO: Need to validate and add these tricontinental pump commands
     commands.append([
             "Tricontinental_Pump_C24000_1",
             "dispense",
             f"flow_rate={flow_rate_pump1},volume={volume_pump1}",
             f"The flow rate of our Xylo compund is {flow_rate_pump1} uL/min and volume is {volume_pump1}",
-            0.5,
+            "0.5",
         ]
     )
     if not _is_zero(flow_rate_pump2, volume_pump2):
@@ -112,7 +109,7 @@ def generate_experimental_commands(
             "dispense",
             f"flow_rate={flow_rate_pump2}, " f"volume={volume_pump2}",
             f"The flow rate of our 0.1 M HCl Water is {flow_rate_pump2} uL/min and volume is {volume_pump2}",
-            0.5,
+            "0.5",
         ]
         )
     if not _is_zero(flow_rate_pump3, volume_pump3):
@@ -121,7 +118,7 @@ def generate_experimental_commands(
             "dispense",
             f"flow_rate={flow_rate_pump3}, volume={volume_pump3}",
             f"The flow rate of our cosolvent is {flow_rate_pump3} uL/min and volume is {volume_pump3}",
-            0.5,
+            "0.5",
         ]
         )
     # TODO: Need to validate and add these tricontinental pump commands
@@ -131,7 +128,7 @@ def generate_experimental_commands(
             "aspirate",
             f"flow_rate={flow_rate_pump4}, volume={volume_pump4}",
             f"The flow rate of our 0.1 M HCl water pump is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
-            0.5,
+            "0.5",
         ]
         )
     commands.append([
@@ -139,11 +136,11 @@ def generate_experimental_commands(
             "wait_for_pumps",
             "",
             "Waiting for XYLO and WATER pumps to complete",
-            0.5,
+            "0.5",
         ]
     )
     commands.append([
-        "OceanOptics_UVVis_1","stop_continuous","","",3.0
+        "OceanOptics_UVVis_1","stop_continuous","","","3.0"
         ]
     )
 

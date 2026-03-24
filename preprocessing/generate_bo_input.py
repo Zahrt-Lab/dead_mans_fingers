@@ -13,11 +13,14 @@ bayesian optimization campaign
 
 import json
 import copy
+from typing import Dict, Any
+import os
+
 
 def generate_bo_input_file(
     complete_workflow_input_json_file: str,
     xylopyridine_analog: str,
-) -> None:
+) -> tuple[Dict[str, Any], str]:
     """
     This function will generate the json input file for an individual xylopyridine analog
     bayesian optimization campaign.
@@ -30,7 +33,7 @@ def generate_bo_input_file(
      - xylopyrdine_analog: The name of the xylopyridine analog we are optimizing for
        in our campaign
     return:
-      - None (saves the bo json input file for the specific xylopyridine analog)
+      - Tuple of (bo_workflow_parameters dict, file_path where it was saved)
     """
     complete_workflow_parameters = {}
     # Load the complete workflow input json file as a dictionary
@@ -56,9 +59,8 @@ def generate_bo_input_file(
     )
 
     # Update the xylopyrdine index value for the stock solution of the xylopyridine analog we are optimizing for in our campaign
-    bo_workflow_parameters["name_of_xylopyridine_analogs_to_optimize"] = [
-        xylopyridine_analog
-    ]
+    bo_workflow_parameters["name_of_xylopyridine_analogs_to_optimize"] = xylopyridine_analog
+    
 
     # Update the index value for the xylopyridine analog we are optimizing for in our campaign
     bo_workflow_parameters["xylopyridine_analog_index"] = complete_workflow_parameters[
@@ -111,8 +113,13 @@ def generate_bo_input_file(
         ]
     )
 
-    # Save the updated workflow parameters to a new json file
-    with open(f"{xylopyridine_analog}_bo_input.json", "w", encoding="utf-8") as f:
-        json.dump(bo_workflow_parameters, f)
+    # Save the updated workflow parameters to a new json file in the analog's output directory
+    os.makedirs(bo_workflow_parameters["base_directory"], exist_ok=True)
+    output_file_path = os.path.join(
+        bo_workflow_parameters["base_directory"],
+        f"{xylopyridine_analog}_bo_input.json"
+    )
+    with open(output_file_path, "w", encoding="utf-8") as f:
+        json.dump(bo_workflow_parameters, f, indent=2)
 
-    return bo_workflow_parameters
+    return bo_workflow_parameters, output_file_path

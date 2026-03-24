@@ -9,13 +9,13 @@
 from typing import List
 
 def generate_wash_commands(
-        flow_rate_pump2,
-        volume_pump2,
-        flow_rate_pump3,
-        volume_pump3,
-        flow_rate_pump4,
-        volume_pump4,
-        cosolvent_valve_position: int,
+        flow_rate_pump2: float,
+        volume_pump2: float,
+        flow_rate_pump3: float,
+        volume_pump3: float,
+        flow_rate_pump4: float,
+        volume_pump4: float,
+        cosolvent_valve_position: float,
         *,
         zero_tolerance: float = 1e-6) -> List[List[str]]:
     """
@@ -26,8 +26,9 @@ def generate_wash_commands(
     - commands: The commands to wash the Xylo compound out of the detector
     """
 
-    def _is_zero(rate: float, vol: float) -> bool:
-        return (abs(rate) <= zero_tolerance) or (abs(vol) <= zero_tolerance)
+    # Checks if the flow rate and volume for a pump are effectively zero
+    def _is_zero(flow_rate: float, volume: float) -> bool:
+        return (abs(flow_rate) <= zero_tolerance) or (abs(volume) <= zero_tolerance)
 
     header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [header]
@@ -37,7 +38,7 @@ def generate_wash_commands(
             "go_to_position",
             f"position={cosolvent_valve_position}",
             "",
-            0.5,
+            "0.5",
         ]
     )
     if not _is_zero(flow_rate_pump2, volume_pump2):
@@ -46,7 +47,7 @@ def generate_wash_commands(
             "dispense",
             f"flow_rate={flow_rate_pump2}, " f"volume={volume_pump2}",
             f"The flow rate of our 0.1 M HCl Water is {flow_rate_pump2} uL/min and volume is {volume_pump2}",
-            0.5,
+            "0.5",
             ]
         )
     if not _is_zero(flow_rate_pump3, volume_pump3):
@@ -55,18 +56,17 @@ def generate_wash_commands(
             "dispense",
             f"flow_rate={flow_rate_pump3}, volume={volume_pump3}",
             f"The flow rate of our cosolvent is {flow_rate_pump3} uL/min and volume is {volume_pump3}",
-            0.5,
+            "0.5",
             ]
         )
-    # TODO: Need to remove this command since we are not using the Isametic pump anymore, need to swap it for the tricontinental pumps
-    # TODO: Also is the if statement needed if we are going to wash everything out anyway at this step?
+
     if not _is_zero(flow_rate_pump4, volume_pump4):
         commands.append([
             "Tricontinental_Pump_C24000_2",
             "aspirate",
             f"flow_rate={flow_rate_pump4}, volume={volume_pump4}",
             f"The flow rate of our 0.1 M HCl water pump is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
-            0.5,
+            "0.5",
             ]
         )
     commands.append([
@@ -74,7 +74,7 @@ def generate_wash_commands(
             "wait_for_pumps",
             "",                                         
             "Waiting for XYLO and WATER pumps to complete",
-            0.5,
+            "0.5",
         ]   )
 
     return commands

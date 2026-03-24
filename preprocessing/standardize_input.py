@@ -11,26 +11,25 @@ This script will standardize our inputs before run_bayesian_optimization_iterati
 make sure their are no type or formatting issues
 """
 
-from typing import Sequence, Tuple
-
+from typing import Dict
+from bayesian_optimizer.experiment_state import IterationState
 
 def standardize_input(
-    experiment_input: Sequence[float], ndp: int = 2
-) -> Tuple[float, ...]:
+    iteration_state: IterationState, ndp: int = 2
+) -> IterationState:
     """
     The role of this script is to standardize our inputs before run_bayesian_optimization_iteration
 
     parameters:
-     - input: Is a sequence with our flow rate, dilution_factor, temperature,
-       co-solvent valve position, co-solvent fraction, and light intensity
+     - iteration_state: The current state of the iteration, which includes the trial conditions that we want to standardize
+       the trial conditions that we want to standardize
      - ndp: Number of decimal places to round to for standardization
 
     return:
      - standardized_input: Standardized format of our input variables for the RESULTS_CACHE
     """
 
-    standardized_experimental_parameters_input = tuple(
-        round(float(experimental_parameter), ndp)
-        for experimental_parameter in experiment_input
-    )
-    return standardized_experimental_parameters_input
+    for key, value in iteration_state.trial_conditions.items():
+        iteration_state.trial_conditions[key] = round(float(value), ndp)
+
+    return iteration_state

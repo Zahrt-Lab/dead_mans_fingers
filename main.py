@@ -14,7 +14,7 @@ This is the main script used to run and control the bayesian optimizater and exp
 import argparse
 import json
 
-from bayesian_optimizer.ax.run_bo_campaign import run_bo_campaign
+from bayesian_optimizer.run_bo_campaign import run_bo_campaign
 from preprocessing.generate_bo_input import generate_bo_input_file
 
 # Conditional import for production_run (may not be available in all environments)
@@ -75,11 +75,23 @@ def main() -> None:
 
     for xylopyridine_analog in experiment_config["name_of_xylopyridine_analogs_stock_solutions"]:
         print(f"Running Bayesian Optimization Campaign for xylopyridine analog: {xylopyridine_analog}")
-        bo_input = generate_bo_input_file(args.input_experimental_parameters, xylopyridine_analog)
+        bo_input, bo_input_file_path = generate_bo_input_file(args.input_experimental_parameters, xylopyridine_analog)
+        print(f"Generated BO input file: {bo_input_file_path}")
+
+        # Construct ax state file path in the analog's output directory
+        ax_state_file_path = f"{bo_input['base_directory']}/ax_state_{xylopyridine_analog}_ax_state.json"
+        print(f"Using Ax state file: {ax_state_file_path}")
+
+        # Before every campaign, we will run a quick test to make sure
+        # we run unit test of our code,
+        # run simulations of code,
+        # then test the hardware
+        # this will ensure everything is working before we run a campaign
+        #test_set_up()
 
         run_bo_campaign(
             input_experimental_parameters=bo_input,
-            ax_previous_run_json_file_path=args.state_path,
+            ax_previous_run_json_file_path=ax_state_file_path,
             percent_yield_threshold=args.objA_threshold,
             throughput_threshold=args.objB_threshold,
             noise_sem=args.noise_sem,

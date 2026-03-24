@@ -58,7 +58,7 @@ def plot_absorbance_time_series(
     return fig
 
 
-def plot_bo_results(csv_path: str, save_dir: str = None):
+def plot_bo_results(csv_path: str):
     """
     Plot Bayesian optimization results showing optimization progress.
 
@@ -66,17 +66,23 @@ def plot_bo_results(csv_path: str, save_dir: str = None):
         csv_path: Path to the BO results CSV file
         save_dir: Optional directory to save plots
     """
+
+    print(f"Loading BO results from {csv_path}")
+    
     df = pd.read_csv(csv_path)
+
+    csv_path = Path(csv_path)
+    print("Plotting Bayesian optimization results from:", csv_path)
+    save_dir = csv_path.parent / "plots"
 
     if save_dir:
         save_dir = Path(save_dir)
         save_dir.mkdir(parents=True, exist_ok=True)
 
     # Create a figure with multiple subplots
-    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-
     # 1. Percent yield over iterations
-    ax = axes[0, 0]
+    ax = plt.axes[0, 0]
+
     ax.plot(df["iteration"], df["percent_yield"], "o-", color="blue", markersize=8)
     ax.set_xlabel("Iteration", fontsize=11)
     ax.set_ylabel("Percent Yield (%)", fontsize=11)
@@ -110,23 +116,6 @@ def plot_bo_results(csv_path: str, save_dir: str = None):
     cbar = plt.colorbar(scatter, ax=ax)
     cbar.set_label("Iteration", fontsize=10)
 
-    # 4. Parameter exploration (temperature vs flow rate, colored by yield)
-    ax = axes[1, 1]
-    scatter = ax.scatter(
-        df["flow_rate"],
-        df["temperature"],
-        c=df["percent_yield"],
-        cmap="RdYlGn",
-        s=100,
-        alpha=0.7,
-    )
-    ax.set_xlabel("Flow Rate (µL/min)", fontsize=11)
-    ax.set_ylabel("Temperature (°C)", fontsize=11)
-    ax.set_title("Parameter Space Exploration", fontsize=12)
-    ax.grid(True, alpha=0.3)
-    cbar = plt.colorbar(scatter, ax=ax)
-    cbar.set_label("Percent Yield (%)", fontsize=10)
-
     plt.tight_layout()
 
     if save_dir:
@@ -134,10 +123,9 @@ def plot_bo_results(csv_path: str, save_dir: str = None):
         plt.savefig(save_path, dpi=300, bbox_inches="tight")
         print(f"Saved optimization summary to {save_path}")
 
-    return fig
+    plt.show()
 
-
-def plot_absorbances_progress(csv_path: str, save_dir: str = None):
+def plot_absorbances_progress(csv_path: str):
     """
     Plot how absorbances evolve over iterations.
 
