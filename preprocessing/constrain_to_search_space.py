@@ -11,6 +11,9 @@ Constrains experimental parameters to valid search space ranges.
 Ensures Bayesian optimization suggestions stay within specified experimental boundaries limits.
 """
 
+# TODO : I want to update this function so it doesn't take in the entire BoCampaignState and IterationState objects
+# Just the bo_campaign boundaries and the current trial conditions.
+
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 
 
