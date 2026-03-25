@@ -1,0 +1,11 @@
+name: my first ci
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4  # Download repos code
+    - run:  echo "Hello, world!" # Runs a single command using the runners shell

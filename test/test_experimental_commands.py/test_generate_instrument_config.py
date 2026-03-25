@@ -60,6 +60,10 @@ def test_generate_instrument_config_all_rows_have_correct_column_count():
             f"Row {row} has {len(row)} columns, expected {_EXPECTED_COLUMN_COUNT}"
         )
 
+def test_generate_instrument_config_matches_expected_config():
+    rows = generate_instrument_config()
+    assert rows == _INSTRUMENT_CONFIG
+
 
 def test_save_instrument_config_csv_creates_file(tmp_path: Path) -> None:
     config_path = tmp_path / "Instrument_Config_File.csv"

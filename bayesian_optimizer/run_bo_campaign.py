@@ -23,7 +23,6 @@ from preprocessing.experimental_parameters import (
     check_required_bo_campaign_parameters,
 )
 
-from utils.visualize_results import plot_bo_results
 
 def run_bo_campaign(
     input_experimental_parameters: dict,
@@ -148,9 +147,6 @@ def run_bo_campaign(
                 f"at experimental parameters={experiment_trial_conditions}"
             )
 
-            # TODO: Need to update this function so it properly updates the plot 
-            #plot_bo_results(csv_path=bo_campaign_state.bo_csv_path)
-            
 
     except KeyboardInterrupt:
         print("Keyboard interrupt received stopping Bayesian Optimization.")
