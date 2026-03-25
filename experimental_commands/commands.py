@@ -9,7 +9,7 @@ from experimental_commands.generate_temperature_commands import (
     generate_temperature_commands,
 )
 from experimental_commands.generate_wash_commands import generate_wash_commands
-from experimental_commands.generate_set_light_intensity_commands import generate_light_intensity_commands
+from experimental_commands.generate_light_intensity_commands import generate_light_intensity_commands
 
 try:
     from methods import GeneralExperimentMethod
