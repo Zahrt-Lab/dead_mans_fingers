@@ -81,10 +81,3 @@ def simulate_uvvis_data(
     )
 
     return data
-
-
-data = simulate_uvvis_data(
-    time_end=600, rate_constant=0.03, noise_level=0.005  # 10 minutes
-)
-
-print(data.head())

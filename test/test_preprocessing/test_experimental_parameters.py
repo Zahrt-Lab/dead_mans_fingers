@@ -47,6 +47,8 @@ def test_load_experimental_parameters_raises_on_non_dict():
 
 # --- check_required_bo_campaign_parameters ---
 
+# TODO: Is this the right set of valid parameters using in BO campaign?
+# Need to doubl check
 # Minimal dict with all required BO campaign keys
 _VALID_BO_PARAMS = {
     "trials": 30,
