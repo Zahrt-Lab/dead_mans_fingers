@@ -35,7 +35,7 @@ import sys
 from pathlib import Path
 from typing import Callable
 
-sys.path.append(str(Path(__file__).parent.parent.parent))
+sys.path.append(str(Path(__file__).parent.parent))
 
 from ax.service.ax_client import AxClient
 

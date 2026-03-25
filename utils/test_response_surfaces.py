@@ -31,6 +31,7 @@ from typing import Callable, Tuple
 # Search-space bounds  (from test_config_ax_demo.json)
 # ---------------------------------------------------------------------------
 
+# TODO : We cshould add more parameters to this test function in 
 _FLOW_RATE_BOUNDS: Tuple[float, float] = (40.0, 200.0)
 _DILUTION_BOUNDS: Tuple[float, float] = (0.05, 0.5)
 _TEMPERATURE_BOUNDS: Tuple[float, float] = (20.0, 60.0)
@@ -48,32 +49,32 @@ def _norm(value: float, lo: float, hi: float) -> float:
 
 
 def make_peaked_rate_constant(
-    optimal_flow_rate: float,
-    optimal_temperature: float,
-    optimal_dilution_factor: float,
+    flow_rate: float,
+    temperature: float,
+    dilution_factor: float,
 ) -> Callable[[float, float, float], float]:
     """
     Return a rate constant function with a single Gaussian peak at the given point.
 
-    The returned callable accepts ``(flow_rate, temperature, dilution_factor)`` and
-    returns a rate constant in [``RATE_CONSTANT_MIN``, ``RATE_CONSTANT_MAX``].
+    The returned callable also accepts ``(flow_rate, temperature, dilution_factor)``
+    and returns a rate constant in [``RATE_CONSTANT_MIN``, ``RATE_CONSTANT_MAX``].
 
     When injected into ``run_simulated_experiment`` via ``rate_constant_fn``, it
-    shapes the first-order reaction kinetics so that the BO must find
-    ``optimal_flow_rate``, ``optimal_temperature``, and ``optimal_dilution_factor``
-    to observe high product conversion at steady state.
+    shapes the first-order reaction kinetics so that the BO must find the supplied
+    ``flow_rate``, ``temperature``, and ``dilution_factor`` to observe high product
+    conversion at steady state.
 
     Args:
-        optimal_flow_rate: Flow rate at which the peak occurs (µL/min).
-        optimal_temperature: Temperature at which the peak occurs (°C).
-        optimal_dilution_factor: Dilution factor at which the peak occurs.
+        flow_rate: Flow rate at which the peak occurs (µL/min).
+        temperature: Temperature at which the peak occurs (°C).
+        dilution_factor: Dilution factor at which the peak occurs.
 
     Returns:
         A callable ``(flow_rate, temperature, dilution_factor) -> float``.
     """
-    opt_fr = _norm(optimal_flow_rate, *_FLOW_RATE_BOUNDS)
-    opt_temp = _norm(optimal_temperature, *_TEMPERATURE_BOUNDS)
-    opt_df = _norm(optimal_dilution_factor, *_DILUTION_BOUNDS)
+    opt_fr = _norm(flow_rate, *_FLOW_RATE_BOUNDS)
+    opt_temp = _norm(temperature, *_TEMPERATURE_BOUNDS)
+    opt_df = _norm(dilution_factor, *_DILUTION_BOUNDS)
     amplitude = RATE_CONSTANT_MAX - RATE_CONSTANT_MIN
 
     def _rate_constant_fn(

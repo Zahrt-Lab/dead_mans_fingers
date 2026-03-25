@@ -23,6 +23,17 @@ from experimental_commands.generate_instrument_config import (
 
 _EXPECTED_HEADER = ["InstrumentType", "DeviceNumber", "Name", "COMPort", "OtherParams"]
 _EXPECTED_COLUMN_COUNT = 5
+_INSTRUMENT_CONFIG =[
+        ["VICI_M6_Pump",	1,	"Pump",	"COM21", ""],
+        ["VICI_M6_Pump",	2,	"Pump",	"COM22", ""],
+        ["Valve6Way",	2,	"Xylopyridine-Valve",	"COM8", ""],
+        ["Valve6Way",	2,	"Cosolvent-Valve",	"COM8", ""],
+        ["Temperature",	1,	"Temperature",	"COM12", ""],
+        ["Tricontinental_Pump_C24000",	1,	"Tricontinental_Pump_C24000",	"COM19", ""],
+        ["Tricontinental_Pump_C24000",	2,	"Tricontinental_Pump_C24000",	"COM14", ""],
+        ["DH2000", 1, "DH2000", "COM27", ""],
+        ["OceanOptics_UVVis", 1, "OceanOptics", "COM50", ""]
+        ]
 
 
 def test_generate_instrument_config_returns_list_of_lists():
