@@ -20,7 +20,7 @@ sys.path.append(str(project_root))
 
 from experimental_commands.generate_light_intensity_commands import generate_light_intensity_commands
 
-_HEADER = ["Component", "Action", "Parameters", "Output", "Notes", "delay"]
+_HEADER = ["Component", "Action", "Parameters", "Notes", "delay"]
     
     
 _COMMANDS = [
@@ -40,6 +40,36 @@ _COMMANDS = [
         "0.5",
     ],
 ]
+
+def test_generate_light_intensity_commands_returns_list_of_lists():
+    commands = generate_light_intensity_commands(75.00)
+    assert isinstance(commands, list)
+    assert all(isinstance(command, list) for command in commands)
+
+def test_generate_light_intensity_commands_header_is_correct():
+    commands = generate_light_intensity_commands(75.00)
+    assert commands[0] == _HEADER
+
+def test_generate_light_intensity_commands_has_command_rows():
+    commands = generate_light_intensity_commands(75.00)
+    assert len(commands) == 3
+
+def test_generate_light_intensity_commands_command_rows_have_correct_column_count():
+    commands = generate_light_intensity_commands(75.00)
+    for command in commands[1:]:  # Skip header
+        assert len(command) == len(_HEADER), (
+            f"Command {command} has {len(command)} columns, expected {len(_HEADER)}"
+        )
+
+def test_generate_light_intensity_output_is_correct():
+    light_intensity = 75.00
+    commands = generate_light_intensity_commands(light_intensity)
+    expected_output = f"Setting Light Intensity to {round(light_intensity, 2)} for the experiment"
+    output_light_intensity_str =commands[2][2].split(",")[0]
+    output_light_intensity_float = round(float(output_light_intensity_str.replace("intensity=", "")), 2)
+    assert output_light_intensity_float == light_intensity, (
+        f"Expected output '{light_intensity}', but got '{output_light_intensity_float}'"
+    )
 
 def test_generate_light_intensity_commands():
     # Example input parameters for the function

@@ -22,7 +22,7 @@ def generate_light_intensity_commands(
      - commands: The instrument commands to set the light intensity
     """
 
-    header = ["Component", "Action", "Parameters", "Output", "Notes", "delay"]
+    header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [
         header,
         [
