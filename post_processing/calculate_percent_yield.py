@@ -43,13 +43,13 @@ def calculate_percent_yield(
     Returns:
         Percent yield (0-100%)
     """
-    if pathlength_cm <= 0:
+    if pathlength_cm < 0:
         raise ValueError("pathlength_cm must be > 0 cm.")
     if (
         epsilon_reactant_at_lambda1_L_per_mol_cm <= 0
         or epsilon_product_at_lambda2_L_per_mol_cm <= 0
     ):
-        raise ValueError("Molar absorptivities must be > 0.")
+        raise ValueError("reactant_absorbance must be > 0.")
     if reactant_absorbance < 0:
         raise ValueError("reactant_absorbance must be >= 0.")
     if product_absorbance < 0:

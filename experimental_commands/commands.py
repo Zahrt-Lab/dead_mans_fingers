@@ -1,7 +1,5 @@
 import csv
 
-from bayesian_optimizer.experiment_state import BoCampaignState
-
 from experimental_commands.generate_experimental_commands import (
     generate_experimental_commands,
 )
@@ -118,33 +116,20 @@ def save_commands_csv(
             )
         )
 
-# TODO : We need to update this function to properly run the experimental commands
-def run_commands(bo_experimental_state: BoCampaignState, 
-                 instrument_config_file) -> None:
+def run_commands(command_file: str, instrument_config_file: str) -> None:
     """
-    This runs all of our experimental commands given the command and instrument config files
+    Run a single CSV command file against the connected instruments.
 
     parameters:
-     - experiment_commands: Experimental Commands in the form of a csv
-     - instrument_config_file: Instrument config file to help us to determine what equipment
-     is being used
+     - command_file: Path to the CSV command file to execute
+     - instrument_config_file: Path to the instrument configuration CSV
     """
-
-    # TODO: There is no experiment_commands_csv need to make this
-        
-    if bo_experimental_state.simulation_mode:
-        print(f"[SIMULATION] Would run commands from: {experiment_commands_csv} with instrument config: {instrument_config_file}")
-        return
-    
     if GeneralExperimentMethod is None:
         raise RuntimeError(
             "GeneralExperimentMethod not available. "
-            "Run in simulation mode with --simulation flag or install AutoZahrt hardware package."
+            "Install the AutoZahrt hardware package or run in simulation mode."
         )
 
-    # TODO: I think this needs an output directory to save the results of the experiments as well.
-    fluorescent_reaction_optimization_experiment = GeneralExperimentMethod(
-        experiment_commands_csv, instrument_config_file
-    )
-    fluorescent_reaction_optimization_experiment.run_experiment()
+    experiment = GeneralExperimentMethod(command_file, instrument_config_file)
+    experiment.run_experiment()
 
