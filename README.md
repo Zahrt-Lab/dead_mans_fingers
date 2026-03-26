@@ -99,18 +99,11 @@ See [High Priority TODOs](#high-priority-todos) below.
 ## High Priority TODOs
 
 **Code Quality & Safety:**
-- [ ] Connect Arduino-controlled light intensity and integrate with experiment orchestration
 - [ ] Prevent overwriting prior run outputs (iteration-stamped directories + hard fails on collisions)
 - [ ] Add a live optimization GUI: progress plots + snapshot export + optional full UV-Vis spectrum export (e.g., every N runs)
-- [ ] Enable per-analog Bayesian optimization (hold analog constant; optimize within each analog)
-- [ ] Provide a Linux-based production runner for stable BO execution
 - [ ] Refactor to production-grade code after a stable workflow is validated
 
 ## Low Priority TODOs
-
-- [ ] Add a pre-check valve path to UV-Vis to verify concentration prior to each reaction step
-- [ ] Add a GUI for setting BO parameters (run count, bounds, objectives) to avoid terminal configuration
-- [ ] Add a short “Getting Started” tutorial for new users (hardware map + run procedure)
 
 ---
 
