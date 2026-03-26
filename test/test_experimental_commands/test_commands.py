@@ -24,6 +24,8 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from experimental_commands.commands import save_commands_csv, run_commands
 
+# TODO : Add more equipment tests when hardware is available
+
 _HEADER = ["Component", "Action", "Parameters", "Notes", "delay"]
 
 
@@ -41,7 +43,6 @@ def test_save_commands_csv_creates_light_intensity_file(tmp_path):
     base = tmp_path / "iteration_1"
     save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, 0.2, 75)
     assert (tmp_path / "iteration_1_light_intensity.csv").exists()
-
 
 def test_save_commands_csv_creates_experiment_file(tmp_path):
     base = tmp_path / "iteration_1"

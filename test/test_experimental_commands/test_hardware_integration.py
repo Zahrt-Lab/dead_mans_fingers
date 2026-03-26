@@ -28,6 +28,11 @@ import pytest
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
+# TODO : Need to figure out how to get this working when on the platform 
+# future versions should be able to import the actual run commands functions
+# and run them on the hardware, but for now will just check for com ports to verify hardware
+
+# TODO : There should also be an experiment test that runs 
 
 # ---------------------------------------------------------------------------
 # Temperature controller (COM12)
@@ -91,10 +96,12 @@ def test_light_intensity_command_executes_without_error(tmp_path, detected_ports
 # OceanOptics UV-Vis (COM50)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.hardware
-def test_uvvis_connection(detected_ports):
-    """Verify OceanOptics UV-Vis on COM50 is in the detected ports."""
-    assert "COM50" in detected_ports, "OceanOptics UV-Vis on COM50 not detected"
+# TODO : UV-VIS doesn't actually have a com port and COM50 is just a placeholder
+# Need to figure out how to handle this test case
+#@pytest.mark.hardware
+#def test_uvvis_connection(detected_ports):
+#    """Verify OceanOptics UV-Vis on COM50 is in the detected ports."""
+#    assert "COM50" in detected_ports, "OceanOptics UV-Vis on COM50 not detected"
 
 
 # ---------------------------------------------------------------------------

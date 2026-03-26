@@ -26,6 +26,7 @@ from experimental_commands.experiment_runner import run_hardware_experiment
 _INSTRUMENT_CONFIG = "Instrument_Config_File.csv"
 _COMMAND_BASE = "iteration_1"
 
+# TODO : I don't understand the unittest.mock library well enough 
 
 # ---------------------------------------------------------------------------
 # Tier 1 — mock tests (always run)

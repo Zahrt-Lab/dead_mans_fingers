@@ -43,7 +43,7 @@ def calculate_percent_yield(
     Returns:
         Percent yield (0-100%)
     """
-    if pathlength_cm < 0:
+    if pathlength_cm <= 0:
         raise ValueError("pathlength_cm must be > 0 cm.")
     if (
         epsilon_reactant_at_lambda1_L_per_mol_cm <= 0
