@@ -87,7 +87,7 @@ def test_calculate_percent_yield_invalid_product_absorbance():
         percent_yield = calculate_percent_yield(
             reactant_absorbance=0.3,  
             epsilon_reactant_at_lambda1_L_per_mol_cm=100,
-            product_absorbance=-0.3,
+            product_absorbance=-0.3, # Invalid
             epsilon_product_at_lambda2_L_per_mol_cm=150,
             pathlength_cm=1,    
             initial_concentration_mol_per_L=0.01,   
@@ -104,18 +104,18 @@ def test_calculate_percent_yield_zero_pathlength():
             initial_concentration_mol_per_L=0.01,
         )
 
-def test_calculate_percent_yield_negative_absorbance():
+def test_calculate_percent_yield_negative_reactant_epsilon():
     with pytest.raises(ValueError):
         calculate_percent_yield(
-            reactant_absorbance=-0.1,  # Invalid
-            epsilon_reactant_at_lambda1_L_per_mol_cm=100,
+            reactant_absorbance=0.1,  
+            epsilon_reactant_at_lambda1_L_per_mol_cm=-100, # Invalid
             product_absorbance=0.3,
             epsilon_product_at_lambda2_L_per_mol_cm=150,
             pathlength_cm=1,
             initial_concentration_mol_per_L=0.01,
         )
 
-def test_calculate_percent_yield_negative_initial_concentration():
+def test_calculate_percent_yield_negative_reactant_concentration():
     with pytest.raises(ValueError):
         calculate_percent_yield(
             reactant_absorbance=0.5,
@@ -124,6 +124,17 @@ def test_calculate_percent_yield_negative_initial_concentration():
             epsilon_product_at_lambda2_L_per_mol_cm=150,
             pathlength_cm=1,
             initial_concentration_mol_per_L=-0.01,  # Invalid
+        )
+
+def test_calculate_percent_yield_negative_product_epsilon():
+    with pytest.raises(ValueError):
+        calculate_percent_yield(
+            reactant_absorbance=0.1,  
+            epsilon_reactant_at_lambda1_L_per_mol_cm=100, 
+            product_absorbance=0.3,
+            epsilon_product_at_lambda2_L_per_mol_cm=-150, # Invalid
+            pathlength_cm=1,
+            initial_concentration_mol_per_L=0.01,
         )
 
 def test_calculate_percent_yield_zero_initial_concentration():
