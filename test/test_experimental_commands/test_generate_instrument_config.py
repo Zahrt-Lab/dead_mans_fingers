@@ -23,7 +23,8 @@ from experimental_commands.generate_instrument_config import (
 
 _EXPECTED_HEADER = ["InstrumentType", "DeviceNumber", "Name", "COMPort", "OtherParams"]
 _EXPECTED_COLUMN_COUNT = 5
-_INSTRUMENT_CONFIG =[
+_INSTRUMENT_CONFIG = [
+        ["InstrumentType", "DeviceNumber", "Name", "COMPort", "OtherParams"],
         ["VICI_M6_Pump",	1,	"Pump",	"COM21", ""],
         ["VICI_M6_Pump",	2,	"Pump",	"COM22", ""],
         ["Valve6Way",	2,	"Xylopyridine-Valve",	"COM8", ""],
