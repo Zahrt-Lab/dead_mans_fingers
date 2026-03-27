@@ -31,6 +31,8 @@ from post_processing.append_bayesian_experimental_results import append_bayesian
 from utils.run_simulation import run_simulated_experiment
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 
+# TODO : This code is considered a god function and should be refactore
+
 def run_experiment(bo_campaign_state: BoCampaignState,
                    iteration_state: IterationState
                    ) -> str:

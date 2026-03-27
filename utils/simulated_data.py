@@ -24,7 +24,7 @@ def simulate_uvvis_data(
     noise_level=0.01,
     random_seed=42,
     start_delay=180,  # delay before reaction starts (in seconds)],
-):
+) -> pd.DataFrame: 
     """
     Simulate UV-Vis absorbance data for a reactant-to-product conversion.
 
@@ -34,6 +34,18 @@ def simulate_uvvis_data(
 
     The simulation starts at absorbance ~0 for the first start_delay seconds,
     then the reaction begins and absorbances evolve according to first-order kinetics.
+
+    Parameters:
+       - time_end: Total duration of the simulated experiment in seconds
+       - time_step: Time interval between recorded measurements in seconds
+       - rate_constant: First-order rate constant for the reaction (1/s)
+       - initial_absorbance: Initial absorbance of the reactant at time=0
+       - noise_level: Standard deviation of Gaussian noise added to absorbance
+       - random_seed: Seed for reproducibility of the random noise
+       - start_delay: Time in seconds before the reaction starts (absorbance ~0)
+
+    Returns:
+       - DataFrame with columns: Time_s, Absorbance_409nm, Absorbance_506nm
     """
 
     np.random.seed(random_seed)
