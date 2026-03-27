@@ -1,5 +1,90 @@
-# Purpose of this code is to hold
-# validate the state of the BoExperimentClass and IterationStateClass, 
-# we use this a lot and do this as a quick error check since it's used so often
+# ------------------------------------------------------------------------------
+# Software: project_dead_mans_fingers
+# Copyright: (C) 2026 by Professor Andrew Zahrt
+# This software is the intellectual property of Professor Andrew Zahrt
+# Contributions by graduate students Scott Laverty and Joao are acknowledged.
+# All rights reserved.
+# ------------------------------------------------------------------------------
+
+"""
+Validate the state of BoCampaignState and IterationState objects.
+Called as a quick sanity check before each BO iteration since these objects
+are threaded through the entire pipeline.
+"""
+
+from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
+
+_REQUIRED_BO_KEYS = {
+    "base_directory",
+    "xylopyridine_analogs_concentrations_uM",
+    "total_volume_through_reactor_bed",
+    "target_volume_through_reactor_bed",
+    "reactant_wavelength",
+    "product_wavelength",
+    "Fluorescent_Bayesian_Optimization_results_filename",
+    "epsilon_reactant_at_lambda1_L_per_mol_cm",
+    "epsilon_product_at_lambda2_L_per_mol_cm",
+    "pathlength_cm",
+    "max_absorbance_concentration_uM_uv_detector",
+    "target_absorbance_in_the_uv_detector",
+}
+
+_REQUIRED_TRIAL_KEYS = {
+    "flow_rate",
+    "dilution_factor",
+    "temperature",
+    "co_solvent_valve_position",
+    "co_solvent_dilution_factor",
+    "light_intensity",
+}
 
 
+def validate_bo_campaign_state(state: BoCampaignState) -> None:
+    """
+    Validate a BoCampaignState object.
+
+    Parameters:
+        state: The BoCampaignState to validate.
+    Raises:
+        TypeError: If state is not a BoCampaignState.
+        ValueError: If required fields are missing or invalid.
+    """
+    if not isinstance(state, BoCampaignState):
+        raise TypeError(f"Expected BoCampaignState, got {type(state).__name__}")
+    if not isinstance(state.simulation_mode, bool):
+        raise ValueError(
+            f"simulation_mode must be bool, got {type(state.simulation_mode).__name__}"
+        )
+    if state.noise_sem <= 0:
+        raise ValueError(f"noise_sem must be > 0, got {state.noise_sem}")
+    missing = _REQUIRED_BO_KEYS - set(state.bo_parameters.keys())
+    if missing:
+        raise ValueError(
+            f"bo_parameters is missing required keys: {sorted(missing)}"
+        )
+
+
+def validate_iteration_state(state: IterationState) -> None:
+    """
+    Validate an IterationState object.
+
+    Parameters:
+        state: The IterationState to validate.
+    Raises:
+        TypeError: If state is not an IterationState.
+        ValueError: If required fields are missing or invalid.
+    """
+    if not isinstance(state, IterationState):
+        raise TypeError(f"Expected IterationState, got {type(state).__name__}")
+    if state.iteration < 0:
+        raise ValueError(f"iteration must be >= 0, got {state.iteration}")
+    missing = _REQUIRED_TRIAL_KEYS - set(state.trial_conditions.keys())
+    if missing:
+        raise ValueError(
+            f"trial_conditions is missing required keys: {sorted(missing)}"
+        )
+    if state.reactor_bed_concentration_uM < 0:
+        raise ValueError(
+            f"reactor_bed_concentration_uM must be >= 0, "
+            f"got {state.reactor_bed_concentration_uM}"
+        )

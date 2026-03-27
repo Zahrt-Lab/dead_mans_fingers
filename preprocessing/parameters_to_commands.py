@@ -7,43 +7,46 @@
 # ------------------------------------------------------------------------------
 
 """
-This script takes the recommend experimental parameters from the Bayesian optimizer
+This script takes the recommended experimental parameters from the Bayesian optimizer
 and converts them into the instrument commands to be sent to the equipment for
-experiment to be performed.
+the experiment to be performed.
 """
 
 from typing import Dict, Any
-from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 
-# TODO : We should go back to an older version of this code with input being
-# 1) the trial conditions
-# 2) the reactor bed volume 
-# 3) the xylopyridine analog concentration in uM
-# 4) the max absorbance concentration in uM for the UV detector
-# 5) the target absorbance in the UV detector
-# The reasoning is that we wish to use this in the production run as well,
-# and in the production run we will not have the same BO parameters
 
 def parameters_to_commands(
-    bo_campaign_state: BoCampaignState,
-    iteration_state: IterationState,
+    trial_conditions: Dict[str, float],
+    total_volume_through_reactor_bed: float,
+    xylopyridine_analogs_concentrations_uM: float,
+    max_absorbance_concentration_uM_uv_detector: float,
+    target_absorbance_in_the_uv_detector: float,
 ) -> Dict[str, Any]:
     """
+    Convert trial conditions and campaign constants into instrument parameters.
+
+    Accepts individual scalar values so this function can be used in both the
+    BO campaign and the production run without requiring state objects.
+
     Parameters
     ----------
-    bo_campaign_state
-        Campaign-level state (constants, BO parameters).
-    iteration_state
-        Iteration-level state (trial conditions for this run).
+    trial_conditions
+        Dict with keys: flow_rate, dilution_factor, temperature,
+        co_solvent_valve_position, co_solvent_dilution_factor, light_intensity.
+    total_volume_through_reactor_bed
+        Total volume to pump through the reactor bed in µL.
+    xylopyridine_analogs_concentrations_uM
+        Stock solution concentration of the xylopyridine analog in µM.
+    max_absorbance_concentration_uM_uv_detector
+        Maximum concentration (µM) the UV detector can handle linearly.
+    target_absorbance_in_the_uv_detector
+        Fraction of max detector concentration to target (0–1).
 
     Returns
     -------
-    Dict[str, int]
-        Instrument command parameters (rounded to integers where needed).
+    Dict[str, Any]
+        Instrument command parameters (flow rates, volumes, valve, temp, light).
     """
-    trial_conditions = iteration_state.trial_conditions
-    bo_parameters = bo_campaign_state.bo_parameters
-
     # --- Validate trial conditions ---
     flow_rate = trial_conditions["flow_rate"]
     dilution_factor = trial_conditions["dilution_factor"]
@@ -70,14 +73,14 @@ def parameters_to_commands(
     if not (0.0 <= light_intensity <= 100.0):
         raise ValueError("light_intensity must be in [0, 100].")
 
-    # --- Validate BO/campaign parameters ---
-    total_volume = bo_parameters["total_volume_through_reactor_bed"]
+    # --- Validate campaign constants ---
+    total_volume = total_volume_through_reactor_bed
     if total_volume <= 0:
         raise ValueError("total_volume_through_reactor_bed must be > 0 µL.")
 
-    xylopyridine_uM = bo_parameters["xylopyridine_analogs_concentrations_uM"]
-    max_abs_uM = bo_parameters["max_absorbance_concentration_uM_uv_detector"]
-    target_abs = bo_parameters["target_absorbance_in_the_uv_detector"]
+    xylopyridine_uM = xylopyridine_analogs_concentrations_uM
+    max_abs_uM = max_absorbance_concentration_uM_uv_detector
+    target_abs = target_absorbance_in_the_uv_detector
 
     if xylopyridine_uM <= 0:
         raise ValueError("xylopyridine_analogs_concentrations_uM must be > 0.")
@@ -104,9 +107,10 @@ def parameters_to_commands(
     flow_rate_reactor = flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3
     volume_reactor = volume_pump1 + volume_pump2 + volume_pump3
 
-    # Pump 4 (UV dilution)
-    reactor_conc_uM = dilution_factor * xylopyridine_uM
+    # Pump 4 (UV dilution): dilutes reactor output to keep detector in linear range.
+    # cuvette_conc_uM is the target concentration at the detector.
     # TODO : Is this math correct? We should double check this
+    reactor_conc_uM = dilution_factor * xylopyridine_uM
     cuvette_conc_uM = max_abs_uM * target_abs
 
     if reactor_conc_uM <= cuvette_conc_uM:

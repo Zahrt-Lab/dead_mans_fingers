@@ -19,20 +19,18 @@ from experimental_commands.generate_experimental_commands import generate_experi
 
 _HEADER = ["Component", "Action", "Parameters", "Notes", "delay"]
 
-# NOTE: set_params and start_continuous rows have 6 elements due to an extra
-# empty Notes field in the source. All other rows have 5 elements.
 _COMMANDS = [
     _HEADER,
     ["DH2000_1", "shutter_open", "", "", "3.0"],
     ["OceanOptics_UVVis_1", "init", "", "", "3.0"],
     ["OceanOptics_UVVis_1", "set_params",
      "integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths=409;506",
-     "", "", "3.0"],
+     "", "3.0"],
     ["OceanOptics_UVVis_1", "record_blank", "", "", "3.0"],
     ["DH2000_1", "shutter_close", "", "", "3.0"],
     ["OceanOptics_UVVis_1", "record_dark", "", "", "3.0"],
     ["DH2000_1", "shutter_open", "", "", "3.0"],
-    ["OceanOptics_UVVis_1", "start_continuous", "stop_upon_convergence=True", "", "", "3.0"],
+    ["OceanOptics_UVVis_1", "start_continuous", "stop_upon_convergence=True", "", "3.0"],
     [
         "Tricontinental_Pump_C24000_1",
         "dispense",
@@ -124,10 +122,16 @@ def test_generate_experimental_commands_uv_vis_start_continuous():
     assert "stop_upon_convergence=True" in commands[8][2]
 
 
-def test_generate_experimental_commands_pump1_always_present():
+def test_generate_experimental_commands_pump1_included_when_nonzero():
     commands = generate_experimental_commands(100, 0, 0, 0, 1000, 0, 0, 0)
     components = [cmd[0] for cmd in commands]
     assert "Tricontinental_Pump_C24000_1" in components
+
+
+def test_generate_experimental_commands_pump1_omitted_when_zero():
+    commands = generate_experimental_commands(0, 0, 0, 0, 0, 0, 0, 0)
+    components = [cmd[0] for cmd in commands]
+    assert "Tricontinental_Pump_C24000_1" not in components
 
 
 def test_generate_experimental_commands_pump1_flow_volume_encoded_correctly():

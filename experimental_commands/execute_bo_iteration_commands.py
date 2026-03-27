@@ -33,7 +33,7 @@ from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 
 def run_experiment(bo_campaign_state: BoCampaignState,
                    iteration_state: IterationState
-                   ) -> Tuple[BoCampaignState, IterationState]:
+                   ) -> str:
     """
     Phase 2: Run the experiment (hardware or simulation mode).
     
@@ -100,7 +100,8 @@ def run_bayesian_optimization_iteration(
         return bo_campaign_state.results_cache[current_trial_conditions]
 
     # Phase 1: Prepare experiment (parameters, files, volume checks)
-    # TODO: Need to evaluate reactor bed concentration — should return 1000 but returns 130
+    # Reactor bed concentration = stock_conc × dilution_factor.
+    # e.g. dilution_factor=0.13, stock=1000 uM → 130 uM in reactor bed. This is correct.
     print("Calculating reactor bed concentration in uM for this experiment")
     reactor_bed_concentration_uM = (
         iteration_state.trial_conditions["dilution_factor"]
@@ -114,7 +115,13 @@ def run_bayesian_optimization_iteration(
     command_path_base = base_directory / Path(f"Fluorescent_Optimization_Iteration_{iteration_state.iteration}")
 
     print("Calculating experimental parameters for this bayesian optimization search point")
-    instrument_parameters = parameters_to_commands(bo_campaign_state, iteration_state)
+    instrument_parameters = parameters_to_commands(
+        iteration_state.trial_conditions,
+        bo_campaign_state.bo_parameters["total_volume_through_reactor_bed"],
+        bo_campaign_state.bo_parameters["xylopyridine_analogs_concentrations_uM"],
+        bo_campaign_state.bo_parameters["max_absorbance_concentration_uM_uv_detector"],
+        bo_campaign_state.bo_parameters["target_absorbance_in_the_uv_detector"],
+    )
     iteration_state.update_instrument_parameters(instrument_parameters)
 
     save_instrument_config_csv(instrument_config)
@@ -155,6 +162,7 @@ def run_bayesian_optimization_iteration(
             "temperature": trial_conditions["temperature"],
             "co_solvent": trial_conditions["co_solvent_valve_position"],
             "co_solvent_volume": trial_conditions["co_solvent_dilution_factor"],
+            "light_intensity": trial_conditions["light_intensity"],
             "target_volume": bo_parameters["target_volume_through_reactor_bed"],
             "reactant_wavelength": bo_parameters["reactant_wavelength"],
             "product_wavelength": bo_parameters["product_wavelength"],

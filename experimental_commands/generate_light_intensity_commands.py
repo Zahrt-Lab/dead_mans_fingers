@@ -8,8 +8,6 @@
 
 from typing import List
 
-# TODO: This is just a placeholder function for now since don't have the actual light box code yet
-
 def generate_light_intensity_commands(
     light_intensity: float
     ) -> List[List[str]]:

@@ -10,7 +10,7 @@
 Test cases for post_processing/post_processing_results.py
 """
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pandas as pd
 import pytest

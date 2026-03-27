@@ -8,7 +8,8 @@
 
 from typing import List
 
-# TODO: Should make is_zero function more robust and move it to a utils file since we will be using it in multiple places
+from utils.is_zero import is_zero
+
 def generate_experimental_commands(
     flow_rate_pump1: float,
     flow_rate_pump2: float,
@@ -46,9 +47,6 @@ def generate_experimental_commands(
     - commands: Experimental commands for reacting the flow reaction
     """
 
-    def _is_zero(flow_rate: float, volume: float) -> bool:
-        return (abs(flow_rate) <= zero_tolerance) or (abs(volume) <= zero_tolerance)
-
     header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [header]
 
@@ -67,7 +65,6 @@ def generate_experimental_commands(
         "num_scans=10,"
         "measurement_interval=5,"
         "target_wavelengths=409;506",
-        "",
         "",
         "3.0"
         ]
@@ -91,18 +88,19 @@ def generate_experimental_commands(
     # This begins the UV-Vis data collection in continuous mode until stopped once converged
     # TODO: Need to verify that once convergence is reached all the pumps will stop as well
     commands.append([
-        "OceanOptics_UVVis_1","start_continuous","stop_upon_convergence=True","","","3.0"
+        "OceanOptics_UVVis_1","start_continuous","stop_upon_convergence=True","","3.0"
         ]
     )
-    commands.append([
-            "Tricontinental_Pump_C24000_1",
-            "dispense",
-            f"flow_rate={flow_rate_pump1},volume={volume_pump1}",
-            f"The flow rate of our Xylo compund is {flow_rate_pump1} uL/min and volume is {volume_pump1}",
-            "0.5",
-        ]
-    )
-    if not _is_zero(flow_rate_pump2, volume_pump2):
+    if not is_zero(flow_rate_pump1, volume_pump1, zero_tolerance):
+        commands.append([
+                "Tricontinental_Pump_C24000_1",
+                "dispense",
+                f"flow_rate={flow_rate_pump1},volume={volume_pump1}",
+                f"The flow rate of our Xylo compund is {flow_rate_pump1} uL/min and volume is {volume_pump1}",
+                "0.5",
+            ]
+        )
+    if not is_zero(flow_rate_pump2, volume_pump2, zero_tolerance):
         commands.append(
             [
             "VICI_M6_Pump_1",
@@ -112,7 +110,7 @@ def generate_experimental_commands(
             "0.5",
         ]
         )
-    if not _is_zero(flow_rate_pump3, volume_pump3):
+    if not is_zero(flow_rate_pump3, volume_pump3, zero_tolerance):
         commands.append([
             "VICI_M6_Pump_2",
             "dispense",
@@ -122,7 +120,7 @@ def generate_experimental_commands(
         ]
         )
     # TODO: Need to validate and add these tricontinental pump commands
-    if not _is_zero(flow_rate_pump4, volume_pump4):
+    if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
             "Tricontinental_Pump_C24000_2",
             "aspirate",

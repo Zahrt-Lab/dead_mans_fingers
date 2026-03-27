@@ -15,8 +15,43 @@ setting up the experiment parameters and objectives for the Bayesian optimizatio
 from __future__ import annotations
 
 import os
+from typing import Callable, Optional
 
 from ax.service.ax_client import AxClient, ObjectiveProperties
+
+
+def _prompt_resume_or_restart(
+    path: str,
+    ask_user_fn: Callable[[str], str] = input,
+) -> bool:
+    """
+    Warn the user that an existing Ax campaign file was found and ask whether
+    to resume it or start a new campaign.
+
+    Parameters:
+        path: Path to the existing Ax JSON file.
+        ask_user_fn: Callable used to read user input (injectable for tests).
+
+    Returns:
+        True  → resume (load existing file)
+        False → restart (caller should delete the file and start fresh)
+    """
+    print(
+        f"\nWarning: An existing Ax campaign file was found at:\n  {path}\n"
+        "Note: The in-memory results cache is not saved between runs. Resuming\n"
+        "may cause previously-run parameter sets to be repeated.\n"
+        "\nOptions:\n"
+        "  [1] Resume the existing campaign\n"
+        "  [2] Delete the file and start a new campaign\n"
+    )
+    while True:
+        choice = ask_user_fn("Enter 1 or 2: ").strip()
+        if choice == "1":
+            return True
+        if choice == "2":
+            return False
+        print("Invalid input. Please enter 1 or 2.")
+
 
 def _init_or_load_ax(
     ax_previous_run_json_file_path: str,
@@ -34,9 +69,13 @@ def _init_or_load_ax(
     light_intensity_max: float,
     percent_yield_threshold: float,
     throughput_threshold: float,
+    ask_user_fn: Optional[Callable[[str], str]] = input,
 ) -> AxClient:
     """
     Initialize a new AxClient or resume from a JSON state file to begin a bayesian optimization campaign.
+
+    If a previous campaign file exists at ``ax_previous_run_json_file_path``, the user
+    is prompted to choose between resuming that campaign or deleting it and starting fresh.
 
     Parameters:
         ax_previous_run_json_file_path: Path to JSON file to load Ax state from (if exists)
@@ -48,14 +87,19 @@ def _init_or_load_ax(
         light_intensity_min, light_intensity_max: Bounds for light intensity parameter
         percent_yield_threshold: Threshold for percent yield objective (for Ax)
         throughput_threshold: Threshold for throughput objective (for Ax)
+        ask_user_fn: Callable used to read user input (injectable for tests; defaults to built-in input())
 
     Returns:
         AxClient: AxClient instance ready for optimization campaign (with experiment created and objectives set)
     """
     if os.path.exists(ax_previous_run_json_file_path):
-        ax = AxClient.load_from_json_file(ax_previous_run_json_file_path)
-        print(f"Resumed Ax experiment with {len(ax.get_trials_data_frame())} trials.")
-        return ax
+        resume = _prompt_resume_or_restart(ax_previous_run_json_file_path, ask_user_fn)
+        if resume:
+            ax = AxClient.load_from_json_file(ax_previous_run_json_file_path)
+            print(f"Resumed Ax experiment with {len(ax.get_trials_data_frame())} trials.")
+            return ax
+        os.remove(ax_previous_run_json_file_path)
+        print("Existing campaign file deleted. Starting a new campaign.")
 
     ax = AxClient()
     ax.create_experiment(

@@ -1,98 +1,21 @@
-# Project Dead Man’s Fingers  
-## Automated Flow Platform for Bayesian Optimization (Xylopyridine Analogs)
-
-This repository controls an automated flow-chemistry platform that optimizes photochemical reactions of xylopyridine analogs using Bayesian optimization. In each campaign, the platform:
-
-1) Selects a set of xylopyridine analogs.
-
-2) Initializes a Bayesian optimization routine over experimental conditions.
-
-3) Executes experiments based on optimizer-proposed conditions.
-
-4) Quantifies each experiment via UV–Vis spectroscopy, calculating yield and throughput.
-
-5) Proposes the next experiment iteratively.
-
-6) Terminates when predefined stopping criteria are met.
-
-7) Optionally transitions the optimized conditions to a production run to generate a target quantity (grams or moles) of the selected analog.
-
----
-
-## ⚙️ System Requirements
-
-### Software Requirements
-
-- **Python**: 3.9 or higher
-- **Operating System**: Linux (tested on Ubuntu), macOS, Windows (simulation mode only)
-- **Required Python Packages**:
-  - `ax-platform` >= 0.3.0 (Bayesian optimization)
-  - `pandas` >= 1.3.0 (data handling)
-  - `numpy` >= 1.21.0 (numerical computing)
-  - `matplotlib` >= 3.4.0 (plotting)
-  - `seaborn` >= 0.11.0 (visualization)
-  - `pyserial` (optional, for hardware control)
-
-### Hardware Requirements (For Non-Simulation Mode)
-
-The following instruments must be connected and powered on:
-
-| Instrument | Connection | Purpose |
-|------------|------------|---------|
-| **VICI M6 Pump 1** | COM21 | Xylopyridine analog feed (0.1 M HCl) |
-| **VICI M6 Pump 2** | COM22 | Dilution feed (0.1 M HCl) |
-| **6-Way Valve (Co-solvent)** | COM7 | Co-solvent selection |
-| **VICI M6 Pump 3** | Connected to Valve | Co-solvent feed |
-| **TC-720 Temperature Controller** | COM12 | Reactor temperature control (Peltier) |
-| **PhD Ultra Syringe Pump** | COM19 | Alternative pump (if used) |
-| **Ismatec Pump** | COM14 | Post-reactor dilution |
-| **Ocean Optics UV-Vis** | USB | Spectroscopic detection (409 nm, 506 nm) |
-| **10-Way Valve (Waste)** | COM? | Waste stream routing |
-| **Light Source** | Arduino/Serial | 365 nm UV lamp (0-400 W) |
-
-**⚠️ Safety Note**: Always verify proper ventilation, chemical compatibility, and safety interlocks before running in hardware mode.
-
----
-
-## 🎯 Optimization Parameters
-
-The Bayesian optimizer explores a 6-dimensional search space:
-
-| Parameter | Symbol | Range | Units | Description |
-|-----------|--------|-------|-------|-------------|
-| **Flow Rate** | $F_{123}$ | 40 - 200 | µL/min | Total flow through reactor |
-| **Dilution Factor** | $D$ | 0.05 - 0.5 | — | Fraction of stock concentration |
-| **Temperature** | $T$ | 20 - 60 | °C | Reactor temperature |
-| **Co-solvent Valve** | $V_2$ | 1 - 6 | position | Co-solvent selection (1=EtOH, 2=MeCN, etc.) |
-| **Co-solvent Fraction** | $D_{cosol}$ | 0.0 - 0.4 | — | Fraction of co-solvent in dilution |
-| **Light Intensity** | $I$ | 0 - 100 | % | UV lamp power |
-
-### Objectives (Maximized)
-
-1. **Percent Yield**: Fraction of xylopyridine converted to product (0-100%)
-2. **Throughput**: Product generation rate (nmol/min)
-
-The optimizer uses **qNEHVI** (quasi-Expected Noisy Hypervolume Improvement) acquisition function to propose experiments that maximize expected improvement on the Pareto front.
-
----
-
-## 🐛 Known Issues & Recent Fixes
-
-See [CODE_REVIEW.md](CODE_REVIEW.md) for comprehensive analysis.
-
-**Recently Fixed:**
-- ✅ **SIMULATION_MODE propagation** - Global state now correctly propagates through function calls
-- ✅ **Undefined EXPERIMENTAL_PARAMETERS** - Fixed incorrect variable references
-- ✅ **Tuple/int comparison error** - Corrected type mismatches in parameter handling
-
-**Current Known Issues:**
-- [ ] TODO comments should be converted to GitHub Issues (47 found)
-- [ ] Missing hardware safety interlocks (temperature, pressure, flow limits)
-- [ ] Inadequate test coverage (< 10% estimated)
-- [ ] Global state management creates testing challenges
-- [ ] Inconsistent error handling patterns
-
-See [High Priority TODOs](#high-priority-todos) below.
+# Project Dead Man's Fingers
+## Flow of data
+     │ Key Data Flow                                                                                        │
+     │                                                                                                      │
+     │ master JSON config                                                                                   │
+     │   └─ generate_bo_input_file() → per-analog JSON                                                      │
+     │        └─ run_bo_campaign() [BO loop]                                                                │
+     │             └─ For each iteration:                                                                   │
+     │                  constrain → standardize → cache check                                               │
+     │                  → parameters_to_commands() → save CSVs                                              │
+     │                  → run_experiment() [hardware or simulation]                                         │
+     │                  → post_process_uv_recording()                                                       │
+     │                  → average_absorbance() × 2 wavelengths                                              │
+     │                  → calculate_percent_yield()                                                         │
+     │                  → calculate_concentration_in_reactor_bed()                                          │
+     │                  → calculate_product_throughput()                                                    │
+     │                  → append_bayesian_experimental_results()                                            │
+     │                  → return (yield, throughput) to Ax   
 
 ---
 

@@ -174,7 +174,13 @@ def _run_bo_pipeline(
             * bo_state.bo_parameters["xylopyridine_analogs_concentrations_uM"]
         )
 
-        instrument_params = parameters_to_commands(bo_state, iter_state)
+        instrument_params = parameters_to_commands(
+            iter_state.trial_conditions,
+            bo_state.bo_parameters["total_volume_through_reactor_bed"],
+            bo_state.bo_parameters["xylopyridine_analogs_concentrations_uM"],
+            bo_state.bo_parameters["max_absorbance_concentration_uM_uv_detector"],
+            bo_state.bo_parameters["target_absorbance_in_the_uv_detector"],
+        )
         iter_state.update_instrument_parameters(instrument_params)
 
         csv_path = run_simulated_experiment(

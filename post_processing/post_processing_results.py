@@ -67,24 +67,19 @@ def analyze_experiment_results(
         f"Average absorbance of our product in steady-state at the end of the reaction is {average_absorbance_product}"
     )
     
-    # Calculate percent yield
-    product_percent_yield = calculate_percent_yield(
-        average_absorbance_reactant,
-        bo_parameters["epsilon_reactant_at_lambda1_L_per_mol_cm"],
-        average_absorbance_product,
-        bo_parameters["epsilon_product_at_lambda2_L_per_mol_cm"],
-        bo_parameters["pathlength_cm"],
-        iteration_state.reactor_bed_concentration_uM / 1e6,  # Convert uM to mol/L
-    )
-
-    # TODO : Should probably update the names instead of using flow rate and volume
-    # Calculate product concentration in reactor bed
+    # Back-calculate product concentration in reactor bed (corrects for pump 4 dilution)
     concentration_product_mol_per_uL_reactor_bed = (
         calculate_concentration_in_the_reactor_bed(
             absorbance=average_absorbance_product,
             experiment_state=bo_campaign_state,
             iteration_state=iteration_state
         )
+    )
+
+    # Calculate percent yield using reactor bed concentrations (mol/L on both sides)
+    product_percent_yield = calculate_percent_yield(
+        concentration_product_mol_per_L=concentration_product_mol_per_uL_reactor_bed * 1e6,
+        initial_concentration_mol_per_L=iteration_state.reactor_bed_concentration_uM / 1e6,
     )
     
     # Calculate product throughput

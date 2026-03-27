@@ -8,6 +8,8 @@
 
 from typing import List
 
+from utils.is_zero import is_zero
+
 def generate_wash_commands(
         flow_rate_pump2: float,
         volume_pump2: float,
@@ -26,10 +28,6 @@ def generate_wash_commands(
     - commands: The commands to wash the Xylo compound out of the detector
     """
 
-    # Checks if the flow rate and volume for a pump are effectively zero
-    def _is_zero(flow_rate: float, volume: float) -> bool:
-        return (abs(flow_rate) <= zero_tolerance) or (abs(volume) <= zero_tolerance)
-
     header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [header]
     
@@ -41,7 +39,7 @@ def generate_wash_commands(
             "0.5",
         ]
     )
-    if not _is_zero(flow_rate_pump2, volume_pump2):
+    if not is_zero(flow_rate_pump2, volume_pump2, zero_tolerance):
         commands.append([
             "VICI_M6_Pump_1",
             "dispense",
@@ -50,7 +48,7 @@ def generate_wash_commands(
             "0.5",
             ]
         )
-    if not _is_zero(flow_rate_pump3, volume_pump3):
+    if not is_zero(flow_rate_pump3, volume_pump3, zero_tolerance):
         commands.append([
             "VICI_M6_Pump_2",
             "dispense",
@@ -60,7 +58,7 @@ def generate_wash_commands(
             ]
         )
 
-    if not _is_zero(flow_rate_pump4, volume_pump4):
+    if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
             "Tricontinental_Pump_C24000_2",
             "aspirate",
