@@ -33,9 +33,8 @@ def append_bayesian_experimental_results(
     return:
      -None
     """
-    bo_parameters =bo_campaign_state.bo_parameters
+    bo_parameters = bo_campaign_state.bo_parameters
 
-    print("What's here")
     print(Path(bo_parameters["base_directory"]) / 
           Path(bo_parameters["Fluorescent_Bayesian_Optimization_results_filename"]))
     bayesian_optimization_csv_path = str(
