@@ -1,105 +1,110 @@
- ---
- Project Summary
 
- Project Dead Man's Fingers is an automated flow-chemistry optimization platform. It uses multi-objective Bayesian optimization (Ax/BoTorch, qNEHVI acquisition 
-  function) to simultaneously maximize percent yield and product throughput for photochemical reactions run on custom laboratory hardware.
+# Project Dead Man's Fingers
 
- ---
- Directory Structure
+**Automated flow-chemistry optimization platform**
 
- project_dead_mans_fingers/
- ├── main.py                          # Entry point (argparse → generate_bo_input → run_bo_campaign)
- ├── test_config_ax_demo.json         # Example master config
- ├── bayesian_optimizer/              # Ax/BoTorch integration, state classes, campaign loop
- │   ├── experiment_state.py          # BoCampaignState & IterationState dataclasses
- │   ├── run_bo_campaign.py           # Main optimization loop (30 iterations)
- │   ├── ax_suggested_experiment.py   # Bridges Ax trial → iteration executor
- │   └── init_or_load_ax.py          # Ax client init / resume from JSON
- ├── preprocessing/                   # Parameter validation & unit conversion
- │   ├── generate_bo_input.py         # Master JSON → per-analog JSON
- │   ├── parameters_to_commands.py    # 6 BO params → pump flow rates (F1–F4)
- │   ├── constrain_to_search_space.py # Clip params to bounds
- │   └── standardize_input.py        # Round to 2 decimal places
- ├── experimental_commands/           # Hardware control & CSV command generation
- │   ├── execute_bo_iteration_commands.py  # Full iteration orchestrator (10 steps)
- │   ├── commands.py                  # Serial port CSV execution
- │   └── experiment_runner.py        # Hardware vs. simulation dispatch
- ├── post_processing/                 # UV-Vis analysis → yield & throughput
- │   ├── post_processing_results.py   # Master pipeline
- │   ├── post_process_uv_recording.py # Extract steady-state region from UV CSV
- │   ├── average_absorbance.py
- │   ├── calculate_concentration_in_reactor_bed.py  # Beer-Lambert
- │   ├── calculate_percent_yield.py
- │   ├── calculate_product_throughput.py
- │   └── append_bayesian_experimental_results.py
- ├── utils/                           # Simulation & visualization
- │   ├── run_simulation.py            # Simulated experiment executor
- │   └── simulated_data.py           # Synthetic UV-Vis kinetic data generator
- ├── production_run/                  # Post-optimization scale-up (scaffolded, not integrated)
- └── test/                            # pytest suite
-     ├── test_preprocessing/          # Most complete coverage
-     ├── test_post_processing/
-     ├── test_experimental_commands/
-     ├── test_bayesian_optimizer/
-     └── test_utils/
+Project Dead Man's Fingers is an automated flow-chemistry optimization platform. It uses multi-objective Bayesian optimization (Ax/BoTorch, qNEHVI acquisition function) to simultaneously maximize percent yield and product throughput for photochemical reactions run on custom laboratory hardware.
 
- ---
- Key Data Flow
+---
 
- main.py
-   → generate_bo_input_file()          master JSON → analog-specific JSON
-   → run_bo_campaign()
-       initialize BoCampaignState + AxClient
-       LOOP (30 trials):
-         ax.get_next_trial() → trial_conditions (6D)
-         run_bayesian_optimization_iteration()
-           1. constrain_to_search_space()  (clip)
-           2. standardize_input()          (round to 2dp)
-           3. Check results_cache          (skip duplicates)
-           4. parameters_to_commands()     (F1–F4 pump flows)
-           5. save CSVs (instrument config, temp, light, experiment, wash)
-           6. run_experiment()             (hardware or simulation)
-           7. analyze_experiment_results() (Beer-Lambert → yield & throughput)
-           8. append_bayesian_experimental_results()
-           9. update results_cache
-           return (percent_yield, throughput_nmol_min)
-         ax.complete_trial()
-         ax.save_to_json_file()           (resumable checkpoint)
+## Directory Structure
 
- ---
- Core State Classes (bayesian_optimizer/experiment_state.py)
+```text
+project_dead_mans_fingers/
+├── main.py                          # Entry point (argparse → generate_bo_input → run_bo_campaign)
+├── test_config_ax_demo.json         # Example master config
+├── bayesian_optimizer/              # Ax/BoTorch integration, state classes, campaign loop
+│   ├── experiment_state.py          # BoCampaignState & IterationState dataclasses
+│   ├── run_bo_campaign.py           # Main optimization loop (30 iterations)
+│   ├── ax_suggested_experiment.py   # Bridges Ax trial → iteration executor
+│   └── init_or_load_ax.py           # Ax client init / resume from JSON
+├── preprocessing/                   # Parameter validation & unit conversion
+│   ├── generate_bo_input.py         # Master JSON → per-analog JSON
+│   ├── parameters_to_commands.py    # 6 BO params → pump flow rates (F1–F4)
+│   ├── constrain_to_search_space.py # Clip params to bounds
+│   └── standardize_input.py         # Round to 2 decimal places
+├── experimental_commands/           # Hardware control & CSV command generation
+│   ├── execute_bo_iteration_commands.py  # Full iteration orchestrator (10 steps)
+│   ├── commands.py                  # Serial port CSV execution
+│   └── experiment_runner.py         # Hardware vs. simulation dispatch
+├── post_processing/                 # UV-Vis analysis → yield & throughput
+│   ├── post_processing_results.py   # Master pipeline
+│   ├── post_process_uv_recording.py # Extract steady-state region from UV CSV
+│   ├── average_absorbance.py
+│   ├── calculate_concentration_in_reactor_bed.py  # Beer-Lambert
+│   ├── calculate_percent_yield.py
+│   ├── calculate_product_throughput.py
+│   └── append_bayesian_experimental_results.py
+├── utils/                           # Simulation & visualization
+│   ├── run_simulation.py            # Simulated experiment executor
+│   └── simulated_data.py            # Synthetic UV-Vis kinetic data generator
+├── production_run/                  # Post-optimization scale-up (scaffolded, not integrated)
+└── test/                            # pytest suite
+    ├── test_preprocessing/          # Most complete coverage
+    ├── test_post_processing/
+    ├── test_experimental_commands/
+    ├── test_bayesian_optimizer/
+    └── test_utils/
+```
 
- - BoCampaignState: campaign config, simulation flag, results cache, CSV path
- - IterationState: trial index, 6 BO parameters, derived pump parameters, absorbances, reactor concentration
+---
 
- ---
- 6 Optimization Parameters
+## Key Data Flow
 
- ┌────────────────────────────┬─────────────────┬─────────────────┐
- │         Parameter          │ Range (example) │      Unit       │
- ├────────────────────────────┼─────────────────┼─────────────────┤
- │ flow_rate                  │ 40–200          │ µL/min          │
- ├────────────────────────────┼─────────────────┼─────────────────┤
- │ dilution_factor            │ 0.05–0.5        │ (dimensionless) │
- ├────────────────────────────┼─────────────────┼─────────────────┤
- │ temperature                │ 20–60           │ °C              │
- ├────────────────────────────┼─────────────────┼─────────────────┤
- │ co_solvent_valve_position  │ 1–3             │ (valve index)   │
- ├────────────────────────────┼─────────────────┼─────────────────┤
- │ co_solvent_dilution_factor │ 0.0–0.4         │ (dimensionless) │
- ├────────────────────────────┼─────────────────┼─────────────────┤
- │ light_intensity            │ 0–100           │ %               │
- └────────────────────────────┴─────────────────┴─────────────────┘
+```text
+main.py
+  → generate_bo_input_file()          master JSON → analog-specific JSON
+  → run_bo_campaign()
+      initialize BoCampaignState + AxClient
+      LOOP (30 trials):
+        ax.get_next_trial() → trial_conditions (6D)
+        run_bayesian_optimization_iteration()
+          1. constrain_to_search_space()  (clip)
+          2. standardize_input()          (round to 2dp)
+          3. Check results_cache          (skip duplicates)
+          4. parameters_to_commands()     (F1–F4 pump flows)
+          5. save CSVs (instrument config, temp, light, experiment, wash)
+          6. run_experiment()             (hardware or simulation)
+          7. analyze_experiment_results() (Beer-Lambert → yield & throughput)
+          8. append_bayesian_experimental_results()
+          9. update results_cache
+          return (percent_yield, throughput_nmol_min)
+        ax.complete_trial()
+        ax.save_to_json_file()           (resumable checkpoint)
+```
 
- ---
- Notable Design Decisions
+---
 
- 1. No globals — all state passed through dataclasses
- 2. Results cache — memoization keyed by standardized parameter tuple (avoids re-running duplicates)
- 3. Deterministic pump math — 4 pump flows derived analytically from BO params via mass-balance dilution
- 4. Simulation mode — generates synthetic UV-Vis kinetic CSVs for hardware-free testing
- 5. Resumable campaigns — Ax state serialized to JSON after every trial
- 6. Per-analog organization — master JSON indexed; separate BO campaign per analog
+## Core State Classes
+
+**Located in `bayesian_optimizer/experiment_state.py`**
+
+- `BoCampaignState`: campaign config, simulation flag, results cache, CSV path
+- `IterationState`: trial index, 6 BO parameters, derived pump parameters, absorbances, reactor concentration
+
+---
+
+## 6 Optimization Parameters
+
+| Parameter                  | Range (example) | Unit            |
+|----------------------------|-----------------|-----------------|
+| flow_rate                  | 40–200          | µL/min          |
+| dilution_factor            | 0.05–0.5        | (dimensionless) |
+| temperature                | 20–60           | °C              |
+| co_solvent_valve_position  | 1–3             | (valve index)   |
+| co_solvent_dilution_factor | 0.0–0.4         | (dimensionless) |
+| light_intensity            | 0–100           | %               |
+
+---
+
+## Notable Design Decisions
+
+1. No globals — all state passed through dataclasses
+2. Results cache — memoization keyed by standardized parameter tuple (avoids re-running duplicates)
+3. Deterministic pump math — 4 pump flows derived analytically from BO params via mass-balance dilution
+4. Simulation mode — generates synthetic UV-Vis kinetic CSVs for hardware-free testing
+5. Resumable campaigns — Ax state serialized to JSON after every trial
+6. Per-analog organization — master JSON indexed; separate BO campaign per analog
 
  ---
  No Code Changes Planned
