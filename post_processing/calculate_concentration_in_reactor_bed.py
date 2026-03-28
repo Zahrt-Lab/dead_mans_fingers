@@ -56,9 +56,8 @@ def calculate_concentration_in_the_reactor_bed(
 
     volume_detector_uL = volume_reactor_uL + iteration_state.instrument_parameters["volume_pump4"]
 
+    # Invert the pump 4 dilution: C_reactor = C_cuvette × (V_reactor + V4) / V_reactor
+    # epsilon is in µL/(mol·cm) so c_cuvette and c_reactor are in mol/µL.
     c_reactor = c_cuvette * (volume_detector_uL / volume_reactor_uL)
 
-    # Return the calculated concentration in the reactor bed, ensuring it's non-negative
-    # TODO : Need to double check if these units are correct.
-    # Units are in mol/µL
     return max(0.0, c_reactor)

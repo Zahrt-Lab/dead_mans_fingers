@@ -14,6 +14,8 @@ each individual xylopyridine analog.
 # bayesian_optimizer/run_bo_campaign.py
 from __future__ import annotations
 
+import math
+
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 from bayesian_optimizer.init_or_load_ax import _init_or_load_ax
 from bayesian_optimizer.ax_suggested_experiment import ax_suggested_experiment
@@ -24,12 +26,47 @@ from preprocessing.experimental_parameters import (
 )
 
 
+def _rebuild_results_cache(ax, bo_campaign_state: BoCampaignState) -> None:
+    """
+    Reconstruct the in-memory results cache from completed Ax trials.
+
+    Called on campaign resume so that previously-run parameter sets are not
+    repeated.  The cache key format matches execute_bo_iteration_commands:
+    a tuple of the 6 trial-condition values rounded to 2 decimal places,
+    in dict insertion order (flow_rate, dilution_factor, temperature,
+    co_solvent_valve_position, co_solvent_dilution_factor, light_intensity).
+    """
+    _PARAM_KEYS = [
+        "flow_rate",
+        "dilution_factor",
+        "temperature",
+        "co_solvent_valve_position",
+        "co_solvent_dilution_factor",
+        "light_intensity",
+    ]
+    trials_df = ax.get_trials_data_frame()
+    if trials_df.empty:
+        return
+    for _, row in trials_df.iterrows():
+        try:
+            pct_yield = float(row["percent_yield"])
+            throughput = float(row["throughput"])
+            if math.isnan(pct_yield) or math.isnan(throughput):
+                continue
+            cache_key = tuple(round(float(row[k]), 2) for k in _PARAM_KEYS)
+            bo_campaign_state.update_results_cache(cache_key, (pct_yield, throughput))
+        except (KeyError, TypeError, ValueError):
+            continue
+    print(f"Reconstructed results cache with {len(bo_campaign_state.results_cache)} entries from prior Ax trials.")
+
+
 def run_bo_campaign(
     input_experimental_parameters: dict,
     ax_previous_run_json_file_path: str,
     percent_yield_threshold: float,
     throughput_threshold: float,
-    noise_sem: float,
+    noise_sem_percent_yield: float = 1.0,
+    noise_sem_throughput: float = 1.0,
     simulation_mode: bool = True,
     xylopyridine_analog: str = "",
 ) -> None:
@@ -50,7 +87,8 @@ def run_bo_campaign(
        (and load from if resuming)
      - percent_yield_threshold: Percent-yield threshold for Ax hypervolume calculation
      - throughput_threshold: Throughput threshold for Ax hypervolume calculation
-     - noise_sem: SEM value to report to Ax for each metric (helps keep GP stable)
+     - noise_sem_percent_yield: SEM for percent yield reported to Ax (absolute %, default 1.0)
+     - noise_sem_throughput: SEM for throughput reported to Ax (nmol/min, default 1.0)
      - simulation_mode: If True, runs in simulation mode (does not check volumes or
        run actual hardware)
      - xylopyridine_analog: Name of the xylopyridine analog being optimized
@@ -72,7 +110,7 @@ def run_bo_campaign(
 
     bo_campaign_state = BoCampaignState()
     bo_campaign_state.update_bo_parameters(parameters_for_experiment)
-    bo_campaign_state.set_noise_sem(noise_sem)
+    bo_campaign_state.set_noise_sem(noise_sem_percent_yield, noise_sem_throughput)
     bo_campaign_state.set_simulation_mode(simulation_mode)
 
     experimental_mode = "SIMULATION" if bo_campaign_state.simulation_mode else "HARDWARE"
@@ -116,6 +154,9 @@ def run_bo_campaign(
         percent_yield_threshold,
         throughput_threshold,
     )
+
+    # Rebuild the in-memory results cache from any completed Ax trials (resume case)
+    _rebuild_results_cache(ax, bo_campaign_state)
 
     # 3) This is the main optimization loop,
     iteration = IterationState()

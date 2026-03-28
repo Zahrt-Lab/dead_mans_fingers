@@ -108,8 +108,15 @@ def parameters_to_commands(
     volume_reactor = volume_pump1 + volume_pump2 + volume_pump3
 
     # Pump 4 (UV dilution): dilutes reactor output to keep detector in linear range.
-    # cuvette_conc_uM is the target concentration at the detector.
-    # TODO : Is this math correct? We should double check this
+    #
+    # target_absorbance_in_the_uv_detector is the expected cuvette absorbance (AU)
+    # when no reaction has occurred (default 1.0). max_abs_uM is the reactant
+    # concentration (µM) that gives absorbance = 1.0 under Beer-Lambert at this
+    # pathlength, so max_abs_uM × target_abs gives the target cuvette concentration.
+    #
+    # Mass balance at the detector mixing point:
+    #   C_reactor × F_reactor = C_cuvette × (F_reactor + F4)
+    # Solving: F4 = F_reactor × (C_reactor/C_cuvette − 1) = F_reactor × (ratio − 1)
     reactor_conc_uM = dilution_factor * xylopyridine_uM
     cuvette_conc_uM = max_abs_uM * target_abs
 

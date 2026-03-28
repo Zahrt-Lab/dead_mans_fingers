@@ -55,8 +55,10 @@ def validate_bo_campaign_state(state: BoCampaignState) -> None:
         raise ValueError(
             f"simulation_mode must be bool, got {type(state.simulation_mode).__name__}"
         )
-    if state.noise_sem <= 0:
-        raise ValueError(f"noise_sem must be > 0, got {state.noise_sem}")
+    if state.noise_sem_percent_yield <= 0:
+        raise ValueError(f"noise_sem_percent_yield must be > 0, got {state.noise_sem_percent_yield}")
+    if state.noise_sem_throughput <= 0:
+        raise ValueError(f"noise_sem_throughput must be > 0, got {state.noise_sem_throughput}")
     missing = _REQUIRED_BO_KEYS - set(state.bo_parameters.keys())
     if missing:
         raise ValueError(

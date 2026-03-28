@@ -76,17 +76,31 @@ def test_bo_campaign_state_missing_key_raises():
         validate_bo_campaign_state(state)
 
 
-def test_bo_campaign_state_non_positive_noise_sem_raises():
+def test_bo_campaign_state_non_positive_noise_sem_percent_yield_raises():
     state = make_valid_bo_state()
-    state.set_noise_sem(0.0)
-    with pytest.raises(ValueError, match="noise_sem"):
+    state.set_noise_sem(0.0, 1.0)
+    with pytest.raises(ValueError, match="noise_sem_percent_yield"):
         validate_bo_campaign_state(state)
 
 
-def test_bo_campaign_state_negative_noise_sem_raises():
+def test_bo_campaign_state_negative_noise_sem_percent_yield_raises():
     state = make_valid_bo_state()
-    state.set_noise_sem(-1.0)
-    with pytest.raises(ValueError, match="noise_sem"):
+    state.set_noise_sem(-1.0, 1.0)
+    with pytest.raises(ValueError, match="noise_sem_percent_yield"):
+        validate_bo_campaign_state(state)
+
+
+def test_bo_campaign_state_non_positive_noise_sem_throughput_raises():
+    state = make_valid_bo_state()
+    state.set_noise_sem(1.0, 0.0)
+    with pytest.raises(ValueError, match="noise_sem_throughput"):
+        validate_bo_campaign_state(state)
+
+
+def test_bo_campaign_state_negative_noise_sem_throughput_raises():
+    state = make_valid_bo_state()
+    state.set_noise_sem(1.0, -1.0)
+    with pytest.raises(ValueError, match="noise_sem_throughput"):
         validate_bo_campaign_state(state)
 
 

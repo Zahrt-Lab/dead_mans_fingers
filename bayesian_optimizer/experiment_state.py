@@ -24,7 +24,8 @@ class BoCampaignState:
     bo_parameters: Dict[str, Any] = field(default_factory=dict)
     simulation_mode: bool = field(default=False)
     results_cache: Dict[Tuple, Tuple] = field(default_factory=dict)
-    noise_sem: float = field(default=1e-3)
+    noise_sem_percent_yield: float = field(default=1.0)
+    noise_sem_throughput: float = field(default=1.0)
     volume_stock_solutions: Dict[str, Any] = field(default_factory=dict)
     bo_csv_path: str = field(default="")
 
@@ -47,11 +48,19 @@ class BoCampaignState:
         """
         self.results_cache[key] = value
 
-    def set_noise_sem(self, noise_sem: float) -> None:
+    def set_noise_sem(self, noise_sem_percent_yield: float, noise_sem_throughput: float) -> None:
         """
-        Set the noise SEM value for Ax.
+        Set the per-metric noise SEM values reported to Ax.
+
+        # TODO: Determine empirical SEM values from repeated measurements at the
+        # same conditions once experimental repeat data is available.
+
+        Parameters:
+            noise_sem_percent_yield: SEM for percent yield (absolute %, e.g. 1.0 = ±1%)
+            noise_sem_throughput: SEM for throughput (nmol/min, e.g. 1.0 = ±1 nmol/min)
         """
-        self.noise_sem = noise_sem
+        self.noise_sem_percent_yield = noise_sem_percent_yield
+        self.noise_sem_throughput = noise_sem_throughput
 
     def update_volume_stock_solutions(
         self, volume_stock_solutions: Dict[str, Any]

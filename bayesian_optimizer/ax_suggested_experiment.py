@@ -57,6 +57,6 @@ def ax_suggested_experiment(
     )
 
     return {
-        "percent_yield": (float(percent_yield), bo_campaign_state.noise_sem),
-        "throughput": (float(throughput), bo_campaign_state.noise_sem),
+        "percent_yield": (float(percent_yield), bo_campaign_state.noise_sem_percent_yield),
+        "throughput": (float(throughput), bo_campaign_state.noise_sem_throughput),
     }
