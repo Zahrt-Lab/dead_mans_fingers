@@ -122,7 +122,7 @@ def _init_or_load_ax(
             {
                 "name": "co_solvent_dilution_factor",
                 "type": "range",
-                "bounds": [experimental_bounds['cosolvent_dilution_factor_min'], experimental_bounds['cosolvent_dilution_factor_max']],
+                "bounds": [experimental_bounds['co_solvent_dilution_factor_min'], experimental_bounds['co_solvent_dilution_factor_max']],
                 "value_type": "float",
             },
             {

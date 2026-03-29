@@ -41,7 +41,7 @@ def parameters_to_commands(
     dilution_factor = trial_conditions["dilution_factor"]
     temperature = trial_conditions["temperature"]
     cosolvent_position = trial_conditions["co_solvent_valve_position"]
-    cosolvent_dilution_factor = trial_conditions["co_solvent_dilution_factor"]
+    co_solvent_dilution_factor = trial_conditions["co_solvent_dilution_factor"]
     light_intensity = trial_conditions["light_intensity"]
 
     if flow_rate <= 0:
@@ -52,9 +52,9 @@ def parameters_to_commands(
         raise ValueError(
             f"cosolvents_valve_position must be in [1, 6], got {cosolvent_position}."
         )
-    if not (0.0 <= cosolvent_dilution_factor <= 1.0):
+    if not (0.0 <= co_solvent_dilution_factor <= 1.0):
         raise ValueError("co_solvent_dilution_factor must be in [0, 1].")
-    if cosolvent_dilution_factor > (1.0 - dilution_factor):
+    if co_solvent_dilution_factor > (1.0 - dilution_factor):
         raise ValueError(
             "co_solvent_dilution_factor cannot exceed (1 - dilution_factor) "
             "because pump2 would go negative."
@@ -79,13 +79,13 @@ def parameters_to_commands(
     volume_pump1 = total_volume_through_reactor_bed * dilution_factor
 
     # Pump 2 (acid/water remainder after pump1 + cosolvent)
-    pump2_dilution_factor = (1.0 - dilution_factor) - cosolvent_dilution_factor
+    pump2_dilution_factor = (1.0 - dilution_factor) - co_solvent_dilution_factor
     flow_rate_pump2 = flow_rate * pump2_dilution_factor
     volume_pump2 = total_volume_through_reactor_bed * pump2_dilution_factor
 
     # Pump 3 (cosolvent)
-    flow_rate_pump3 = flow_rate * cosolvent_dilution_factor
-    volume_pump3 = total_volume_through_reactor_bed * cosolvent_dilution_factor
+    flow_rate_pump3 = flow_rate * co_solvent_dilution_factor
+    volume_pump3 = total_volume_through_reactor_bed * co_solvent_dilution_factor
 
     # Reactor bed flow rate and volume
     flow_rate_reactor = flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3

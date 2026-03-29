@@ -108,8 +108,8 @@ class BoCampaignState:
             "temperature_max": temperature_max,
             "cosolvent_valve_position_min": co_solvent_valve_position_min,
             "cosolvent_valve_position_max": co_solvent_valve_position_max,
-            "cosolvent_dilution_factor_min": co_solvent_dilution_factor_min,
-            "cosolvent_dilution_factor_max": co_solvent_dilution_factor_max,
+            "co_solvent_dilution_factor_min": co_solvent_dilution_factor_min,
+            "co_solvent_dilution_factor_max": co_solvent_dilution_factor_max,
             "light_intensity_min": light_intensity_min,
             "light_intensity_max": light_intensity_max,
         }

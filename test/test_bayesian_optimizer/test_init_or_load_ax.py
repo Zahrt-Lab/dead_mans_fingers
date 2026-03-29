@@ -62,8 +62,8 @@ def _call_init_or_load(json_path: Path, ask_user_fn=None) -> AxClient:
         "temperature_max": 60.0,
         "cosolvent_valve_position_min": 1.0,
         "cosolvent_valve_position_max": 3.0,
-        "cosolvent_dilution_factor_min": 0.0,
-        "cosolvent_dilution_factor_max": 0.4,
+        "co_solvent_dilution_factor_min": 0.0,
+        "co_solvent_dilution_factor_max": 0.4,
         "light_intensity_min": 0.0,
         "light_intensity_max": 100.0,
     }

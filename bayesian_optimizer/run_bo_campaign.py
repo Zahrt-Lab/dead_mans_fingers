@@ -159,8 +159,8 @@ def run_bo_campaign(
            f" - {experimental_bounds['temperature_max']} °C")
     print(f"Co-solvent valve position bounds: {experimental_bounds['cosolvent_valve_position_min']}"
            f" - {experimental_bounds['cosolvent_valve_position_max']}")
-    print(f"Co-solvent dilution factor bounds: {experimental_bounds['cosolvent_dilution_factor_min']}"
-           f" - {experimental_bounds['cosolvent_dilution_factor_max']}")
+    print(f"Co-solvent dilution factor bounds: {experimental_bounds['co_solvent_dilution_factor_min']}"
+           f" - {experimental_bounds['co_solvent_dilution_factor_max']}")
     print(f"Light intensity bounds: {experimental_bounds['light_intensity_min']}"
            f" - {experimental_bounds['light_intensity_max']}")
 

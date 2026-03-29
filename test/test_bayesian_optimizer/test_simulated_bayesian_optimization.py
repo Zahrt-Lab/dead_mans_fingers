@@ -94,8 +94,8 @@ def _make_ax_client(ax_json_path: Path) -> AxClient:
         "temperature_max": _TEMP_MAX,
         "cosolvent_valve_position_min": _VALVE_MIN,
         "cosolvent_valve_position_max": _VALVE_MAX,
-        "cosolvent_dilution_factor_min": _COSOLVENT_DILUTION_MIN,
-        "cosolvent_dilution_factor_max": _COSOLVENT_DILUTION_MAX,
+        "co_solvent_dilution_factor_min": _COSOLVENT_DILUTION_MIN,
+        "co_solvent_dilution_factor_max": _COSOLVENT_DILUTION_MAX,
         "light_intensity_min": _LIGHT_MIN,
         "light_intensity_max": _LIGHT_MAX,
     }
