@@ -88,7 +88,8 @@ def test_wash_runs_even_when_experiment_raises(mock_run):
             raise RuntimeError("Simulated hardware failure")
 
     mock_run.side_effect = raise_on_experiment
-    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
+    with pytest.raises(RuntimeError):
+        run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
 
     called_files = [c.args[0] for c in mock_run.call_args_list]
     assert f"{_COMMAND_BASE}_wash.csv" in called_files

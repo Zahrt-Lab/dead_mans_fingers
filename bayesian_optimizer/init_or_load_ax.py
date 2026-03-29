@@ -55,18 +55,7 @@ def _prompt_resume_or_restart(
 
 def _init_or_load_ax(
     ax_previous_run_json_file_path: str,
-    flow_rate_min: float,
-    flow_rate_max: float,
-    dilution_factor_min: float,
-    dilution_factor_max: float,
-    temperature_min: float,
-    temperature_max: float,
-    co_solvent_valve_position_min: float,
-    co_solvent_valve_position_max: float,
-    co_solvent_dilution_factor_min: float,
-    co_solvent_dilution_factor_max: float,
-    light_intensity_min: float,
-    light_intensity_max: float,
+    experimental_bounds: dict,
     percent_yield_threshold: float,
     throughput_threshold: float,
     ask_user_fn: Optional[Callable[[str], str]] = input,
@@ -92,6 +81,7 @@ def _init_or_load_ax(
     Returns:
         AxClient: AxClient instance ready for optimization campaign (with experiment created and objectives set)
     """
+    
     if os.path.exists(ax_previous_run_json_file_path):
         resume = _prompt_resume_or_restart(ax_previous_run_json_file_path, ask_user_fn)
         if resume:
@@ -108,37 +98,37 @@ def _init_or_load_ax(
             {
                 "name": "flow_rate",
                 "type": "range",
-                "bounds": [flow_rate_min, flow_rate_max],
+                "bounds": [experimental_bounds['flow_rate_min'], experimental_bounds['flow_rate_max']],
                 "value_type": "int",
             },
             {
                 "name": "dilution_factor",
                 "type": "range",
-                "bounds": [dilution_factor_min, dilution_factor_max],
+                "bounds": [experimental_bounds['dilution_factor_min'], experimental_bounds['dilution_factor_max']],
                 "value_type": "float",
             },
             {
                 "name": "temperature",
                 "type": "range",
-                "bounds": [temperature_min, temperature_max],
+                "bounds": [experimental_bounds['temperature_min'], experimental_bounds['temperature_max']],
                 "value_type": "float",
             },
             {
                 "name": "co_solvent_valve_position",
                 "type": "range",
-                "bounds": [co_solvent_valve_position_min, co_solvent_valve_position_max],
+                "bounds": [experimental_bounds['cosolvent_valve_position_min'], experimental_bounds['cosolvent_valve_position_max']],
                 "value_type": "int",
             },
             {
                 "name": "co_solvent_dilution_factor",
                 "type": "range",
-                "bounds": [co_solvent_dilution_factor_min, co_solvent_dilution_factor_max],
+                "bounds": [experimental_bounds['cosolvent_dilution_factor_min'], experimental_bounds['cosolvent_dilution_factor_max']],
                 "value_type": "float",
             },
             {
                 "name": "light_intensity",
                 "type": "range",
-                "bounds": [light_intensity_min, light_intensity_max],
+                "bounds": [experimental_bounds['light_intensity_min'], experimental_bounds['light_intensity_max']],
                 "value_type": "float",
             },
         ],

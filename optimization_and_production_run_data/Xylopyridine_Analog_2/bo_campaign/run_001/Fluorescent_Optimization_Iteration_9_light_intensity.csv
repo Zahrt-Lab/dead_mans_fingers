@@ -1,0 +1,3 @@
+Component,Action,Parameters,Notes,delay
+custom_light_box_1,turn_on_light_box,,Turning on the custom light box for the experiment,0.5
+custom_light_box_1,set_light_intensity,"intensity=51.66, intensity_id=1",Setting Light Intensity to 51.66 for the experiment,0.5

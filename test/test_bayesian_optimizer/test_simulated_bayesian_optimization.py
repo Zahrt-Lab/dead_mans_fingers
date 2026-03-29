@@ -85,20 +85,23 @@ _SURFACE_3 = {"flow_rate": 170.0, "temperature": 45.0, "dilution_factor": 0.22}
 
 def _make_ax_client(ax_json_path: Path) -> AxClient:
     """Create a fresh AxClient using the test_config_ax_demo.json search space."""
+    experimental_bounds = {
+        "flow_rate_min": _FLOW_RATE_MIN,
+        "flow_rate_max": _FLOW_RATE_MAX,
+        "dilution_factor_min": _DILUTION_MIN,
+        "dilution_factor_max": _DILUTION_MAX,
+        "temperature_min": _TEMP_MIN,
+        "temperature_max": _TEMP_MAX,
+        "cosolvent_valve_position_min": _VALVE_MIN,
+        "cosolvent_valve_position_max": _VALVE_MAX,
+        "cosolvent_dilution_factor_min": _COSOLVENT_DILUTION_MIN,
+        "cosolvent_dilution_factor_max": _COSOLVENT_DILUTION_MAX,
+        "light_intensity_min": _LIGHT_MIN,
+        "light_intensity_max": _LIGHT_MAX,
+    }
     return _init_or_load_ax(
-        str(ax_json_path),
-        _FLOW_RATE_MIN,
-        _FLOW_RATE_MAX,
-        _DILUTION_MIN,
-        _DILUTION_MAX,
-        _TEMP_MIN,
-        _TEMP_MAX,
-        _VALVE_MIN,
-        _VALVE_MAX,
-        _COSOLVENT_DILUTION_MIN,
-        _COSOLVENT_DILUTION_MAX,
-        _LIGHT_MIN,
-        _LIGHT_MAX,
+        ax_previous_run_json_file_path=str(ax_json_path),
+        experimental_bounds=experimental_bounds,
         percent_yield_threshold=10.0,
         throughput_threshold=5.0,
     )

@@ -84,3 +84,10 @@ def test_beer_lambert_formula_correct():
     it = make_iter_state(vol_pump4=0)
     result = calculate_concentration_in_the_reactor_bed(1.0, bo, it)
     assert result == pytest.approx(1.0)
+
+
+def test_zero_reactor_volume_raises_value_error():
+    # vol_pump1=vol_pump2=vol_pump3=0 → volume_reactor_uL = 0 → division by zero guard
+    it = make_iter_state(vol_pump1=0, vol_pump2=0, vol_pump3=0, vol_pump4=0)
+    with pytest.raises(ValueError):
+        calculate_concentration_in_the_reactor_bed(0.5, make_bo_state(), it)

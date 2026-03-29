@@ -47,7 +47,11 @@ def run_hardware_experiment(
         experiment_command_file = f"{command_path_base}_experiment.csv"
         run_commands(experiment_command_file, instrument_config)
     except Exception as e:
-        print(f"Error during experiment execution: {e}")
+        print(
+            f"[HARDWARE ERROR] Instrument failure during experiment iteration {iteration_number}: {e}\n"
+            "Check all instrument COM port connections and power before retrying."
+        )
+        raise
     finally:
         print(f"Experiment completing, UV recording for {iteration_number} is turned off")
         

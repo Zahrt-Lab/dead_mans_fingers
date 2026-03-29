@@ -47,6 +47,9 @@ def make_bo_state(tmp_path, simulation_mode=True):
         "instrument_config": str(tmp_path / "Instrument_Config_File.csv"),
         "max_absorbance_concentration_uM_uv_detector": 88.0,
         "target_absorbance_in_the_uv_detector": 1.0,
+        "epsilon_reactant_at_lambda1_L_per_mol_cm": 2200.0,
+        "epsilon_product_at_lambda2_L_per_mol_cm": 3100.0,
+        "pathlength_cm": 1.0,
     })
     return state
 

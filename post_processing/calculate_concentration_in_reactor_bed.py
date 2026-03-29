@@ -47,9 +47,17 @@ def calculate_concentration_in_the_reactor_bed(
     # Beer–Lambert at detector: C = A / (ε * l)
     c_cuvette = A / (epsilon * l)
 
-    volume_reactor_uL = iteration_state.instrument_parameters["volume_pump1"] + \
-                        iteration_state.instrument_parameters["volume_pump2"] + \
-                        iteration_state.instrument_parameters["volume_pump3"]
+    volume_reactor_uL = (
+        iteration_state.instrument_parameters["volume_pump1"]
+        + iteration_state.instrument_parameters["volume_pump2"]
+        + iteration_state.instrument_parameters["volume_pump3"]
+    )
+
+    if volume_reactor_uL <= 0:
+        raise ValueError(
+            f"volume_reactor_uL must be > 0 (sum of pump1+pump2+pump3 volumes), "
+            f"got {volume_reactor_uL}. Check parameters_to_commands output."
+        )
 
     if iteration_state.instrument_parameters["volume_pump4"] < 0:
         raise ValueError(f"volume_pump4 must be >= 0, got {iteration_state.instrument_parameters['volume_pump4']}")

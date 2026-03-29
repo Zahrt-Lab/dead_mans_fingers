@@ -20,7 +20,7 @@ import pandas as pd
 from extract_best_reaction_conditions import extract_best_reaction_conditions
 
 
-def production_run(bo_results, yield_threshold, desired_mols) -> None:
+def production_run(bo_results : str, yield_threshold: float, desired_mols: float) -> None:
     """
     This function will run the production run after we've converged on a set of optimal
     experimental parameters from our bayesian optimization campaign.
@@ -45,6 +45,7 @@ def production_run(bo_results, yield_threshold, desired_mols) -> None:
         cosolvent_valve_position,
         fraction_of_cosolvent,
         light_intensity,
+        throughput_nmol_per_min,
     ) = extract_best_reaction_conditions(bo_results, yield_threshold=yield_threshold)
 
     calculate_production_run_parameters(
@@ -55,4 +56,5 @@ def production_run(bo_results, yield_threshold, desired_mols) -> None:
         fraction_of_cosolvent,
         light_intensity,
         desired_mols,
+        throughput_nmol_per_min,
     )

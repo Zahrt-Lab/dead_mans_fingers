@@ -82,3 +82,15 @@ def test_early_convergence_returns_dataframe(tmp_path):
         experiment_converged_early=True,
     )
     assert isinstance(result, pd.DataFrame)
+
+
+def test_empty_dataframe_after_cutoff_raises_value_error(tmp_path):
+    # flow_rate=100, target_volume=600 → cutoff = 360 s; all rows are before cutoff
+    rows = [(t, 0.1, 0.2) for t in [0, 30, 60]]
+    csv_path = write_uv_csv(tmp_path, rows)
+    with pytest.raises(ValueError):
+        post_process_uv_recording(
+            flow_rate=100, target_volume=600,
+            uv_vis_absorbance_results_csv=csv_path,
+            experiment_converged_early=False,
+        )

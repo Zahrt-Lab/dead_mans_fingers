@@ -30,6 +30,8 @@ from post_processing.post_processing_results import analyze_experiment_results
 from post_processing.append_bayesian_experimental_results import append_bayesian_experimental_results
 from utils.run_simulation import run_simulated_experiment
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
+from utils.validate_state_classes import validate_bo_campaign_state, validate_iteration_state
+from utils.experiment_aborted import PostProcessingError
 
 # TODO : This code is considered a god function and should be refactore
 
@@ -46,10 +48,13 @@ def run_experiment(bo_campaign_state: BoCampaignState,
     Returns:
         Tuple of updated bo campaign state and iteration state
     """
+    validate_bo_campaign_state(bo_campaign_state)
+    validate_iteration_state(iteration_state)
+
     bo_parameters = bo_campaign_state.bo_parameters
     trial_conditions = iteration_state.trial_conditions
 
-    # Run experiment (hardware or simulation)
+    # Run experiment (hardware)
     if not bo_campaign_state.simulation_mode:
         csv_file_path = run_hardware_experiment(
             bo_parameters["command_path_base"],
@@ -57,7 +62,6 @@ def run_experiment(bo_campaign_state: BoCampaignState,
             iteration_state.iteration,
         )
 
-    # TODO : We should reevaluate this simulated experiment code, not urgent
     else:
         csv_file_path = run_simulated_experiment(
             trial_conditions["flow_rate"],
@@ -126,7 +130,10 @@ def run_bayesian_optimization_iteration(
     )
     iteration_state.update_instrument_parameters(instrument_parameters)
 
-    save_instrument_config_csv(instrument_config)
+    save_instrument_config_csv(
+        instrument_config,
+        bo_campaign_state.bo_parameters.get("instrument_com_ports"),
+    )
     save_commands_csv(
         command_path_base,
         instrument_parameters["flow_rate_pump1"],
@@ -151,9 +158,36 @@ def run_bayesian_optimization_iteration(
     trial_conditions = iteration_state.trial_conditions
 
     print(f"Bayesian Optimization results saved to {csv_file_path}")
-    avg_abs_reactant, avg_abs_product, percent_yield, throughput = analyze_experiment_results(
-        bo_campaign_state, iteration_state, csv_file_path
-    )
+    try:
+        avg_abs_reactant, avg_abs_product, percent_yield, throughput = analyze_experiment_results(
+            bo_campaign_state, iteration_state, csv_file_path
+        )
+    except ValueError as e:
+        print(f"[ERROR] Post-processing failed for iteration {iteration_state.iteration}: {e}")
+        append_bayesian_experimental_results(
+            {
+                "iteration": iteration_state.iteration,
+                "flow_rate": trial_conditions["flow_rate"],
+                "dilution_factor": trial_conditions["dilution_factor"],
+                "reactor_concentration_uM": round(iteration_state.reactor_bed_concentration_uM, 2),
+                "temperature": trial_conditions["temperature"],
+                "co_solvent_valve_position": trial_conditions["co_solvent_valve_position"],
+                "co_solvent_dilution_factor": trial_conditions["co_solvent_dilution_factor"],
+                "light_intensity": trial_conditions["light_intensity"],
+                "target_volume": bo_parameters["target_volume_through_reactor_bed"],
+                "reactant_wavelength": bo_parameters["reactant_wavelength"],
+                "product_wavelength": bo_parameters["product_wavelength"],
+                "average_absorbance_reactant": 0.0,
+                "average_absorbance_product": 0.0,
+                "percent_yield": 0.0,
+                "throughput_nmol_per_min": 0.0,
+                "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "status": "error",
+                "error_message": str(e),
+            },
+            bo_campaign_state,
+        )
+        raise PostProcessingError(str(e))
 
     append_bayesian_experimental_results(
         {
@@ -162,8 +196,8 @@ def run_bayesian_optimization_iteration(
             "dilution_factor": trial_conditions["dilution_factor"],
             "reactor_concentration_uM": round(iteration_state.reactor_bed_concentration_uM, 2),
             "temperature": trial_conditions["temperature"],
-            "co_solvent": trial_conditions["co_solvent_valve_position"],
-            "co_solvent_volume": trial_conditions["co_solvent_dilution_factor"],
+            "co_solvent_valve_position": trial_conditions["co_solvent_valve_position"],
+            "co_solvent_dilution_factor": trial_conditions["co_solvent_dilution_factor"],
             "light_intensity": trial_conditions["light_intensity"],
             "target_volume": bo_parameters["target_volume_through_reactor_bed"],
             "reactant_wavelength": bo_parameters["reactant_wavelength"],
