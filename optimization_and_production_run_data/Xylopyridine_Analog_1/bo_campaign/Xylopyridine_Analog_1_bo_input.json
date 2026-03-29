@@ -1,14 +1,10 @@
 {
-  "trials": 30,
+  "trials": 3,
   "total_volume_through_reactor_bed": 3000,
   "target_volume_through_reactor_bed": 2500,
   "base_directory": "./optimization_and_production_run_data/Xylopyridine_Analog_1/bo_campaign",
   "name_of_xylopyridine_analogs_stock_solutions": [
-    "Xylopyridine_Analog_1",
-    "Xylopyridine_Analog_2",
-    "Xylopyridine_Analog_3",
-    "Xylopyridine_Analog_4",
-    "Xylopyridine_Analog_5"
+    "Xylopyridine_Analog_1"
   ],
   "name_of_stock_solution2": [
     "0.1M HCl Water"
@@ -25,10 +21,6 @@
     "0.1M HCl Water"
   ],
   "pump1_xylopyridine_analogs_volume_stock_solution": [
-    18000,
-    18000,
-    18000,
-    18000,
     18000
   ],
   "pump2_0.1M_HCl_water_volume_stock_solution": [
@@ -81,17 +73,6 @@
   "epsilon_reactant_at_lambda2_L_per_mol_cm": 1962,
   "epsilon_product_at_lambda2_L_per_mol_cm": 12994.57,
   "pathlength_cm": 1.0,
-  "instrument_com_ports": {
-    "vici_pump_1": "COM21",
-    "vici_pump_2": "COM22",
-    "valve_xylopyridine": "COM8",
-    "valve_cosolvent": "COM8",
-    "temperature_controller": "COM12",
-    "tricontinental_pump_1": "COM19",
-    "tricontinental_pump_2": "COM14",
-    "dh2000_light_source": "COM27",
-    "ocean_optics_uv_vis": "COM50"
-  },
   "Fluorescent_Bayesian_Optimization_results_filename": "BO_Results_Xylopyridine_Analog_1_results.csv",
   "name_of_xylopyridine_analogs_to_optimize": "Xylopyridine_Analog_1",
   "xylopyridine_analog_index": 0
