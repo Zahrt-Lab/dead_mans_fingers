@@ -23,36 +23,25 @@ def parameters_to_commands(
     target_absorbance_in_the_uv_detector: float,
 ) -> Dict[str, Any]:
     """
-    Convert trial conditions and campaign constants into instrument parameters.
+    Convert trial conditions and bo campaign constant values into instrument parameters.
 
-    Accepts individual scalar values so this function can be used in both the
-    BO campaign and the production run without requiring state objects.
+    Parameters: 
+        trial_conditions: Dict with keys: flow_rate, dilution_factor, temperature,
+            co_solvent_valve_position, co_solvent_dilution_factor, light_intensity.
+        total_volume_through_reactor_bed: Total volume to pump through the reactor bed in µL.
+        xylopyridine_analogs_concentrations_uM: Stock solution concentration of the xylopyridine analog in µM.
+        max_absorbance_concentration_uM_uv_detector: Maximum concentration (µM) the UV detector can handle linearly (we assume max absorbace = 1)
+        target_absorbance_in_the_uv_detector: Given the max absorbance concentration, this is the absorbance level to target in the UV detector. (typically set to 1.0)
 
-    Parameters
-    ----------
-    trial_conditions
-        Dict with keys: flow_rate, dilution_factor, temperature,
-        co_solvent_valve_position, co_solvent_dilution_factor, light_intensity.
-    total_volume_through_reactor_bed
-        Total volume to pump through the reactor bed in µL.
-    xylopyridine_analogs_concentrations_uM
-        Stock solution concentration of the xylopyridine analog in µM.
-    max_absorbance_concentration_uM_uv_detector
-        Maximum concentration (µM) the UV detector can handle linearly.
-    target_absorbance_in_the_uv_detector
-        Fraction of max detector concentration to target (0–1).
-
-    Returns
-    -------
-    Dict[str, Any]
-        Instrument command parameters (flow rates, volumes, valve, temp, light).
+    Returns:
+        Dict[str, Any]: Instrument command parameters (flow rates, volumes, valve, temp, light).
     """
     # --- Validate trial conditions ---
     flow_rate = trial_conditions["flow_rate"]
     dilution_factor = trial_conditions["dilution_factor"]
     temperature = trial_conditions["temperature"]
     cosolvent_position = trial_conditions["co_solvent_valve_position"]
-    cosolvent_dilution_factor = trial_conditions["co_solvent_dilution_factor"]
+    co_solvent_dilution_factor = trial_conditions["co_solvent_dilution_factor"]
     light_intensity = trial_conditions["light_intensity"]
 
     if flow_rate <= 0:
@@ -63,9 +52,9 @@ def parameters_to_commands(
         raise ValueError(
             f"cosolvents_valve_position must be in [1, 6], got {cosolvent_position}."
         )
-    if not (0.0 <= cosolvent_dilution_factor <= 1.0):
+    if not (0.0 <= co_solvent_dilution_factor <= 1.0):
         raise ValueError("co_solvent_dilution_factor must be in [0, 1].")
-    if cosolvent_dilution_factor > (1.0 - dilution_factor):
+    if co_solvent_dilution_factor > (1.0 - dilution_factor):
         raise ValueError(
             "co_solvent_dilution_factor cannot exceed (1 - dilution_factor) "
             "because pump2 would go negative."
@@ -74,34 +63,29 @@ def parameters_to_commands(
         raise ValueError("light_intensity must be in [0, 100].")
 
     # --- Validate campaign constants ---
-    total_volume = total_volume_through_reactor_bed
-    if total_volume <= 0:
+    if total_volume_through_reactor_bed <= 0:
         raise ValueError("total_volume_through_reactor_bed must be > 0 µL.")
 
-    xylopyridine_uM = xylopyridine_analogs_concentrations_uM
-    max_abs_uM = max_absorbance_concentration_uM_uv_detector
-    target_abs = target_absorbance_in_the_uv_detector
-
-    if xylopyridine_uM <= 0:
+    if xylopyridine_analogs_concentrations_uM <= 0:
         raise ValueError("xylopyridine_analogs_concentrations_uM must be > 0.")
-    if max_abs_uM <= 0:
+    if max_absorbance_concentration_uM_uv_detector <= 0:
         raise ValueError("max_absorbance_concentration_uM_uv_detector must be > 0.")
-    if target_abs <= 0:
+    if target_absorbance_in_the_uv_detector <= 0:
         raise ValueError("target_absorbance_in_the_uv_detector must be > 0.")
 
     # --- Pump calculations ---
     # Pump 1 (reactant)
     flow_rate_pump1 = flow_rate * dilution_factor
-    volume_pump1 = total_volume * dilution_factor
+    volume_pump1 = total_volume_through_reactor_bed * dilution_factor
 
     # Pump 2 (acid/water remainder after pump1 + cosolvent)
-    pump2_dilution_factor = (1.0 - dilution_factor) - cosolvent_dilution_factor
+    pump2_dilution_factor = (1.0 - dilution_factor) - co_solvent_dilution_factor
     flow_rate_pump2 = flow_rate * pump2_dilution_factor
-    volume_pump2 = total_volume * pump2_dilution_factor
+    volume_pump2 = total_volume_through_reactor_bed * pump2_dilution_factor
 
     # Pump 3 (cosolvent)
-    flow_rate_pump3 = flow_rate * cosolvent_dilution_factor
-    volume_pump3 = total_volume * cosolvent_dilution_factor
+    flow_rate_pump3 = flow_rate * co_solvent_dilution_factor
+    volume_pump3 = total_volume_through_reactor_bed * co_solvent_dilution_factor
 
     # Reactor bed flow rate and volume
     flow_rate_reactor = flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3
@@ -109,13 +93,14 @@ def parameters_to_commands(
 
     # Pump 4 (UV dilution): dilutes reactor output to keep detector in linear range.
     # cuvette_conc_uM is the target concentration at the detector.
-    # TODO : Is this math correct? We should double check this
-    reactor_conc_uM = dilution_factor * xylopyridine_uM
-    cuvette_conc_uM = max_abs_uM * target_abs
+    reactor_conc_uM = dilution_factor * xylopyridine_analogs_concentrations_uM
+    cuvette_conc_uM = max_absorbance_concentration_uM_uv_detector * target_absorbance_in_the_uv_detector
 
+    # If reactor concentration is already below target, no dilution needed.
     if reactor_conc_uM <= cuvette_conc_uM:
         flow_rate_pump4 = 0.0
         volume_pump4 = 0.0
+    # If reactor concentration is above target, calculate dilution flow and volume.
     else:
         ratio = reactor_conc_uM / cuvette_conc_uM  # > 1
         cuvette_flow = flow_rate_reactor * ratio

@@ -30,5 +30,16 @@
   "epsilon_product_at_lambda2_L_per_mol_cm": [12994.57, 12994.57, 12994.57, 12994.57, 12994.57],
   "pathlength_cm": 1.0,
   "product_run": "True",
-  "production_run_quantity_nmol": [1000, 1000, 1000, 1000, 1000]
+  "production_run_quantity_nmol": [1000, 1000, 1000, 1000, 1000],
+  "instrument_com_ports": {
+    "vici_pump_1":            "COM21",
+    "vici_pump_2":            "COM22",
+    "valve_xylopyridine":     "COM8",
+    "valve_cosolvent":        "COM8",
+    "temperature_controller": "COM12",
+    "tricontinental_pump_1":  "COM19",
+    "tricontinental_pump_2":  "COM14",
+    "dh2000_light_source":    "COM27",
+    "ocean_optics_uv_vis":    "COM50"
+  }
 }

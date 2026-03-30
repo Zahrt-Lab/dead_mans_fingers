@@ -51,10 +51,16 @@ def parse_args() -> argparse.Namespace:
         help="Throughput threshold (for Bayesian Optimization reference hypervolume)",
     )
     parser.add_argument(
-        "--noise-sem",
+        "--noise-sem-percent-yield",
         type=float,
-        default=1e-3,
-        help="Per-metric Structure Equation Modeling reported to Ax (keeps GP stable)",
+        default=1.0,
+        help="SEM for percent yield reported to Ax (absolute %%, default 1.0)",
+    )
+    parser.add_argument(
+        "--noise-sem-throughput",
+        type=float,
+        default=1.0,
+        help="SEM for throughput reported to Ax (nmol/min, default 1.0)",
     )
     parser.add_argument(
         "--production-run-yield-threshold",
@@ -108,7 +114,8 @@ def main() -> None:
             ax_previous_run_json_file_path=ax_state_file_path,
             percent_yield_threshold=args.yield_threshold,
             throughput_threshold=args.throughput_threshold,
-            noise_sem=args.noise_sem,
+            noise_sem_percent_yield=args.noise_sem_percent_yield,
+            noise_sem_throughput=args.noise_sem_throughput,
             simulation_mode=args.simulation,
             xylopyridine_analog=xylopyridine_analog,
         )

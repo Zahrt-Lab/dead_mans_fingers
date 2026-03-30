@@ -87,7 +87,8 @@ def check_required_complete_workflow_parameters(
         "epsilon_product_at_lambda2_L_per_mol_cm",
         "pathlength_cm",
         "product_run",
-        "production_run_quantity_nmol"
+        "production_run_quantity_nmol",
+        "instrument_com_ports"
     ]
 
     missing_experimental_parameter = [
@@ -160,7 +161,7 @@ def check_required_bo_campaign_parameters(
         "pathlength_cm", 
         "Fluorescent_Bayesian_Optimization_results_filename", 
         "name_of_xylopyridine_analogs_to_optimize", 
-        "xylopyridine_analog_index"
+        "xylopyridine_analog_index",
     ]
 
     missing_experimental_parameter = [

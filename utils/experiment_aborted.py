@@ -17,6 +17,9 @@ class HardwareFailure(ExperimentAborted):
 class ValidationError(ExperimentAborted):
     pass
 
+class PostProcessingError(ExperimentAborted):
+    pass
+
 class keyboard_interrupt(ExperimentAborted):
     def __init__(self):
         super().__init__("Experiment was aborted by keyboard interrupt.")

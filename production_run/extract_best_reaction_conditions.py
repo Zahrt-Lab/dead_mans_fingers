@@ -20,7 +20,7 @@ import pandas as pd
 
 
 def extract_best_reaction_conditions(
-    bo_results, yield_threshold
+    bo_results: str, yield_threshold: float
 ) -> tuple(float, float, float, float, float, float, float):
     """
     This function will extract the best reaction conditions from our bayesian optimization

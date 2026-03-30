@@ -35,8 +35,6 @@ def constrain_to_search_space(bo_campaign_state: BoCampaignState,
     bo_parameters = bo_campaign_state.bo_parameters
     trial_conditions = iteration_state.trial_conditions
 
-    print("What are the trial conditions before constraining to search space? ", trial_conditions)
-
     if len(trial_conditions) != 6:
         raise ValueError(
             f"Expected 6 parameters (flow_rate, dilution_factor, temperature, "
@@ -79,15 +77,7 @@ def constrain_to_search_space(bo_campaign_state: BoCampaignState,
     light_intensity = round(float(
         min(max(trial_conditions["light_intensity"], light_intensity_min), light_intensity_max)
     ), 2)
-
-    print("What are the trial conditions after constraining to search space? ", {
-        "flow_rate": flow_rate,
-        "dilution_factor": dilution_factor,
-        "temperature": temperature,
-        "co_solvent_valve_position": cosolvent_valve_position,
-        "co_solvent_dilution_factor": fraction_of_cosolvent,
-        "light_intensity": light_intensity,
-    })
+    
     # Part 2) Physical constraints enforced
 
     # Validate dilution factor bounds (0-1) 

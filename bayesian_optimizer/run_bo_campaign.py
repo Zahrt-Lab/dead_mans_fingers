@@ -14,14 +14,78 @@ each individual xylopyridine analog.
 # bayesian_optimizer/run_bo_campaign.py
 from __future__ import annotations
 
+import math
+from pathlib import Path
+
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 from bayesian_optimizer.init_or_load_ax import _init_or_load_ax
-from bayesian_optimizer.ax_suggested_experiment import ax_suggested_experiment
+from experimental_commands.execute_bo_iteration_commands import run_bayesian_optimization_iteration
+from utils.experiment_aborted import PostProcessingError
 
 from preprocessing.experimental_parameters import (
     load_experimental_parameters,
     check_required_bo_campaign_parameters,
 )
+
+def _resolve_output_directory(bo_campaign_state: BoCampaignState, ax) -> None:
+    """
+    Redirect to a numbered subdirectory (run_001, run_002, ...) when starting a
+    fresh campaign into a base_directory that already contains output files.
+
+    Only acts on a fresh start (ax has no completed trials). On resume, the
+    existing directory is used as-is.
+    """
+    if not ax.get_trials_data_frame().empty:
+        return  # resuming an existing campaign — don't redirect
+
+    base_dir = Path(bo_campaign_state.bo_parameters["base_directory"])
+    if not base_dir.exists() or not any(base_dir.iterdir()):
+        return  # directory is empty or does not exist — no collision
+
+    n = 1
+    while (base_dir / f"run_{n:03d}").exists():
+        n += 1
+    new_base = base_dir / f"run_{n:03d}"
+    print(
+        f"Output directory already contains files from a previous run.\n"
+        f"Saving this run to: {new_base}"
+    )
+    bo_campaign_state.bo_parameters["base_directory"] = str(new_base)
+
+
+# TODO : This python function was a good idea but I prefer it as a seperate scripts, so I want to move it to init_or_load_ax eventually.
+def _rebuild_results_cache(ax, bo_campaign_state: BoCampaignState) -> None:
+    """
+    Reconstruct the in-memory results cache from completed Ax trials.
+
+    Called on campaign resume so that previously-run parameter sets are not
+    repeated.  The cache key format matches execute_bo_iteration_commands:
+    a tuple of the 6 trial-condition values rounded to 2 decimal places,
+    in dict insertion order (flow_rate, dilution_factor, temperature,
+    co_solvent_valve_position, co_solvent_dilution_factor, light_intensity).
+    """
+    _PARAM_KEYS = [
+        "flow_rate",
+        "dilution_factor",
+        "temperature",
+        "co_solvent_valve_position",
+        "co_solvent_dilution_factor",
+        "light_intensity",
+    ]
+    trials_df = ax.get_trials_data_frame()
+    if trials_df.empty:
+        return
+    for _, row in trials_df.iterrows():
+        try:
+            pct_yield = float(row["percent_yield"])
+            throughput = float(row["throughput"])
+            if math.isnan(pct_yield) or math.isnan(throughput):
+                continue
+            cache_key = tuple(round(float(row[k]), 2) for k in _PARAM_KEYS)
+            bo_campaign_state.update_results_cache(cache_key, (pct_yield, throughput))
+        except (KeyError, TypeError, ValueError):
+            continue
+    print(f"Reconstructed results cache with {len(bo_campaign_state.results_cache)} entries from prior Ax trials.")
 
 
 def run_bo_campaign(
@@ -29,7 +93,8 @@ def run_bo_campaign(
     ax_previous_run_json_file_path: str,
     percent_yield_threshold: float,
     throughput_threshold: float,
-    noise_sem: float,
+    noise_sem_percent_yield: float = 1.0,
+    noise_sem_throughput: float = 1.0,
     simulation_mode: bool = True,
     xylopyridine_analog: str = "",
 ) -> None:
@@ -50,7 +115,8 @@ def run_bo_campaign(
        (and load from if resuming)
      - percent_yield_threshold: Percent-yield threshold for Ax hypervolume calculation
      - throughput_threshold: Throughput threshold for Ax hypervolume calculation
-     - noise_sem: SEM value to report to Ax for each metric (helps keep GP stable)
+     - noise_sem_percent_yield: SEM for percent yield reported to Ax (absolute %, default 1.0)
+     - noise_sem_throughput: SEM for throughput reported to Ax (nmol/min, default 1.0)
      - simulation_mode: If True, runs in simulation mode (does not check volumes or
        run actual hardware)
      - xylopyridine_analog: Name of the xylopyridine analog being optimized
@@ -72,7 +138,7 @@ def run_bo_campaign(
 
     bo_campaign_state = BoCampaignState()
     bo_campaign_state.update_bo_parameters(parameters_for_experiment)
-    bo_campaign_state.set_noise_sem(noise_sem)
+    bo_campaign_state.set_noise_sem(noise_sem_percent_yield, noise_sem_throughput)
     bo_campaign_state.set_simulation_mode(simulation_mode)
 
     experimental_mode = "SIMULATION" if bo_campaign_state.simulation_mode else "HARDWARE"
@@ -93,37 +159,35 @@ def run_bo_campaign(
            f" - {experimental_bounds['temperature_max']} °C")
     print(f"Co-solvent valve position bounds: {experimental_bounds['cosolvent_valve_position_min']}"
            f" - {experimental_bounds['cosolvent_valve_position_max']}")
-    print(f"Co-solvent dilution factor bounds: {experimental_bounds['cosolvent_dilution_factor_min']}"
-           f" - {experimental_bounds['cosolvent_dilution_factor_max']}")
+    print(f"Co-solvent dilution factor bounds: {experimental_bounds['co_solvent_dilution_factor_min']}"
+           f" - {experimental_bounds['co_solvent_dilution_factor_max']}")
     print(f"Light intensity bounds: {experimental_bounds['light_intensity_min']}"
            f" - {experimental_bounds['light_intensity_max']}")
 
     # 2) Generating ax object for optimization of xylopyridine analogs
     ax = _init_or_load_ax(
         ax_previous_run_json_file_path,
-        experimental_bounds['flow_rate_min'],
-        experimental_bounds['flow_rate_max'],
-        experimental_bounds['dilution_factor_min'],
-        experimental_bounds['dilution_factor_max'],
-        experimental_bounds['temperature_min'],
-        experimental_bounds['temperature_max'],
-        experimental_bounds['cosolvent_valve_position_min'],
-        experimental_bounds['cosolvent_valve_position_max'],
-        experimental_bounds['cosolvent_dilution_factor_min'],
-        experimental_bounds['cosolvent_dilution_factor_max'],
-        experimental_bounds['light_intensity_min'],
-        experimental_bounds['light_intensity_max'],
+        experimental_bounds,
         percent_yield_threshold,
         throughput_threshold,
     )
+
+    # Rebuild the in-memory results cache from any completed Ax trials (resume case)
+    _rebuild_results_cache(ax, bo_campaign_state)
+
+    # Redirect to a numbered subdirectory if the output directory already has files
+    _resolve_output_directory(bo_campaign_state, ax)
 
     # 3) This is the main optimization loop,
     iteration = IterationState()
     step = 0
 
     # If configured trial count is 0, default to 30 iterations.
-    configured_trials = int(bo_campaign_state.bo_parameters["trials"])
-    target = "30" if configured_trials == 0 else str(configured_trials)
+    if int(bo_campaign_state.bo_parameters["trials"]) == 0:
+        target = 30
+    else:
+        target = int(bo_campaign_state.bo_parameters["trials"])
+
     try:
         while True if int(bo_campaign_state.bo_parameters["trials"]) == 0 else (step < int(target)):
             experiment_trial_conditions, trial_index = ax.get_next_trial()
@@ -132,8 +196,18 @@ def run_bo_campaign(
             iteration.update_iteration(trial_index + 1)
             iteration.update_trial_conditions(experiment_trial_conditions)
 
-            experimental_results = ax_suggested_experiment(bo_campaign_state, iteration)
+            try:
+                percent_yield, throughput = run_bayesian_optimization_iteration(bo_campaign_state, iteration)
+            except PostProcessingError as e:
+                ax.abandon_trial(trial_index=trial_index)
+                print(f"[WARNING] Trial {trial_index} abandoned — post-processing failed: {e}")
+                step += 1
+                continue
 
+            experimental_results = {
+                "percent_yield": (float(percent_yield), bo_campaign_state.noise_sem_percent_yield),
+                "throughput": (float(throughput), bo_campaign_state.noise_sem_throughput),
+            }
             ax.complete_trial(trial_index=trial_index, raw_data=experimental_results)
             step += 1
 

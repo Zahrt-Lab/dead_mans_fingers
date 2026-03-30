@@ -53,20 +53,23 @@ def _save_minimal_ax_json(path: Path) -> None:
 
 def _call_init_or_load(json_path: Path, ask_user_fn=None) -> AxClient:
     """Call _init_or_load_ax with fixed test-space bounds."""
+    experimental_bounds = {
+        "flow_rate_min": 40.0,
+        "flow_rate_max": 200.0,
+        "dilution_factor_min": 0.05,
+        "dilution_factor_max": 0.5,
+        "temperature_min": 20.0,
+        "temperature_max": 60.0,
+        "cosolvent_valve_position_min": 1.0,
+        "cosolvent_valve_position_max": 3.0,
+        "co_solvent_dilution_factor_min": 0.0,
+        "co_solvent_dilution_factor_max": 0.4,
+        "light_intensity_min": 0.0,
+        "light_intensity_max": 100.0,
+    }
     return _init_or_load_ax(
         ax_previous_run_json_file_path=str(json_path),
-        flow_rate_min=40.0,
-        flow_rate_max=200.0,
-        dilution_factor_min=0.05,
-        dilution_factor_max=0.5,
-        temperature_min=20.0,
-        temperature_max=60.0,
-        co_solvent_valve_position_min=1.0,
-        co_solvent_valve_position_max=3.0,
-        co_solvent_dilution_factor_min=0.0,
-        co_solvent_dilution_factor_max=0.4,
-        light_intensity_min=0.0,
-        light_intensity_max=100.0,
+        experimental_bounds=experimental_bounds,
         percent_yield_threshold=10.0,
         throughput_threshold=5.0,
         ask_user_fn=ask_user_fn,

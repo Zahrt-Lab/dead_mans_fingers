@@ -70,6 +70,14 @@ def post_process_uv_recording(
             uv_vis_recording["Time(s)"] >= time_target_volume_is_reached
         ].reset_index(drop=True)
 
+        if uv_vis_recording_after_target_volume.empty:
+            raise ValueError(
+                f"No UV-Vis data found after target volume cutoff "
+                f"({time_target_volume_is_reached:.1f} s) in {uv_vis_absorbance_results_csv}. "
+                f"Recording ends at {uv_vis_recording['Time(s)'].max():.1f} s. "
+                "Check flow rate, target volume, and recording duration."
+            )
+
         base_name, iteration = os.path.splitext(uv_vis_absorbance_results_csv)
         uv_vis_recording_post_processed_filename = (
             f"{base_name}_post_processed{iteration}"

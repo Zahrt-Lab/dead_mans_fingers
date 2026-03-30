@@ -33,3 +33,6 @@ jobs:
 
       - name: Run tests (excluding hardware)
         run: pytest test/ -m "not hardware" -v --tb=short
+
+      - name: Smoke test simulation run (1 analog, 3 trials)
+        run: python main.py test/test_config_ci_smoke.json --simulation

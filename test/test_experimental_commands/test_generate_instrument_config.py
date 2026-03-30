@@ -92,3 +92,31 @@ def test_save_instrument_config_csv_row_count_matches(tmp_path: Path) -> None:
 
     expected_rows = generate_instrument_config()
     assert len(rows) == len(expected_rows)
+
+
+def test_generate_instrument_config_uses_provided_com_ports():
+    custom_ports = {"vici_pump_1": "COM99", "ocean_optics_uv_vis": "COM88"}
+    rows = generate_instrument_config(com_ports=custom_ports)
+    com_ports_in_rows = [row[3] for row in rows[1:]]  # skip header
+    assert "COM99" in com_ports_in_rows
+    assert "COM88" in com_ports_in_rows
+
+
+def test_generate_instrument_config_partial_override_keeps_defaults():
+    custom_ports = {"vici_pump_1": "COM99"}
+    rows = generate_instrument_config(com_ports=custom_ports)
+    com_ports_in_rows = [row[3] for row in rows[1:]]
+    assert "COM99" in com_ports_in_rows
+    # Unoverridden port should still use the default
+    assert "COM22" in com_ports_in_rows
+
+
+def test_save_instrument_config_csv_uses_provided_com_ports(tmp_path: Path) -> None:
+    config_path = tmp_path / "Instrument_Config_File.csv"
+    save_instrument_config_csv(str(config_path), com_ports={"vici_pump_1": "COM99"})
+
+    with open(config_path, newline="", encoding="utf-8") as f:
+        rows = list(csv.reader(f))
+
+    com_ports_in_rows = [row[3] for row in rows[1:]]
+    assert "COM99" in com_ports_in_rows
