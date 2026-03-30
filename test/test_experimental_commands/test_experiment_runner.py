@@ -21,7 +21,7 @@ import pytest
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from experimental_commands.experiment_runner import run_hardware_experiment
+from experimental_commands.run_hardware_experiment import run_hardware_experiment
 
 _INSTRUMENT_CONFIG = "Instrument_Config_File.csv"
 _COMMAND_BASE = "iteration_1"
