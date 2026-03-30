@@ -17,7 +17,7 @@ _DEFAULT_COM_PORTS: Dict[str, str] = {
     "vici_pump_1":           "COM21",
     "vici_pump_2":           "COM22",
     "valve_xylopyridine":    "COM8",
-    "valve_cosolvent":       "COM8",
+    "valve_cosolvent":       "COM11",
     "temperature_controller": "COM12",
     "tricontinental_pump_1": "COM19",
     "tricontinental_pump_2": "COM14",
