@@ -32,7 +32,7 @@ _INSTRUMENT_CONFIG = [
         ["Temperature",	1,	"Temperature",	"COM12", ""],
         ["Tricontinental_Pump_C24000",	1,	"Tricontinental_Pump_C24000",	"COM19", ""],
         ["Tricontinental_Pump_C24000",	2,	"Tricontinental_Pump_C24000",	"COM14", ""],
-        ["DH2000", 1, "DH2000", "COM27", ""]
+        ["DH2000", 1, "DH2000", "COM27", ""],
         ["OceanOptics_UVVis", 1, "OceanOptics", "COM50", ""]
         ]
 
