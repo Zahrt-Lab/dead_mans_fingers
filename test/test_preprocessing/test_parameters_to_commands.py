@@ -90,10 +90,19 @@ def test_pump4_nonzero_when_reactor_conc_above_cuvette_target():
     assert result["volume_pump4"] > 0.0
 
 
-def test_temperature_and_light_intensity_passed_through():
+def test_temperature_passed_through_and_light_intensity_inverted():
+    # temperature passes through unchanged; light_intensity is inverted: input 0-100 → output 0-255 (0=brightest)
     result = call(trial_conditions=make_trial_conditions(temperature=65, light_intensity=80))
     assert result["temperature"] == 65.0
-    assert result["light_intensity"] == 80.0
+    # input 80 → (100-80)/100*255 = 51
+    assert result["light_intensity"] == 51.0
+
+
+def test_light_intensity_inversion_boundaries():
+    # 100% (brightest) → 0; 0% (dimmest) → 255; 50% → 128
+    assert call(trial_conditions=make_trial_conditions(light_intensity=100))["light_intensity"] == 0.0
+    assert call(trial_conditions=make_trial_conditions(light_intensity=0))["light_intensity"] == 255.0
+    assert call(trial_conditions=make_trial_conditions(light_intensity=50))["light_intensity"] == 128.0
 
 
 def test_valve_position_passed_through():

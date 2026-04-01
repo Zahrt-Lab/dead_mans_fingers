@@ -107,6 +107,9 @@ def parameters_to_commands(
         flow_rate_pump4 = max(0.0, cuvette_flow - flow_rate_reactor)
         volume_pump4 = max(0.0, (ratio - 1.0) * volume_reactor)
 
+    # Set Light intensity as a value between 0 (brightest) and 255 (dimmest) in integer values
+    light_intensity = int(round((100.0 - light_intensity) / 100.0 * 255))
+
     return {
         "flow_rate_pump1": float(round(flow_rate_pump1, 2)),
         "volume_pump1": float(round(volume_pump1, 2)),
