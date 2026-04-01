@@ -30,10 +30,11 @@ _INSTRUMENT_CONFIG = [
         ["Valve6Way",	2,	"Xylopyridine-Valve",	"COM7", ""],
         ["Valve6Way",	2,	"Cosolvent-Valve",	"COM11", ""],
         ["Temperature",	1,	"Temperature",	"COM12", ""],
-        ["Tricontinental_Pump_C24000",	1,	"Tricontinental_Pump_C24000",	"COM19", ""],
-        ["Tricontinental_Pump_C24000",	2,	"Tricontinental_Pump_C24000",	"COM14", ""],
+        ["Tricontinental_Pump_C24000",	1,	"Tricontinental_Pump_C24000",	"COM17", ""],
+        ["Tricontinental_Pump_C24000",	2,	"Tricontinental_Pump_C24000",	"COM25", ""],
         ["DH2000", 1, "DH2000", "COM27", ""],
-        ["OceanOptics_UVVis", 1, "OceanOptics", "COM50", ""]
+        ["OceanOptics_UVVis", 1, "OceanOptics", "COM50", ""],
+        ["MirrorBox365nm", 1, "MirrorBox365nm", "COM18", ""]
         ]
 
 

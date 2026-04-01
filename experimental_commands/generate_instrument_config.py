@@ -19,10 +19,11 @@ _DEFAULT_COM_PORTS: Dict[str, str] = {
     "valve_xylopyridine":    "COM7",
     "valve_cosolvent":       "COM11",
     "temperature_controller": "COM12",
-    "tricontinental_pump_1": "COM19",
-    "tricontinental_pump_2": "COM14",
+    "tricontinental_pump_1": "COM17",
+    "tricontinental_pump_2": "COM25",
     "dh2000_light_source":   "COM27",
     "ocean_optics_uv_vis":   "COM50",
+    "MirrorBox365nm":        "COM18",
 }
 
 

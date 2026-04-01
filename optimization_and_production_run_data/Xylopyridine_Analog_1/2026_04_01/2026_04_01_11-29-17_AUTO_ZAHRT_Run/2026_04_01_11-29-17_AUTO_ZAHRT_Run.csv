@@ -1,0 +1,8 @@
+Time,Component,Action,Parameters,Output,Notes
+55.15,METHOD,load_method,input=C:/Users/zahrtlab/AutoZahrt/Auto_Zahrt_v3/tmp/tricontinental_test.csv,Loading input file: C:/Users/zahrtlab/AutoZahrt/Auto_Zahrt_v3/tmp/tricontinental_test.csv,
+55.16,Tricontinental_C24000_1,dispense,"flow_rate=100,volume=500",Started async dispense,exp. 300.0 s
+55.66,Tricontinental_C24000_2,dispense,"flow_rate=500,volume=2500",Started async dispense,exp. 300.0 s
+361.63,Tricontinental_C24000_2,dispense,"flow_rate=500,volume=2500",dispense 2500.0 µL @ 500.0 µL/min,≈300.0 s
+369.7,Tricontinental_C24000_1,dispense,"flow_rate=100,volume=500",dispense 500.0 µL @ 100.0 µL/min,≈300.0 s
+369.71,SYNC,wait_for_pumps,,All pumps finished,
+369.71,SYNC,wait_for_pumps,,All pumps finished,

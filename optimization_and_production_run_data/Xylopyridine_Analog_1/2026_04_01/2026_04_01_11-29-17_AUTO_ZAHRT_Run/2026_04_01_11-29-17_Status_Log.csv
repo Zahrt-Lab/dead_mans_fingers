@@ -1,0 +1,30 @@
+Timestamp,Elapsed_Time_s,Tricontinental_C24000_1,Tricontinental_C24000_2
+2026-04-01 11:30:13,55.16,"Tricontinental_C24000_1: Pump A status: /0`, Pump B status: 
+/0`0","Tricontinental_C24000_2: Pump A status: 
+/0`192000, Pump B status: 
+/0`91907"
+2026-04-01 11:31:13,115.47,"Tricontinental_C24000_1: Pump A status: 
+/0@176273, Pump B status: 
+/0`192000","Tricontinental_C24000_2: Pump A status: 
+/0@99909, Pump B status: 
+/0`192000"
+2026-04-01 11:32:13,175.78,"Tricontinental_C24000_1: Pump A status: 
+/0@156502, Pump B status: 
+/0`192000","Tricontinental_C24000_2: Pump A status: 
+/0@1043, Pump B status: 
+/0@191534"
+2026-04-01 11:33:14,236.29,"Tricontinental_C24000_1: Pump A status: 
+/0@136665, Pump B status: 
+/0`192000","Tricontinental_C24000_2: Pump A status: 
+/0`192000, Pump B status: 
+/0@92331"
+2026-04-01 11:34:14,296.59,"Tricontinental_C24000_1: Pump A status: 
+/0@116898, Pump B status: 
+/0`192000","Tricontinental_C24000_2: Pump A status: 
+/0@184061, Pump B status: 
+/0@11838"
+2026-04-01 11:35:14,356.93,"Tricontinental_C24000_1: Pump A status: 
+/0@97117, Pump B status: 
+/0`192000","Tricontinental_C24000_2: Pump A status: 
+/0@85144, Pump B status: 
+/0`192000"
