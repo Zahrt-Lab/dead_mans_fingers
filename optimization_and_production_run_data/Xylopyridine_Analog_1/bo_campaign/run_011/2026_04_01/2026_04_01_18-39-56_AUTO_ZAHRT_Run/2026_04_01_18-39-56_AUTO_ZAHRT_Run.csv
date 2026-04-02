@@ -1,0 +1,14 @@
+Time,Component,Action,Parameters,Output,Notes
+19.62,METHOD,load_method,input=C:/Users/zahrtlab/AutoZahrt/project_dead_mans_fingers/optimization_and_production_run_data/Xylopyridine_Analog_1/bo_campaign/run_011/Fluorescent_Optimization_Iteration_20_wash.csv,Loading input file: C:/Users/zahrtlab/AutoZahrt/project_dead_mans_fingers/optimization_and_production_run_data/Xylopyridine_Analog_1/bo_campaign/run_011/Fluorescent_Optimization_Iteration_20_wash.csv,
+20.66,Valve6Way_2,go_to_position,position=2,Moved valve to position 2,
+21.7,Valve6Way_2,check_position,,CP02,Valve now at position CP02
+22.2,VICI_M6_Pump_1,dispense,"flow_rate=1220.0, volume=3660.0",Started async dispense,exp. 180.0 s
+22.72,VICI_M6_Pump_2,dispense,"flow_rate=780.0, volume=2340.0",Started async dispense,exp. 180.0 s
+23.23,Tricontinental_C24000_2,dispense,"flow_rate=1000, volume=3000",Started async dispense,exp. 180.0 s
+205.42,VICI_M6_Pump_1,dispense,"flow_rate=1220.0, volume=3660.0",dispense 3660.0 µL @ 1220.0 µL/min,≈180.0 s
+205.92,VICI_M6_Pump_2,dispense,"flow_rate=780.0, volume=2340.0",dispense 2340.0 µL @ 780.0 µL/min,≈180.0 s
+216.6,Tricontinental_C24000_2,dispense,"flow_rate=1000, volume=3000",dispense 3000.0 µL @ 1000.0 µL/min,≈180.0 s
+216.6,SYNC,wait_for_pumps,,All pumps finished,
+216.61,SYNC,wait_for_pumps,,All pumps finished,
+217.5,DH2000_1,shutdown_success_noop,,"{'shutter_open': False, 'halogen_on': False, 'deuterium_on': False, 'arduino_output': ['Shutter: CLOSED', 'Halogen: OFF', 'Deuterium: OFF']}",Success: leaving DH2000 state unchanged
+217.53,MirrorBox365nm_1,shutdown_set_dimmer,value=255,OK,MirrorBox dimmed to 255 (off) at shutdown

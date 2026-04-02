@@ -1,0 +1,2 @@
+Component,Action,Parameters,Notes,delay
+MirrorBox365nm_1,set_dimmer,value=145,Setting light intensity to 145,0.5

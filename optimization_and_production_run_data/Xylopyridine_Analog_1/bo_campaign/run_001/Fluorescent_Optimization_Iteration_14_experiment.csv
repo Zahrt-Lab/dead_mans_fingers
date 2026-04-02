@@ -7,9 +7,8 @@ DH2000_1,shutter_close,,,3.0
 OceanOptics_UVVis_1,record_dark,,,3.0
 DH2000_1,shutter_open,,,3.0
 OceanOptics_UVVis_1,start_continuous,stop_upon_convergence=True,,3.0
-Tricontinental_Pump_C24000_1,dispense,"flow_rate=71.75,volume=1230.0",The flow rate of our Xylo compund is 71.75 uL/min and volume is 1230.0,0.5
-VICI_M6_Pump_1,dispense,"flow_rate=61.25, volume=1050.0",The flow rate of our 0.1 M HCl Water is 61.25 uL/min and volume is 1050.0,0.5
-VICI_M6_Pump_2,dispense,"flow_rate=42.0, volume=720.0",The flow rate of our cosolvent is 42.0 uL/min and volume is 720.0,0.5
-Tricontinental_Pump_C24000_2,aspirate,"flow_rate=640.34, volume=10977.27",The flow rate of our 0.1 M HCl water pump is 640.34 uL/min and volume is 10977.27,0.5
+Tricontinental_Pump_C24000_1,dispense,"flow_rate=81.84,volume=1320.0",The flow rate of our Xylo compund is 81.84 uL/min and volume is 1320.0,0.5
+VICI_M6_Pump_1,dispense,"flow_rate=68.82, volume=1110.0",The flow rate of our 0.1 M HCl Water is 68.82 uL/min and volume is 1110.0,0.5
+Tricontinental_Pump_C24000_2,aspirate,"flow_rate=744.0, volume=12000.0",The flow rate of our 0.1 M HCl water pump is 744.0 uL/min and volume is 12000.0,0.5
 SYNC,wait_for_pumps,,Waiting for XYLO and WATER pumps to complete,0.5
 OceanOptics_UVVis_1,stop_continuous,,,3.0

@@ -1,4 +1,0 @@
-Component,Action,Parameters,Notes,delay
-Tricontinental_C24000_1,dispense,"flow_rate=100,volume=500",,0.5
-Tricontinental_C24000_2,dispense,"flow_rate=500,volume=2500",,0.5
-SYNC,wait_for_pumps,,,0.5

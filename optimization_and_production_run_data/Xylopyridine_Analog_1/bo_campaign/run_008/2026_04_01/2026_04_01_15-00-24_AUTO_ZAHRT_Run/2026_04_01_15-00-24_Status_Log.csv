@@ -1,0 +1,21 @@
+Timestamp,Elapsed_Time_s,DH2000_1,MirrorBox365nm_1,OceanOptics_UVVis_1,Temperature_1,Tricontinental_C24000_1,Tricontinental_C24000_2,VICI_M6_Pump_1,Valve6Way_1,Valve6Way_2
+2026-04-01 15:00:44,19.71,"{'shutter_open': False, 'halogen_on': False, 'deuterium_on': False, 'arduino_output': ['Shutter: CLOSED', 'Halogen: OFF', 'Deuterium: OFF']}","{'light1_on': True, 'light2_on': True, 'dimmer_pwm': 255, 'temp_light1_c': 35.21, 'temp_light2_c': 33.26, 'raw_line1': 'Light1: ON | Light2: ON | DimmerPWM: 255', 'raw_line2': 'Temps(C): 35.21\t33.26'}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 100000, 'num_scans': 10, 'targets_nm': [409.0], 'interval_s': 20.0}",39.89,"Tricontinental_C24000_1: Pump A status: 
+/0`11689, Pump B status: 
+/0`183118","Tricontinental_C24000_2: Pump A status: 
+/0`36520, Pump B status: 
+/0`169570",Error: invalid velocity response '',VICI Valve - Position: CP02,VICI Valve - Position: CP03
+2026-04-01 15:01:49,84.57,"{'shutter_open': False, 'halogen_on': False, 'deuterium_on': False, 'arduino_output': ['Shutter: CLOSED', 'Halogen: OFF', 'Deuterium: OFF']}","{'light1_on': True, 'light2_on': True, 'dimmer_pwm': 255, 'temp_light1_c': 35.21, 'temp_light2_c': 34.23, 'raw_line1': 'Light1: ON | Light2: ON | DimmerPWM: 255', 'raw_line2': 'Temps(C): 35.21\t34.23'}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 100000, 'num_scans': 10, 'targets_nm': [409.0], 'interval_s': 20.0}",39.87,"Tricontinental_C24000_1: Pump A status: 
+/0`11689, Pump B status: 
+/0`183118","Tricontinental_C24000_2: Pump A status: 
+/0@20597, Pump B status: 
+/0`192000",Error: invalid velocity response '',VICI Valve - Position: CP02,VICI Valve - Position: CP03
+2026-04-01 15:02:54,149.29,"{'shutter_open': False, 'halogen_on': False, 'deuterium_on': False, 'arduino_output': ['Shutter: CLOSED', 'Halogen: OFF', 'Deuterium: OFF']}","{'light1_on': True, 'light2_on': True, 'dimmer_pwm': 255, 'temp_light1_c': 34.23, 'temp_light2_c': 34.23, 'raw_line1': 'Light1: ON | Light2: ON | DimmerPWM: 255', 'raw_line2': 'Temps(C): 34.23\t34.23'}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 100000, 'num_scans': 10, 'targets_nm': [409.0], 'interval_s': 20.0}",39.90,"Tricontinental_C24000_1: Pump A status: 
+/0`11689, Pump B status: 
+/0`183118","Tricontinental_C24000_2: Pump A status: 
+/0@190621, Pump B status: 
+/0@0",Error: invalid velocity response '',VICI Valve - Position: CP02,VICI Valve - Position: CP03
+2026-04-01 15:03:59,214.17,"{'shutter_open': False, 'halogen_on': False, 'deuterium_on': False, 'arduino_output': ['Shutter: CLOSED', 'Halogen: OFF', 'Deuterium: OFF']}","{'light1_on': True, 'light2_on': True, 'dimmer_pwm': 255, 'temp_light1_c': 35.21, 'temp_light2_c': 34.23, 'raw_line1': 'Light1: ON | Light2: ON | DimmerPWM: 255', 'raw_line2': 'Temps(C): 35.21\t34.23'}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 100000, 'num_scans': 10, 'targets_nm': [409.0], 'interval_s': 20.0}",39.87,"Tricontinental_C24000_1: Pump A status: 
+/0`11689, Pump B status: 
+/0`183118","Tricontinental_C24000_2: Pump A status: 
+/0`39599, Pump B status: 
+/0@168809",Error: invalid velocity response '',VICI Valve - Position: CP02,VICI Valve - Position: CP03

@@ -1,0 +1,5 @@
+Component,Action,Parameters,Notes,delay
+Valve6Way_2,go_to_position,position=2,,0.5
+VICI_M6_Pump_1,dispense,"flow_rate=1840.0, volume=5520.0",The flow rate of our 0.1 M HCl Water is 1840.0 uL/min and volume is 5520.0,0.5
+Tricontinental_Pump_C24000_2,aspirate,"flow_rate=1000, volume=3000",The flow rate of our 0.1 M HCl water pump is 1000 uL/min and volume is 3000,0.5
+SYNC,wait_for_pumps,,Waiting for XYLO and WATER pumps to complete,0.5

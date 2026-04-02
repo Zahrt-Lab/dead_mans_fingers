@@ -15,7 +15,7 @@ def generate_light_intensity_commands(
     The light intensity is an experimental parameter to feed into our bayesian optimizer
 
     parameters:
-     - light_intensity: The light intensity to set our experiment to (0-100%)
+     - light_intensity: The light intensity to set our experiment to 0 (brightest) to 100 (dimmest))
     return:
      - commands: The instrument commands to set the light intensity
     """
@@ -23,20 +23,11 @@ def generate_light_intensity_commands(
     header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [
         header,
-        [
-            "custom_light_box_1",
-            "turn_on_light_box",
-            f"",
-            f"Turning on the custom light box for the experiment",
-            "0.5",
-        ],
-        [
-            "custom_light_box_1",
-            "set_light_intensity",
-            f"intensity={round(light_intensity, 2)}, " f"intensity_id=1",
-            f"Setting Light Intensity to {round(light_intensity, 2)} for the experiment",
-            "0.5",
-        ],
-
+        ["MirrorBox365nm_1",
+         "set_dimmer",
+         f"value={int(light_intensity)}",
+         f"Setting light intensity to {int(light_intensity)}",
+         "0.5"
+         ]
     ]
     return commands

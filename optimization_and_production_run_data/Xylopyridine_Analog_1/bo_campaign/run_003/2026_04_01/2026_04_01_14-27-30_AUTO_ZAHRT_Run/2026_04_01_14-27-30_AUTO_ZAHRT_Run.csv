@@ -1,0 +1,6 @@
+Time,Component,Action,Parameters,Output,Notes
+10.89,METHOD,load_method,input=C:/Users/zahrtlab/AutoZahrt/project_dead_mans_fingers/optimization_and_production_run_data/Xylopyridine_Analog_1/bo_campaign/run_003/Fluorescent_Optimization_Iteration_12_wash.csv,Loading input file: C:/Users/zahrtlab/AutoZahrt/project_dead_mans_fingers/optimization_and_production_run_data/Xylopyridine_Analog_1/bo_campaign/run_003/Fluorescent_Optimization_Iteration_12_wash.csv,
+11.89,Valve6Way_2,go_to_position,position=3,Moved valve to position 3,
+12.91,Valve6Way_2,check_position,,CP03,Valve now at position CP03
+13.42,VICI_M6_Pump_1,dispense,"flow_rate=1980.0, volume=5940.0",Started async dispense,exp. 180.0 s
+13.94,Tricontinental_Pump_C24000_2,aspirate,"flow_rate=1000, volume=3000",Error: Device 'Tricontinental_Pump_C24000_2' not found,

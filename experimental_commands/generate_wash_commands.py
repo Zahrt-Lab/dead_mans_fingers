@@ -48,6 +48,7 @@ def generate_wash_commands(
             "0.5",
             ]
         )
+        
     if not is_zero(flow_rate_pump3, volume_pump3, zero_tolerance):
         commands.append([
             "VICI_M6_Pump_2",
@@ -57,12 +58,12 @@ def generate_wash_commands(
             "0.5",
             ]
         )
-
+    
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
-            "Tricontinental_Pump_C24000_2",
-            "aspirate",
-            f"flow_rate={flow_rate_pump4}, volume={volume_pump4}",
+            "Tricontinental_C24000_2",
+            "dispense",
+            f"flow_rate={flow_rate_pump4}, " f"volume={volume_pump4}",
             f"The flow rate of our 0.1 M HCl water pump is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
             "0.5",
             ]

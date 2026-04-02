@@ -110,6 +110,8 @@ def generate_experimental_commands(
             "0.5",
         ]
         )
+    # Edit this back to pump 2 once the new wire is in
+    '''
     if not is_zero(flow_rate_pump3, volume_pump3, zero_tolerance):
         commands.append([
             "VICI_M6_Pump_2",
@@ -119,6 +121,7 @@ def generate_experimental_commands(
             "0.5",
         ]
         )
+    '''
     # TODO: Need to validate and add these tricontinental pump commands
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
