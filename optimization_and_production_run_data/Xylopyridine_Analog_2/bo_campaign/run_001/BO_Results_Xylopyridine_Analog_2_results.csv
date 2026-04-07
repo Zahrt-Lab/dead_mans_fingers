@@ -1,0 +1,3 @@
+iteration,flow_rate,dilution_factor,reactor_concentration_uM,temperature,co_solvent_valve_position,co_solvent_dilution_factor,light_intensity,target_volume,reactant_wavelength,product_wavelength,average_absorbance_reactant,average_absorbance_product,percent_yield,throughput_nmol_per_min,timestamp,status,error_message
+29,200.0,0.5,500.0,60.0,2.0,0.15,83.01,2500,409.0,506.0,0.0022655502987740323,1.0011935846613744,87.55346880872152,87.5534688087215,2026-04-07 13:16:35,ok,
+30,200.0,0.5,500.0,37.19,3.0,0.05,93.08,2500,409.0,506.0,0.004410651326753752,0.9998739488844268,87.43806785968833,87.43806785968833,2026-04-07 13:16:39,ok,

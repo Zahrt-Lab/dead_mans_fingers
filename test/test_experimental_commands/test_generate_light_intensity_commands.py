@@ -26,19 +26,12 @@ _HEADER = ["Component", "Action", "Parameters", "Notes", "delay"]
 _COMMANDS = [
     _HEADER,
     [
-        "custom_light_box_1",
-        "turn_on_light_box",
-        f"",
-        f"Turning on the custom light box for the experiment",
+        "MirrorBox365nm_1",
+        "set_dimmer",
+        f"value={75.00}",
+        f"Setting light intensity to {int(75.00)}",
         "0.5",
-    ],
-    [
-        "custom_light_box_1",
-        "set_light_intensity",
-        f"intensity=75.0, " f"intensity_id=1",
-        f"Setting Light Intensity to 75.0 for the experiment",
-        "0.5",
-    ],
+        ],
 ]
 
 def test_generate_light_intensity_commands_returns_list_of_lists():
