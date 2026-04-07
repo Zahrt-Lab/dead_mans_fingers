@@ -1,0 +1,2 @@
+Timestamp,Elapsed_Time_s,MirrorBox365nm_1
+2026-04-07 17:42:33,3.04,"{'light1_on': True, 'light2_on': True, 'dimmer_pwm': 245, 'temp_light1_c': 42.05, 'temp_light2_c': 42.05, 'raw_line1': 'Light1: ON | Light2: ON | DimmerPWM: 245', 'raw_line2': 'Temps(C): 42.05\t42.05'}"

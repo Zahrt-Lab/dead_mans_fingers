@@ -119,6 +119,8 @@ def run_bayesian_optimization_iteration(
     base_directory.mkdir(parents=True, exist_ok=True)
     instrument_config = base_directory / Path("Instrument_Config_File.csv")
     command_path_base = base_directory / Path(f"Fluorescent_Optimization_Iteration_{iteration_state.iteration}")
+    bo_campaign_state.bo_parameters["instrument_config"] = str(instrument_config)
+    bo_campaign_state.bo_parameters["command_path_base"] = str(command_path_base)
 
     print("Calculating experimental parameters for this bayesian optimization search point")
     instrument_parameters = parameters_to_commands(

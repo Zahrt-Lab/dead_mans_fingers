@@ -1,0 +1,6 @@
+Time,Component,Action,Parameters,Output,Notes
+3.02,METHOD,load_method,input=C:/Users/zahrtlab/AutoZahrt/project_dead_mans_fingers/optimization_and_production_run_data/Xylopyridine_Analog_1/bo_campaign/run_001/mirror_box_365nm_test.csv,Loading input file: C:/Users/zahrtlab/AutoZahrt/project_dead_mans_fingers/optimization_and_production_run_data/Xylopyridine_Analog_1/bo_campaign/run_001/mirror_box_365nm_test.csv,
+3.06,MirrorBox365nm_1,set_dimmer,value=255,OK,
+3.57,SYNC,wait_for_pumps,,All pumps finished,
+4.41,MirrorBox365nm_1,shutdown,success=True,OK,
+4.41,Close,Connection closed at shutdown,MirrorBox365nm_1,OK,

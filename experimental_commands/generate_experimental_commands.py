@@ -27,21 +27,21 @@ def generate_experimental_commands(
     This will generate the experimental flow reaction commands for this reactor bed
 
     parameters:
-    - flow_rate_pump1: Flow rate of tricontinental pump 1 with our XYLO compound
-    - flow_rate_pump2: Flow rate of 0.1 M HCl water for diluting our compound
-    before it reaches the detector using the VICI M6 Pump 1
-    - flow_rate_pump3: Flow rate of co-solvents for diluting our compound before it reaches the reactor bed
+    - flow_rate_pump1: Flow rate of the VICI M6 Pump 1 with our XYLO compound
+    - flow_rate_pump2: Flow rate of co-solvents for diluting our compound before it reaches the reactor bed
     using the VICI M6 Pump 2
+    - flow_rate_pump3: Flow rate of 0.1 M HCl water for diluting our compound
+    before it reaches the detector using the tricontinental Pump C24000 1
     - flow_rate_pump4: Flow rate of 0.1 M HCL water for diluting our compound
     before it reaches the UV-detector and after the reactor bed using the
     Tricontinental Pump C24000 2
-    - volume_pump1: Volume of Xylo compound to pump using tricontinental pump 1
-    - volume_pump2: volume 0.1 M HCl water to dilute our Xylo compound solution
-    before it reaches the UV-detector
-    - volume_pump3: volume of co-solvents to dilute our Xylo compound before
-    it reaches the reactor bed using VICI M6 Pump 1
+    - volume_pump1: Volume of Xylo compound to pump using VICI M6 Pump 1
+    - volume_pump2: volume of co-solvents to dilute our Xylo compound before
+    it reaches the reactor bed using VICI M6 Pump 2
+    - volume_pump3: volume 0.1 M HCl water to dilute our Xylo compound solution
+    before it reaches the UV-detector using the tricontinental Pump C24000 1
     - volume_pump4: volume 0.1 M HCl water to dilute our Xylo compound solution
-    before it reaches the UV-detector
+    after it reaches the UV-detector using the tricontinental Pump C24000 2
 
     return:
     - commands: Experimental commands for reacting the flow reaction

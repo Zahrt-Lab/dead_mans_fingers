@@ -24,6 +24,7 @@ _DEFAULT_COM_PORTS: Dict[str, str] = {
     "dh2000_light_source":   "COM27",
     "ocean_optics_uv_vis":   "COM50",
     "MirrorBox365nm":        "COM18",
+
 }
 
 

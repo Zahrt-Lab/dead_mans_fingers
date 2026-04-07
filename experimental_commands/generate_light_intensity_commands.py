@@ -26,9 +26,9 @@ def generate_light_intensity_commands(
         [
             "MirrorBox365nm_1",
             "set_dimmer",
-            f"value={int(light_intensity)}",
-            f"Setting light intensity to {int(light_intensity)}",
-            "0.5",
-        ],
+            f"value={light_intensity}",
+            f"Setting light intensity to {int(light_intensity)} for the experiment",
+            0.5
+        ]
     ]
     return commands
