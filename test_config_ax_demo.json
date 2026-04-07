@@ -1,5 +1,8 @@
 {
   "trials" : 30,
+  "early_stopping_window": 5,
+  "early_stopping_improvement_bar": 0.1,
+  "early_stopping_min_trials": 10,
   "total_volume_through_reactor_bed": 3000,
   "target_volume_through_reactor_bed": 2500,
   "base_directory": "./optimization_and_production_run_data",

@@ -1,3 +1,0 @@
-Component,Action,Parameters,Notes,delay
-Temperature_1,set_temperature,"temp=28.91, temp_id=1",Setting Temperature to 28.91C for the experiment,0.5
-Temperature_1,wait_convergence,"target_temp=28.91,tolerance=1,duration=60",Waiting for temperature to converge to 28.91 before starting experiment,0.5

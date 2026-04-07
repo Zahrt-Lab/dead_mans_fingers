@@ -225,5 +225,3 @@ def run_bo_campaign(
     except KeyboardInterrupt:
         print("Keyboard interrupt received stopping Bayesian Optimization.")
     
-
-    # TODO : It would be cool to maybe include a visualization plot

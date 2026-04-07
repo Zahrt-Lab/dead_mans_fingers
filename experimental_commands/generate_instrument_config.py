@@ -15,7 +15,7 @@ from typing import Dict, List, Optional
 # editing source code.
 _DEFAULT_COM_PORTS: Dict[str, str] = {
     "vici_pump_1":           "COM21",
-    "vici_pump_2":           "COM22",   
+    "vici_pump_2":           "COM22",
     "valve_xylopyridine":    "COM11",
     "valve_cosolvent":       "COM7",
     "temperature_controller": "COM12",
@@ -54,8 +54,8 @@ def generate_instrument_config(
         ["Valve6Way",                 1, "Xylopyridine-Valve",          ports["valve_xylopyridine"],     ""],
         ["Valve6Way",                 2, "Cosolvent-Valve",             ports["valve_cosolvent"],        ""],
         ["Temperature",               1, "Temperature",                 ports["temperature_controller"], ""],
-        ["Tricontinental_C24000",     1, "Tricontinental_C24000",  ports["Tricontinental_C24000_1"],  ""],      
-        ["Tricontinental_C24000",     2, "Tricontinental_C24000",  ports["Tricontinental_C24000_2"],  ""],                     
+        ["Tricontinental_C24000",     1, "Tricontinental_C24000",       ports["Tricontinental_C24000_1"],  ""],
+        ["Tricontinental_C24000",     2, "Tricontinental_C24000",       ports["Tricontinental_C24000_2"],  ""],                     
         ["DH2000",                    1, "DH2000",                      ports["dh2000_light_source"],    ""],
         ["OceanOptics_UVVis",         1, "OceanOptics",                 ports["ocean_optics_uv_vis"],    ""],
         ["MirrorBox365nm",            1, "MirrorBox365nm",              ports["MirrorBox365nm"],         ""]
