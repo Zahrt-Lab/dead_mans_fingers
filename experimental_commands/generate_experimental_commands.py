@@ -28,18 +28,18 @@ def generate_experimental_commands(
 
     parameters:
     - flow_rate_pump1: Flow rate of the VICI M6 Pump 1 with our XYLO compound
-    - flow_rate_pump2: Flow rate of co-solvents for diluting our compound before it reaches the reactor bed
+    - flow_rate_pump2: Flow rate of 0.1 M HCl water for diluting our compound
+    before it reaches the detector using the Tricontinental Pump C24000 1
+    - flow_rate_pump3: Flow rate of co-solvents for diluting our compound before it reaches the reactor bed
     using the VICI M6 Pump 2
-    - flow_rate_pump3: Flow rate of 0.1 M HCl water for diluting our compound
-    before it reaches the detector using the tricontinental Pump C24000 1
     - flow_rate_pump4: Flow rate of 0.1 M HCL water for diluting our compound
     before it reaches the UV-detector and after the reactor bed using the
     Tricontinental Pump C24000 2
     - volume_pump1: Volume of Xylo compound to pump using VICI M6 Pump 1
-    - volume_pump2: volume of co-solvents to dilute our Xylo compound before
-    it reaches the reactor bed using VICI M6 Pump 2
-    - volume_pump3: volume 0.1 M HCl water to dilute our Xylo compound solution
+    - volume_pump2: volume 0.1 M HCl water to dilute our Xylo compound solution
     before it reaches the UV-detector using the tricontinental Pump C24000 1
+    - volume_pump3: volume of co-solvents to dilute our Xylo compound before
+    it reaches the reactor bed using VICI M6 Pump 2
     - volume_pump4: volume 0.1 M HCl water to dilute our Xylo compound solution
     after it reaches the UV-detector using the tricontinental Pump C24000 2
 
@@ -58,7 +58,8 @@ def generate_experimental_commands(
         "OceanOptics_UVVis_1","init","","","3.0"
         ]
     )
-    # TODO : Could be useful if this was updated by the user to change the integration time but not urgent
+    # TODO: This was set to be fixed for xylopyridine analogs
+    # for the future iterations make this more dynamic and flexible for different compounds
     commands.append([
         "OceanOptics_UVVis_1","set_params",
         "integration_time=30000,"
@@ -93,7 +94,7 @@ def generate_experimental_commands(
     )
     if not is_zero(flow_rate_pump1, volume_pump1, zero_tolerance):
         commands.append([
-                "Tricontinental_Pump_C24000_1",
+                "VICI_M6_Pump_1",
                 "dispense",
                 f"flow_rate={flow_rate_pump1},volume={volume_pump1}",
                 f"The flow rate of our Xylo compund is {flow_rate_pump1} uL/min and volume is {volume_pump1}",
@@ -101,9 +102,8 @@ def generate_experimental_commands(
             ]
         )
     if not is_zero(flow_rate_pump2, volume_pump2, zero_tolerance):
-        commands.append(
-            [
-            "VICI_M6_Pump_1",
+        commands.append([
+            "Tricontinental_Pump_C24000_1",
             "dispense",
             f"flow_rate={flow_rate_pump2}, " f"volume={volume_pump2}",
             f"The flow rate of our 0.1 M HCl Water is {flow_rate_pump2} uL/min and volume is {volume_pump2}",
@@ -123,7 +123,7 @@ def generate_experimental_commands(
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
             "Tricontinental_Pump_C24000_2",
-            "aspirate",
+            "dispense",
             f"flow_rate={flow_rate_pump4}, volume={volume_pump4}",
             f"The flow rate of our 0.1 M HCl water pump is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
             "0.5",
