@@ -29,7 +29,7 @@ _COMMANDS = [
         "0.5",
     ],
     [
-        "VICI_M6_Pump_1",
+        "Tricontinental_C24000_1",
         "dispense",
         "flow_rate=100, volume=300",
         "The flow rate of our 0.1 M HCl Water is 100 uL/min and volume is 300",
@@ -102,13 +102,13 @@ def test_generate_wash_commands_maximum_row_count_when_all_pumps_nonzero():
 def test_generate_wash_pump2_included_when_nonzero():
     commands = generate_wash_commands(100, 300, 0, 0, 0, 0, 3)
     components = [cmd[0] for cmd in commands]
-    assert "VICI_M6_Pump_1" in components
+    assert "Tricontinental_C24000_1" in components
 
 
 def test_generate_wash_pump2_omitted_when_zero_flow_rate():
     commands = generate_wash_commands(0, 300, 0, 0, 0, 0, 3)
     components = [cmd[0] for cmd in commands]
-    assert "VICI_M6_Pump_1" not in components
+    assert "Tricontinental_C24000_1" not in components
 
 
 def test_generate_wash_pump3_included_when_nonzero():

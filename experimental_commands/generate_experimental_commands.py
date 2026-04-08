@@ -103,7 +103,7 @@ def generate_experimental_commands(
         )
     if not is_zero(flow_rate_pump2, volume_pump2, zero_tolerance):
         commands.append([
-            "Tricontinental_Pump_C24000_1",
+            "Tricontinental_C24000_1",
             "dispense",
             f"flow_rate={flow_rate_pump2}, " f"volume={volume_pump2}",
             f"The flow rate of our 0.1 M HCl Water is {flow_rate_pump2} uL/min and volume is {volume_pump2}",
@@ -122,7 +122,7 @@ def generate_experimental_commands(
     # TODO: Need to validate and add these tricontinental pump commands
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
-            "Tricontinental_Pump_C24000_2",
+            "Tricontinental_C24000_2",
             "dispense",
             f"flow_rate={flow_rate_pump4}, volume={volume_pump4}",
             f"The flow rate of our 0.1 M HCl water pump is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
