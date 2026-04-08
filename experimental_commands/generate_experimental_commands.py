@@ -51,75 +51,71 @@ def generate_experimental_commands(
     commands = [header]
 
     commands.append([ 
-        "DH2000_1","shutter_open","","","3.0"
+        "DH2000_1","halogen_toggle","","","5.0"
         ]
     )
     commands.append([
-        "OceanOptics_UVVis_1","init","","","3.0"
-        ]
-    )
+        "DH2000_1","deuterium_toggle","","","5.0"
+    ])
+    commands.append([
+        "DH2000_1","shutter_open","","","5.0"
+    ])
+    commands.append([
+        "OceanOptics_UVVis_1","init","","","5.0"
+    ])
+
     # TODO: This was set to be fixed for xylopyridine analogs
     # for the future iterations make this more dynamic and flexible for different compounds
     commands.append([
-        "OceanOptics_UVVis_1","set_params",
-        "integration_time=30000,"
-        "num_scans=10,"
-        "measurement_interval=5,"
-        "target_wavelengths=409;506",
+        "OceanOptics_UVVis_1",
+        "set_params",
+        "integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths=409;506",
         "",
-        "3.0"
-        ]
-    )
+        "5.0"
+    ])
     commands.append([
-        "OceanOptics_UVVis_1","record_blank","","","3.0"
-        ]
-    )
+        "OceanOptics_UVVis_1","record_blank","","","5.0"
+    ])
     commands.append([
-        "DH2000_1","shutter_close","","","3.0"
-        ]
-    )
+        "DH2000_1","shutter_close","","","5.0"
+    ])
     commands.append([
-        "OceanOptics_UVVis_1","record_dark","","","3.0"
-        ]
-    )
+        "OceanOptics_UVVis_1","record_dark","","","5.0"
+    ])
     commands.append([
-        "DH2000_1","shutter_open","","","3.0"
-        ]
-    )
+        "DH2000_1","shutter_open","","","5.0"
+    ])
     # This begins the UV-Vis data collection in continuous mode until stopped once converged
     # TODO: Need to verify that once convergence is reached all the pumps will stop as well
     commands.append([
-        "OceanOptics_UVVis_1","start_continuous","stop_upon_convergence=True","","3.0"
-        ]
-    )
+        "OceanOptics_UVVis_1","start_continuous","stop_upon_convergence=True","","0.5"
+    ])
     if not is_zero(flow_rate_pump1, volume_pump1, zero_tolerance):
         commands.append([
-                "VICI_M6_Pump_1",
-                "dispense",
-                f"flow_rate={flow_rate_pump1},volume={volume_pump1}",
-                f"The flow rate of our Xylo compund is {flow_rate_pump1} uL/min and volume is {volume_pump1}",
-                "0.5",
-            ]
-        )
+            "VICI_M6_Pump_1",
+            "dispense",
+            f"flow_rate={flow_rate_pump1},volume={volume_pump1}",
+            f"The flow rate of our Xylo compund is {flow_rate_pump1} uL/min and volume is {volume_pump1}",
+            "0.5"
+        ])
     if not is_zero(flow_rate_pump2, volume_pump2, zero_tolerance):
         commands.append([
             "Tricontinental_C24000_1",
             "dispense",
-            f"flow_rate={flow_rate_pump2}, " f"volume={volume_pump2}",
+            f"flow_rate={flow_rate_pump2},volume={volume_pump2}",
             f"The flow rate of our 0.1 M HCl Water is {flow_rate_pump2} uL/min and volume is {volume_pump2}",
-            "0.5",
-        ]
-        )
+            "0.5"
+        ])
+        
     if not is_zero(flow_rate_pump3, volume_pump3, zero_tolerance):
         commands.append([
             "VICI_M6_Pump_2",
             "dispense",
-            f"flow_rate={flow_rate_pump3}, volume={volume_pump3}",
+            f"flow_rate={flow_rate_pump3},volume={volume_pump3}",
             f"The flow rate of our cosolvent is {flow_rate_pump3} uL/min and volume is {volume_pump3}",
-            "0.5",
-        ]
-        )
-    # TODO: Need to validate and add these tricontinental pump commands
+            "0.5"
+        ])
+
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
             "Tricontinental_C24000_2",
@@ -129,18 +125,38 @@ def generate_experimental_commands(
             "0.5",
         ]
         )
+        # TODO: Due to mechanical issues with pump 4 this has been commented out til resolved. 
+        '''        
+        commands.append([
+            "Tricontinental_C24000_2",
+            "dispense",
+            f"flow_rate={flow_rate_pump4},volume={volume_pump4}",
+            f"The flow rate of our 0.1 M HCl water pump after the reactor is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
+            "0.5"
+        ])
+        '''
     commands.append([
             "SYNC",
             "wait_for_pumps",
             "",
             "Waiting for XYLO and WATER pumps to complete",
             "0.5",
-        ]
-    )
+        ])
     commands.append([
         "OceanOptics_UVVis_1","stop_continuous","","","3.0"
-        ]
-    )
+        ])
+    
+    commands.append([
+        "DH2000_1","halogen_toggle","","","3.0"
+        ])
+
+    commands.append([
+        "DH2000_1","deuterium_toggle","","","3.0"
+        ])
+    
+    commands.append([
+        "DH2000_1","shutter_close","","","3.0"
+        ])
 
     return commands
 

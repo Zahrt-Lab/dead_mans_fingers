@@ -1,0 +1,2 @@
+Component,Action,Parameters,Notes,delay
+VICI_M6_Pump_1,dispense,"flow_rate=1000,volume=2000",,0.5

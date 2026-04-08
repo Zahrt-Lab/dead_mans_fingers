@@ -1,0 +1,6 @@
+Timestamp,Elapsed_Time_s,DH2000_1,MirrorBox365nm_1,OceanOptics_UVVis_1,Temperature_1,Tricontinental_C24000_1,Tricontinental_C24000_2,VICI_M6_Pump_1,VICI_M6_Pump_2,Valve6Way_1,Valve6Way_2
+2026-04-08 14:29:14,19.69,"{'shutter_open': True, 'halogen_on': False, 'deuterium_on': False, 'arduino_output': ['Shutter: OPEN', 'Halogen: OFF', 'Deuterium: OFF']}","{'light1_on': True, 'light2_on': True, 'dimmer_pwm': 255, 'temp_light1_c': 37.17, 'temp_light2_c': 38.14, 'raw_line1': 'Light1: ON | Light2: ON | DimmerPWM: 255', 'raw_line2': 'Temps(C): 37.17\t38.14'}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 100000, 'num_scans': 10, 'targets_nm': [409.0], 'interval_s': 20.0}",25.00,"Tricontinental_C24000_1: Pump A status: 
+/0`0, Pump B status: 
+/0`0","Tricontinental_C24000_2: Pump A status: 
+/0`0, Pump B status: 
+/0`0",Error: invalid velocity response 'PR V489',Error: invalid velocity response 'PR V1143',VICI Valve - Position: CP01,VICI Valve - Position: CP01

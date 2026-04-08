@@ -67,7 +67,9 @@ def generate_wash_commands(
             "0.5",
             ]
         )
-    
+
+    # TODO: Due to mechanical issues with pump 4 this has been commented out til resolved.
+    '''
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
             "Tricontinental_C24000_2",
@@ -77,6 +79,7 @@ def generate_wash_commands(
             "0.5",
             ]
         )
+    '''
     commands.append([
             "SYNC",
             "wait_for_pumps",

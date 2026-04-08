@@ -1,0 +1,3 @@
+Component,Action,Parameters,Notes,delay
+DH2000_1,shutter_open,,,0.5
+DH2000_1,shutter_close,,,0.5
