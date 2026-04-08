@@ -24,6 +24,15 @@ def generate_wash_commands(
     These are the experimental parameters to feed into our equipment to wash the XYLO compound
     out of the detector before the next reaction
 
+    Parameters:
+     - flow_rate_pump2: Flow rate of 0.1 M HCl water to dilute our compound before it reaches the detector
+     - volume_pump2: Volume of 0.1 M HCl water to dilute our compound before it reaches the detector
+     - flow_rate_pump3: Flow rate of cosolvent for diluting our compound before it reaches the UV-detector
+     - volume_pump3: Volume of cosolvent for diluting our compound before it reaches the UV-detector
+     - flow_rate_pump4: Flow rate of 0.1 M HCl water for diluting our compound after it reaches the reactor bed and before it reaches the UV-detector
+     - volume_pump4: Volume of 0.1 M HCl water for diluting our compound after it reaches the reactor bed
+     - cosolvent_valve_position: valve position for the VICI M6 pump 2 which pumps the co-solvent.
+
     return:
     - commands: The commands to wash the Xylo compound out of the detector
     """
@@ -41,7 +50,7 @@ def generate_wash_commands(
     )
     if not is_zero(flow_rate_pump2, volume_pump2, zero_tolerance):
         commands.append([
-            "VICI_M6_Pump_1",
+            "Tricontinental_C24000_1",
             "dispense",
             f"flow_rate={flow_rate_pump2}, " f"volume={volume_pump2}",
             f"The flow rate of our 0.1 M HCl Water is {flow_rate_pump2} uL/min and volume is {volume_pump2}",

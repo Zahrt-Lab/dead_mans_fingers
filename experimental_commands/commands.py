@@ -41,20 +41,27 @@ def save_commands_csv(
 
     parameters:
      - commands_path: Output directory and csv prefix for all our instrument commands
-     - flow_rate_pump1: Flow rate of harvard apparatus with our XYLO compound
+     - flow_rate_pump1: Flow rate of harvard apparatus with our XYLO compound using the 
+     VICI M6 Pump 1
      - flow_rate_pump2: Flow rate of 0.1 M HCl water for diluting our compound
-     before it reaches the detector using the VICI M6 Pump 1
-     - flow_rate_pump3: Flow rate of 0.1 M HCL water for diluting our compound
-     before it reaches the UV-detector and after the reactor bed using the
+     before it reaches the detector using the tri-continent pump 1
+     - flow_rate_pump3: Flow rate of cosolvents for diluting our compound
+     before it reaches the reactor UV-detector and after the reactor bed using the
      VICI M6 Pump 2
+     - flow_rate_pump4: Flow rate of 0.1 M HCl water for diluting our compound
+     before it reaches the reactor UV-detector and after the reactor bed using the
+     tri-continent pump 2
      - volume_pump1: Volume of Xylo compound to pump using harvard aparatus
      - volume_pump2: volume 0.1 M HCl water to dilute our Xylo compound before
      it reaches the reactor bed
-     - volume_pump3: volume 0.1 M HCl water to dilute our Xylo compound solution
+     - volume_pump3: volume 0.1 M cosolvent to dilute our Xylo compound solution
      before it reaches the UV-detector
+     - volume_pump4: volume 0.1 M HCl water to dilute our Xylo compound solution
+     after it reaches the reactor bed and before it reaches the UV-detector.
+    - valve_position_pump3: valve position for the VICI M6 pump 2 which pumps the co-solvent.
      - temperature: Temperature to set the thermal couple to for the experiment
-     - previous_temperature: Previous temperature the thermal couple was set for
-     the previous experiment
+     - fraction_of_cosolvent: Fraction of co-solvent to use for the experiment
+     - light_intensity: Light intensity to set the mirror box to for the experiment
     return:
      - None
     """
@@ -90,8 +97,6 @@ def save_commands_csv(
             )
         )
 
-    # TODO : Currently we our used fixed volumes for wash commands but we may want to 
-    # update this in the future to be more dynamic 
     # Generate wash commands
     # Following the README File at Step 5:
     # F2 = 2000 * (1 - D_cosolvent), F3 = 2000 * D_cosolvent, F4 = 1000
