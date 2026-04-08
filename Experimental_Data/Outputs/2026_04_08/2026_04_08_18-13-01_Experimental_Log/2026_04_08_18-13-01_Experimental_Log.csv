@@ -1,0 +1,16 @@
+Time,Component,Action,Parameters,Output,Notes
+12.13,METHOD,load_method,input=optimization_and_production_run_data\Xylopyridine_Analog_1\bo_campaign\run_006\Fluorescent_Optimization_Iteration_1_experiment.csv,Loading input file: optimization_and_production_run_data\Xylopyridine_Analog_1\bo_campaign\run_006\Fluorescent_Optimization_Iteration_1_experiment.csv,
+13.0,DH2000_1,halogen_toggle,nan,OK,
+18.9,DH2000_1,deuterium_toggle,nan,OK,
+24.81,DH2000_1,shutter_open,nan,OK,
+30.14,OceanOptics_UVVis_1,init,nan,OK,
+35.45,OceanOptics_UVVis_1,set_params,"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths=409;506",OK,
+41.37,OceanOptics_UVVis_1,record_blank,nan,OK,
+47.29,DH2000_1,shutter_close,nan,OK,
+52.87,OceanOptics_UVVis_1,record_dark,nan,OK,
+58.76,DH2000_1,shutter_open,nan,OK,
+63.77,OceanOptics_UVVis_1,start_continuous,stop_upon_convergence=True,OK,
+64.27,VICI_M6_Pump_1,dispense,"flow_rate=9.2,volume=690.0",Started async dispense,exp. 4500.0 s
+64.79,Tricontinental_C24000_1,dispense,"flow_rate=16.8,volume=1260.0",Started async dispense,exp. 4500.0 s
+65.3,VICI_M6_Pump_2,dispense,"flow_rate=14.0,volume=1050.0",Started async dispense,exp. 4500.0 s
+65.8,Tricontinental_C24000_2,dispense,"flow_rate=64.55, volume=4840.91",Error: Device 'Tricontinental_C24000_2' not found,

@@ -1,0 +1,6 @@
+Component,Action,Parameters,Notes,delay
+MirrorBox365nm_1,set_dimmer,value=255,,0.5
+MirrorBox365nm_1,status,,,0.5
+MirrorBox365nm_1,read_temperature,,,0.5
+MirrorBox365nm_1,set_dimmer,value=200,,0.5
+MirrorBox365nm_1,set_dimmer,value=255,,0.5

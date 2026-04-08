@@ -1,7 +1,7 @@
 {
   "trials": 30,
-  "total_volume_through_reactor_bed": 3000,
-  "target_volume_through_reactor_bed": 2500,
+  "total_volume_through_reactor_bed": 100,
+  "target_volume_through_reactor_bed": 80,
   "base_directory": "./optimization_and_production_run_data/Xylopyridine_Analog_1/bo_campaign",
   "name_of_xylopyridine_analogs_stock_solutions": [
     "Xylopyridine_Analog_1",

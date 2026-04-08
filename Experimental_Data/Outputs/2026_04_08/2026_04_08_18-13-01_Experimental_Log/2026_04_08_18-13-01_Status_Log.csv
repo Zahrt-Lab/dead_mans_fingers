@@ -1,0 +1,76 @@
+Timestamp,Elapsed_Time_s,DH2000_1,OceanOptics_UVVis_1,Temperature_1,Tricontinental_C24000_1,VICI_M6_Pump_1,VICI_M6_Pump_2,Valve6Way_1,Valve6Way_2
+2026-04-08 18:13:13,12.14,"{'shutter_open': False, 'halogen_on': True, 'deuterium_on': False, 'arduino_output': ['Shutter: CLOSED', 'Halogen: ON', 'Deuterium: OFF']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 100000, 'num_scans': 10, 'targets_nm': [409.0], 'interval_s': 20.0}",25.87,"Tricontinental_C24000_1: Pump A status: 
+/0`177349, Pump B status: 
+/0`29170",Error: invalid velocity response 'PR V0',Error: invalid velocity response 'PR V0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:14:18,76.54,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.10,"Tricontinental_C24000_1: Pump A status: 
+/0@191603, Pump B status: 
+/0`192000",0.0,Error: invalid velocity response '= 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:15:21,140.04,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.64,"Tricontinental_C24000_1: Pump A status: 
+/0@188112, Pump B status: 
+/0`192000",Error: invalid velocity response 'D3 = 0',Error: invalid velocity response 'D4 = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:16:25,203.57,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.85,"Tricontinental_C24000_1: Pump A status: 
+/0@184620, Pump B status: 
+/0`192000",Error: invalid velocity response 'D4 = 0',Error: invalid velocity response 'D5 = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:17:28,266.96,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.95,"Tricontinental_C24000_1: Pump A status: 
+/0@181135, Pump B status: 
+/0`192000",Error: invalid velocity response 'D5 = 0',Error: invalid velocity response 'D = 1000000',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:18:32,330.38,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.98,"Tricontinental_C24000_1: Pump A status: 
+/0@177649, Pump B status: 
+/0`192000",Error: invalid velocity response 'D = 1000000',Error: invalid velocity response 'DE = 1',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:19:35,393.87,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.99,"Tricontinental_C24000_1: Pump A status: 
+/0@174156, Pump B status: 
+/0`192000",Error: invalid velocity response 'DE = 1',Error: invalid velocity response 'DG = 1',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:20:39,457.37,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.01,"Tricontinental_C24000_1: Pump A status: 
+/0@170664, Pump B status: 
+/0`192000",Error: invalid velocity response 'DG = 1',"Error: invalid velocity response 'DN = ""!""'",VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:21:42,520.86,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.01,"Tricontinental_C24000_1: Pump A status: 
+/0@167175, Pump B status: 
+/0`192000","Error: invalid velocity response 'DN = ""!""'",Error: invalid velocity response 'EF = 1',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:22:46,584.27,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.02,"Tricontinental_C24000_1: Pump A status: 
+/0@163688, Pump B status: 
+/0`192000",Error: invalid velocity response 'EF = 1',Error: invalid velocity response 'EM = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:23:49,647.65,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.02,"Tricontinental_C24000_1: Pump A status: 
+/0@160202, Pump B status: 
+/0`192000",Error: invalid velocity response 'EM = 0',Error: invalid velocity response 'ER = 23',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:24:52,711.09,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.02,"Tricontinental_C24000_1: Pump A status: 
+/0@156715, Pump B status: 
+/0`192000",Error: invalid velocity response 'ER = 23',Error: invalid velocity response 'ES = 1',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:25:56,774.5,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.03,"Tricontinental_C24000_1: Pump A status: 
+/0@153227, Pump B status: 
+/0`192000",Error: invalid velocity response 'ES = 1',Error: invalid velocity response 'FM = 2',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:26:59,837.99,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.03,"Tricontinental_C24000_1: Pump A status: 
+/0@149738, Pump B status: 
+/0`192000",Error: invalid velocity response 'FM = 2',Error: invalid velocity response 'HC = 5',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:28:03,901.42,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.03,"Tricontinental_C24000_1: Pump A status: 
+/0@146249, Pump B status: 
+/0`192000",Error: invalid velocity response 'HC = 5',Error: invalid velocity response 'HT = 500',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:29:06,964.86,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.03,"Tricontinental_C24000_1: Pump A status: 
+/0@142761, Pump B status: 
+/0`192000",Error: invalid velocity response 'HT = 500',Error: invalid velocity response 'I1 = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:30:10,1028.33,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.03,"Tricontinental_C24000_1: Pump A status: 
+/0@139272, Pump B status: 
+/0`192000",Error: invalid velocity response 'I1 = 0',Error: invalid velocity response 'I2 = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:31:13,1091.77,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.03,"Tricontinental_C24000_1: Pump A status: 
+/0@135781, Pump B status: 
+/0`192000",Error: invalid velocity response 'I2 = 0',Error: invalid velocity response 'I3 = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:32:17,1155.17,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.03,"Tricontinental_C24000_1: Pump A status: 
+/0@132297, Pump B status: 
+/0`192000",Error: invalid velocity response 'I3 = 0',Error: invalid velocity response 'I4 = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:33:20,1218.67,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.04,"Tricontinental_C24000_1: Pump A status: 
+/0@128805, Pump B status: 
+/0`192000",Error: invalid velocity response 'I4 = 0',Error: invalid velocity response 'I5 = 1019',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:34:23,1282.13,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",25.05,"Tricontinental_C24000_1: Pump A status: 
+/0@125317, Pump B status: 
+/0`192000",Error: invalid velocity response 'I5 = 1019',Error: invalid velocity response 'IF = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:35:27,1345.5,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.97,"Tricontinental_C24000_1: Pump A status: 
+/0@121833, Pump B status: 
+/0`192000",Error: invalid velocity response 'IF = 0',Error: invalid velocity response 'IL = 15',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:36:30,1408.99,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.95,"Tricontinental_C24000_1: Pump A status: 
+/0@118342, Pump B status: 
+/0`192000",Error: invalid velocity response 'IL = 15',Error: invalid velocity response 'IN = 15',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:37:34,1472.42,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.97,"Tricontinental_C24000_1: Pump A status: 
+/0@114854, Pump B status: 
+/0`192000",Error: invalid velocity response 'IN = 15',Error: invalid velocity response 'JE = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
+2026-04-08 18:38:37,1535.78,"{'shutter_open': True, 'halogen_on': True, 'deuterium_on': True, 'arduino_output': ['Shutter: OPEN', 'Halogen: ON', 'Deuterium: ON']}","{'initialized': True, 'model': 'OCEANHR2', 'serial': 'HR200608', 'integration_time_us': 30000, 'num_scans': 10, 'targets_nm': [409.0, 506.0], 'interval_s': 5.0}",24.97,"Tricontinental_C24000_1: Pump A status: 
+/0@111368, Pump B status: 
+/0`192000",Error: invalid velocity response 'JE = 0',Error: invalid velocity response 'LK = 0',VICI Valve - Position: CP01,VICI Valve - Position: CP01
