@@ -1,0 +1,2 @@
+Component,Action,Parameters,Notes,delay
+MirrorBox365nm_1,set_dimmer,value=230.0,Setting light intensity to 230 for the experiment,0.5
