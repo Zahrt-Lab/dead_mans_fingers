@@ -18,11 +18,11 @@ from preprocessing.standardize_input import standardize_input
 from bayesian_optimizer.experiment_state import IterationState
 
 
-def test_standardize_rounds_to_two_decimal_places():
+def test_standardize_rounds_to_four_decimal_places():
     state = IterationState(trial_conditions={"flow_rate": 100.12345, "temperature": 50.6789})
     result = standardize_input(state)
-    assert result.trial_conditions["flow_rate"] == 100.12
-    assert result.trial_conditions["temperature"] == 50.68
+    assert result.trial_conditions["flow_rate"] == 100.1235
+    assert result.trial_conditions["temperature"] == 50.6789
 
 
 def test_standardize_custom_decimal_places():
@@ -55,9 +55,9 @@ def test_standardize_all_trial_conditions():
         "light_intensity": 75.125,
     })
     result = standardize_input(state)
-    assert result.trial_conditions["flow_rate"] == 201.0
-    assert result.trial_conditions["dilution_factor"] == 0.33
-    assert result.trial_conditions["temperature"] == 60.56
+    assert result.trial_conditions["flow_rate"] == 200.999
+    assert result.trial_conditions["dilution_factor"] == 0.3333
+    assert result.trial_conditions["temperature"] == 60.5555
     assert result.trial_conditions["co_solvent_valve_position"] == 3.0
     assert result.trial_conditions["co_solvent_dilution_factor"] == 0.2
-    assert result.trial_conditions["light_intensity"] == 75.12
+    assert result.trial_conditions["light_intensity"] == 75.125

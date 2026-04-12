@@ -15,7 +15,7 @@ from typing import Dict
 from bayesian_optimizer.experiment_state import IterationState
 
 def standardize_input(
-    iteration_state: IterationState, ndp: int = 2
+    iteration_state: IterationState, ndp: int = 4
 ) -> IterationState:
     """
     The role of this script is to standardize our inputs before run_bayesian_optimization_iteration

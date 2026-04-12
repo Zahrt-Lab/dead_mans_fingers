@@ -86,7 +86,15 @@ def _rebuild_results_cache(ax, bo_campaign_state: BoCampaignState) -> None:
             throughput = float(row["throughput"])
             if math.isnan(pct_yield) or math.isnan(throughput):
                 continue
-            cache_key = tuple(round(float(row[k]), 2) for k in _PARAM_KEYS)
+            _PARAM_NDP = {
+                "flow_rate": 2,
+                "dilution_factor": 4,
+                "temperature": 2,
+                "co_solvent_valve_position": 0,
+                "co_solvent_dilution_factor": 2,
+                "light_intensity": 2,
+            }
+            cache_key = tuple(round(float(row[k]), _PARAM_NDP[k]) for k in _PARAM_KEYS)
             bo_campaign_state.update_results_cache(cache_key, (pct_yield, throughput))
         except (KeyError, TypeError, ValueError):
             continue
@@ -189,15 +197,15 @@ def run_bo_campaign(
     )
 
     # Initialize stock-solution and waste volumes (hardware mode only)
-    if not simulation_mode:
+    if not bo_campaign_state.simulation_mode:
         initial_volumes = initialize_volume_state(
             bo_campaign_state.bo_parameters,
             volume_state_json_path,
-        )
+            )
         bo_campaign_state.update_volume_stock_solutions(initial_volumes)
         bo_campaign_state.update_waste_volume(
             initial_volumes.get("waste_volume_uL", 0.0)
-        )
+            )
 
     # 3) This is the main optimization loop,
     iteration = IterationState()
@@ -245,14 +253,4 @@ def run_bo_campaign(
 
     except KeyboardInterrupt:
         print("Keyboard interrupt received stopping Bayesian Optimization.")
-
-    finally:
-        if not simulation_mode and bo_campaign_state.volume_log:
-            volume_log_path = (
-                Path(bo_campaign_state.bo_parameters["base_directory"]) / "volume_log.csv"
-            )
-            save_volume_log_csv(bo_campaign_state.volume_log, str(volume_log_path))
-            save_volume_state_json(bo_campaign_state, volume_state_json_path)
-            print(f"Volume log saved to: {volume_log_path}")
-            print(f"Volume state saved to: {volume_state_json_path}")
-
+    

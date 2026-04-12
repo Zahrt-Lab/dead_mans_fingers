@@ -30,6 +30,7 @@ from experimental_commands.experiment_runner import run_hardware_experiment
 from post_processing.post_processing_results import analyze_experiment_results
 from post_processing.append_bayesian_experimental_results import append_bayesian_experimental_results
 from utils.run_simulation import run_simulated_experiment
+from post_processing.detect_early_convergence import detect_early_convergence
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 from utils.validate_state_classes import validate_bo_campaign_state, validate_iteration_state
 from utils.experiment_aborted import PostProcessingError
@@ -133,20 +134,17 @@ def run_bayesian_optimization_iteration(
     )
     iteration_state.update_instrument_parameters(instrument_parameters)
 
-    # Volume check and update (hardware mode only — simulation skips volume tracking)
     if not bo_campaign_state.simulation_mode:
+        
         volumes_used = calculate_volumes_used(
             instrument_parameters,
             iteration_state.trial_conditions["co_solvent_dilution_factor"],
         )
         check_and_update_all_volumes(
             bo_campaign_state,
-            volumes_used,
-            iteration=iteration_state.iteration,
-            co_solvent_valve_position=int(
-                iteration_state.trial_conditions["co_solvent_valve_position"]
-            ),
-        )
+        volumes_used,
+        iteration=iteration_state.iteration,
+    )
 
     save_instrument_config_csv(
         instrument_config,
@@ -170,6 +168,17 @@ def run_bayesian_optimization_iteration(
 
     # Phase 2: Run experiment (hardware or simulation)
     csv_file_path = run_experiment(bo_campaign_state, iteration_state)
+
+    if detect_early_convergence(
+        csv_file_path,
+        iteration_state.trial_conditions["flow_rate"],
+        bo_parameters["total_volume_through_reactor_bed"],
+    ):
+        print(
+            "[INFO] Experiment stopped before expected duration — "
+            "treating as early convergence. Last 5 minutes of data will be used."
+        )
+        iteration_state.converged_early = True
 
     # Phase 3: Analyze results and save to CSV
     bo_parameters = bo_campaign_state.bo_parameters
@@ -206,7 +215,7 @@ def run_bayesian_optimization_iteration(
             bo_campaign_state,
         )
         raise PostProcessingError(str(e))
-
+    
     append_bayesian_experimental_results(
         {
             "iteration": iteration_state.iteration,

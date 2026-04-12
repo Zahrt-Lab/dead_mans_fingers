@@ -84,6 +84,29 @@ def test_early_convergence_returns_dataframe(tmp_path):
     assert isinstance(result, pd.DataFrame)
 
 
+def test_early_convergence_saves_post_processed_csv(tmp_path):
+    rows = [(t, 0.1, 0.2) for t in range(0, 660, 60)]
+    csv_path = write_uv_csv(tmp_path, rows)
+    post_process_uv_recording(
+        flow_rate=100, target_volume=100,
+        uv_vis_absorbance_results_csv=str(csv_path),
+        experiment_converged_early=True,
+    )
+    assert (tmp_path / "uv_recording_post_processed.csv").exists()
+
+
+def test_early_convergence_insufficient_data_raises_value_error(tmp_path):
+    # Only 120 s of data — less than 300 s required for last-5-min window
+    rows = [(t, 0.1, 0.2) for t in range(0, 121, 60)]
+    csv_path = write_uv_csv(tmp_path, rows)
+    with pytest.raises(ValueError, match="fewer than 5 minutes"):
+        post_process_uv_recording(
+            flow_rate=100, target_volume=100,
+            uv_vis_absorbance_results_csv=str(csv_path),
+            experiment_converged_early=True,
+        )
+
+
 def test_empty_dataframe_after_cutoff_raises_value_error(tmp_path):
     # flow_rate=100, target_volume=600 → cutoff = 360 s; all rows are before cutoff
     rows = [(t, 0.1, 0.2) for t in [0, 30, 60]]

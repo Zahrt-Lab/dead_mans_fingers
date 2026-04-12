@@ -44,10 +44,23 @@ def post_process_uv_recording(
         # Find the last time point in the UV-VIS data recording
         max_time = uv_vis_recording["Time(s)"].max()
 
+        if max_time < 300:
+            raise ValueError(
+                f"Experiment converged early but fewer than 5 minutes (300 s) of data "
+                f"were recorded (recording ends at {max_time:.1f} s). "
+                "Inspect the hardware and UV-Vis recording before continuing."
+            )
+
         # Select only rows where Time(s) is within the last 5 minutes (300 seconds)
         uv_vis_recording_after_target_volume = uv_vis_recording[
             uv_vis_recording["Time(s)"] >= max_time - 300
         ]
+
+        base_name, ext = os.path.splitext(uv_vis_absorbance_results_csv)
+        uv_vis_recording_post_processed_filename = f"{base_name}_post_processed{ext}"
+        uv_vis_recording_after_target_volume.to_csv(
+            uv_vis_recording_post_processed_filename, index=False
+        )
 
         return uv_vis_recording_after_target_volume
     

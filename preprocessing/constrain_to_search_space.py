@@ -52,7 +52,7 @@ def constrain_to_search_space(bo_campaign_state: BoCampaignState,
     # Extract and constrain dilution_factor (concentration fraction)
     dilution_min, dilution_max = bo_parameters["dilution_factor"]
     dilution_factor = round(float(
-        min(max(trial_conditions["dilution_factor"], dilution_min), dilution_max)), 2)
+        min(max(trial_conditions["dilution_factor"], dilution_min), dilution_max)), 4)
 
     # Extract and constrain temperature
     temp_min, temp_max = bo_parameters["temperature"]
