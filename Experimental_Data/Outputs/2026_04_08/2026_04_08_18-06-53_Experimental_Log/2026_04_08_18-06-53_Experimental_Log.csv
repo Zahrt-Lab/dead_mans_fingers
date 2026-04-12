@@ -1,4 +1,0 @@
-Time,Component,Action,Parameters,Output,Notes
-77.15,METHOD,load_method,input=optimization_and_production_run_data\Xylopyridine_Analog_1\bo_campaign\run_005\Fluorescent_Optimization_Iteration_1_temperature.csv,Loading input file: optimization_and_production_run_data\Xylopyridine_Analog_1\bo_campaign\run_005\Fluorescent_Optimization_Iteration_1_temperature.csv,
-77.15,Temperature_1,set_temperature,"temp=37.07, temp_id=1",Temperature controller set to 37.07°C,
-77.66,Temperature_1,wait_convergence,"target_temp=37.07,tolerance=1,duration=60",Waiting for temperature to converge to 37.07±1.0°C for 60.0s,

@@ -1,9 +1,0 @@
-Component,Action,Parameters,Notes,delay
-OceanOptics_UVVis_1,init,,,3.0
-OceanOptics_UVVis_1,set_params,"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths=409;506",,3.0
-DH2000_1,shutter_open,,,3.0
-OceanOptics_UVVis_1,record_blank,,,3.0
-DH2000_1,shutter_close,,,3.0
-OceanOptics_UVVis_1,record_dark,,,3.0
-DH2000_1,halogen_toggle,,,3.0
-DH2000_1,deuterium_toggle,,,3.0

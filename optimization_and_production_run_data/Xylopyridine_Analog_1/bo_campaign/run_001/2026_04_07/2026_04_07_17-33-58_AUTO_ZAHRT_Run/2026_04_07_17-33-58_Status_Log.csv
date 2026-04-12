@@ -1,2 +1,0 @@
-Timestamp,Elapsed_Time_s,MirrorBox365nm_1
-2026-04-07 17:34:01,3.02,"{'light1_on': None, 'light2_on': None, 'dimmer_pwm': None, 'temp_light1_c': None, 'temp_light2_c': None, 'raw_line1': 'Shutter: CLOSED', 'raw_line2': 'Halogen: OFF'}"

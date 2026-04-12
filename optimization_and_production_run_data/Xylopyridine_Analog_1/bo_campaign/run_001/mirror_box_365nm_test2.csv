@@ -1,3 +1,0 @@
-Component,Action,Parameters,Notes,delay
-MirrorBox365nm_1,set_dimmer,value=255,,80.0
-MirrorBox365nm_1,set_dimmer,value=240,,80.0

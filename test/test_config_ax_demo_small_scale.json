@@ -2,7 +2,7 @@
   "trials" : 30,
   "total_volume_through_reactor_bed": 100,
   "target_volume_through_reactor_bed": 80,
-  "base_directory": "./optimization_and_production_run_data",
+  "base_directory": "/home/scott/Documents/project_dead_mans_fingers",
   "name_of_xylopyridine_analogs_stock_solutions": ["Xylopyridine_Analog_1", "Xylopyridine_Analog_2", "Xylopyridine_Analog_3", "Xylopyridine_Analog_4", "Xylopyridine_Analog_5"],
   "name_of_stock_solution2": ["0.1M HCl Water"],
   "name_of_co-solvent_stock_solutions" : ["Ethanol", "Acetonitrile", "THF", "Isopropanol", "DMF", "DMSO"],

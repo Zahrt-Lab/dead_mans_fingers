@@ -27,6 +27,8 @@ class BoCampaignState:
     noise_sem_percent_yield: float = field(default=1.0)
     noise_sem_throughput: float = field(default=1.0)
     volume_stock_solutions: Dict[str, Any] = field(default_factory=dict)
+    waste_volume_uL: float = field(default=0.0)
+    volume_log: list = field(default_factory=list)
     bo_csv_path: str = field(default="")
 
     def update_bo_parameters(self, bo_parameters: Dict[str, Any]) -> None:
@@ -70,6 +72,18 @@ class BoCampaignState:
         """
         self.volume_stock_solutions.clear()
         self.volume_stock_solutions.update(volume_stock_solutions)
+
+    def update_waste_volume(self, waste_volume_uL: float) -> None:
+        """
+        Update the current waste container volume.
+        """
+        self.waste_volume_uL = waste_volume_uL
+
+    def append_volume_log_entry(self, entry: dict) -> None:
+        """
+        Append a per-iteration volume snapshot to the volume log.
+        """
+        self.volume_log.append(entry)
 
     def set_bo_csv_path(self, bo_csv_path: str) -> None:
         """

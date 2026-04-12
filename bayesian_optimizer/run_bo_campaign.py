@@ -26,6 +26,11 @@ from preprocessing.experimental_parameters import (
     load_experimental_parameters,
     check_required_bo_campaign_parameters,
 )
+from preprocessing.volume_tracking import (
+    initialize_volume_state,
+    save_volume_log_csv,
+    save_volume_state_json,
+)
 
 def _resolve_output_directory(bo_campaign_state: BoCampaignState, ax) -> None:
     """
@@ -178,6 +183,22 @@ def run_bo_campaign(
     # Redirect to a numbered subdirectory if the output directory already has files
     _resolve_output_directory(bo_campaign_state, ax)
 
+    # Volume state JSON lives alongside the Ax JSON (sibling file)
+    volume_state_json_path = str(
+        Path(ax_previous_run_json_file_path).parent / "volume_state.json"
+    )
+
+    # Initialize stock-solution and waste volumes (hardware mode only)
+    if not simulation_mode:
+        initial_volumes = initialize_volume_state(
+            bo_campaign_state.bo_parameters,
+            volume_state_json_path,
+        )
+        bo_campaign_state.update_volume_stock_solutions(initial_volumes)
+        bo_campaign_state.update_waste_volume(
+            initial_volumes.get("waste_volume_uL", 0.0)
+        )
+
     # 3) This is the main optimization loop,
     iteration = IterationState()
     step = 0
@@ -224,4 +245,14 @@ def run_bo_campaign(
 
     except KeyboardInterrupt:
         print("Keyboard interrupt received stopping Bayesian Optimization.")
-    
+
+    finally:
+        if not simulation_mode and bo_campaign_state.volume_log:
+            volume_log_path = (
+                Path(bo_campaign_state.bo_parameters["base_directory"]) / "volume_log.csv"
+            )
+            save_volume_log_csv(bo_campaign_state.volume_log, str(volume_log_path))
+            save_volume_state_json(bo_campaign_state, volume_state_json_path)
+            print(f"Volume log saved to: {volume_log_path}")
+            print(f"Volume state saved to: {volume_state_json_path}")
+

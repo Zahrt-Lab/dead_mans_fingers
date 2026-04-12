@@ -22,6 +22,7 @@ from pathlib import Path
 from preprocessing.constrain_to_search_space import constrain_to_search_space
 from preprocessing.standardize_input import standardize_input
 from preprocessing.parameters_to_commands import parameters_to_commands
+from preprocessing.volume_tracking import calculate_volumes_used, check_and_update_all_volumes
 
 from experimental_commands.generate_instrument_config import save_instrument_config_csv
 from experimental_commands.commands import save_commands_csv
@@ -131,6 +132,21 @@ def run_bayesian_optimization_iteration(
         bo_campaign_state.bo_parameters["target_absorbance_in_the_uv_detector"],
     )
     iteration_state.update_instrument_parameters(instrument_parameters)
+
+    # Volume check and update (hardware mode only — simulation skips volume tracking)
+    if not bo_campaign_state.simulation_mode:
+        volumes_used = calculate_volumes_used(
+            instrument_parameters,
+            iteration_state.trial_conditions["co_solvent_dilution_factor"],
+        )
+        check_and_update_all_volumes(
+            bo_campaign_state,
+            volumes_used,
+            iteration=iteration_state.iteration,
+            co_solvent_valve_position=int(
+                iteration_state.trial_conditions["co_solvent_valve_position"]
+            ),
+        )
 
     save_instrument_config_csv(
         instrument_config,
