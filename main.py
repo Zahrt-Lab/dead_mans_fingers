@@ -70,6 +70,12 @@ def parse_args() -> argparse.Namespace:
         "and has highest throughput it is selected for the production run (default: 80.0).",
     )
     parser.add_argument(
+        "--desired-mols",
+        type=float,
+        default=1000.0,
+        help="Desired nanomoles of product to produce in the production run (default: 1000.0 nmol).",
+    )
+    parser.add_argument(
         "--simulation",
         action="store_true",
         help="Use simulated data instead of running AutoZahrt hardware",
@@ -128,7 +134,8 @@ def main() -> None:
                 bo_results=f"{bo_input['base_directory']}/bo_results_{xylopyridine_analog}.csv",
                 yield_threshold=args.production_run_yield_threshold,
                 desired_mols=args.desired_mols,
-                output_dir=f"{bo_input['base_directory']}/production_run_{xylopyridine_analog}"
+                xylopyridine_analogs_concentrations_uM=bo_input["xylopyridine_analogs_concentrations_uM"],
+                output_dir=f"{bo_input['base_directory']}/production_run_{xylopyridine_analog}",
             )
         else:
             print("Skipping production_run - not available in this environment")

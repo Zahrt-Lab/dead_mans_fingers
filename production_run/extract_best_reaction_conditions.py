@@ -21,7 +21,7 @@ import pandas as pd
 
 def extract_best_reaction_conditions(
     bo_results: str, yield_threshold: float
-) -> tuple(float, float, float, float, float, float, float):
+) -> tuple:
     """
     This function will extract the best reaction conditions from our bayesian optimization
     campaign results and will then select the optimal experimental parameters to run in
@@ -46,14 +46,15 @@ def extract_best_reaction_conditions(
         bo_results_df["percent_yield"] >= yield_threshold
     ]
 
-    best_bo_result = bo_results_df_passed_threshold["throughput_nmol_per_min"].idxmax()
+    best_row_idx = bo_results_df_passed_threshold["throughput_nmol_per_min"].idxmax()
+    best_bo_result = bo_results_df_passed_threshold.loc[best_row_idx]
 
     return (
-        float(best_bo_result["flow_rate_mL_per_min"]),
+        float(best_bo_result["flow_rate"]),
         float(best_bo_result["dilution_factor"]),
-        float(best_bo_result["temperature_C"]),
-        float(best_bo_result["cosolvent_valve_position"]),
-        float(best_bo_result["fraction_of_cosolvent"]),
-        float(best_bo_result["light_intensity_percent"]),
+        float(best_bo_result["temperature"]),
+        float(best_bo_result["co_solvent_valve_position"]),
+        float(best_bo_result["co_solvent_dilution_factor"]),
+        float(best_bo_result["light_intensity"]),
         float(best_bo_result["throughput_nmol_per_min"]),
     )

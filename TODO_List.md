@@ -8,7 +8,7 @@ Solved
   - `bo_parameters` is used before it's defined (defined 9 lines later at line 184)
   - Replace with `bo_ca/clearmpaign_state.bo_parameters` at the call site
 
-- [ ] **Fix missing import + broken relative import** — `production_run/production_run.py`
+- [x] **Fix missing import + broken relative import** — `production_run/production_run.py`
   - Line 51 calls `calculate_production_run_parameters()` with no import
   - Add: `from production_run.calculate_production_run_parameters import calculate_production_run_parameters`
   - Fix broken relative import on line 20
@@ -25,7 +25,7 @@ Solved
   - Uncomment and fix the production run block (lines 123–132)
   - Pipeline: `extract_best_reaction_conditions.py` → `calculate_production_run_parameters.py` → `generate_production_run_commands.py`
 
-- [ ] **Add production run tests**
+- [x] **Add production run tests**
   - `test/test_production_run/test_extract_best_reaction_conditions.py` — Pareto selection, yield threshold filtering
   - `test/test_production_run/test_calculate_production_run_parameters.py` — mole production math, edge cases
 
@@ -64,7 +64,7 @@ TODO Need to inspect this, not affecting experiments but should resolve
 
 - [ ] **Remove empty file or implement it**: `experimental_commands/generate_production_run_commands.py`
 
-- [ ] **Fix relative import inconsistency** in `production_run/` — standardize to absolute imports
+- [x] **Fix relative import inconsistency** in `production_run/` — standardize to absolute imports
 
 ---
 
@@ -72,8 +72,8 @@ TODO Need to inspect this, not affecting experiments but should resolve
 
 | New Test File | What to Cover |
 |---|---|
-| `test/test_production_run/test_extract_best_reaction_conditions.py` | Pareto selection, yield threshold filtering |
-| `test/test_production_run/test_calculate_production_run_parameters.py` | Mole production math, edge cases |
+| ~~`test/test_production_run/test_extract_best_reaction_conditions.py`~~ ✓ Done | Pareto selection, yield threshold filtering |
+| ~~`test/test_production_run/test_calculate_production_run_parameters.py`~~ ✓ Done | Mole production math, edge cases |
 | `test/test_experimental_commands/test_execute_bo_iteration_commands.py` | Integration test using simulation mode (no hardware skip) |
 | `test/test_post_processing/test_detect_early_convergence.py` | Hardware-failure vs intentional convergence |
 | `test/test_preprocessing/test_experimental_parameters.py` | Validation functions (after Phase 3 fix) |

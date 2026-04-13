@@ -69,10 +69,11 @@ def parameters_to_commands(
 
     if xylopyridine_analogs_concentrations_uM <= 0:
         raise ValueError("xylopyridine_analogs_concentrations_uM must be > 0.")
-    if max_absorbance_concentration_uM_uv_detector <= 0:
-        raise ValueError("max_absorbance_concentration_uM_uv_detector must be > 0.")
-    if target_absorbance_in_the_uv_detector <= 0:
-        raise ValueError("target_absorbance_in_the_uv_detector must be > 0.")
+    if not production_run:
+        if max_absorbance_concentration_uM_uv_detector <= 0:
+            raise ValueError("max_absorbance_concentration_uM_uv_detector must be > 0.")
+        if target_absorbance_in_the_uv_detector <= 0:
+            raise ValueError("target_absorbance_in_the_uv_detector must be > 0.")
 
     # --- Pump calculations ---
     # Pump 1 (reactant)
@@ -93,21 +94,24 @@ def parameters_to_commands(
     volume_reactor = volume_pump1 + volume_pump2 + volume_pump3
 
     if production_run == False:
-    # Pump 4 (UV dilution): dilutes reactor output to keep detector in linear range.
-    # cuvette_conc_uM is the target concentration at the detector.
+        # Pump 4 (UV dilution): dilutes reactor output to keep detector in linear range.
+        # cuvette_conc_uM is the target concentration at the detector.
         reactor_conc_uM = dilution_factor * xylopyridine_analogs_concentrations_uM
         cuvette_conc_uM = max_absorbance_concentration_uM_uv_detector * target_absorbance_in_the_uv_detector
-
-    # If reactor concentration is already below target, no dilution needed.
-    if reactor_conc_uM <= cuvette_conc_uM:
+        # If reactor concentration is already below target, no dilution needed.
+        if reactor_conc_uM <= cuvette_conc_uM:
+            flow_rate_pump4 = 0.0
+            volume_pump4 = 0.0
+        # If reactor concentration is above target, calculate dilution flow and volume.
+        else:
+            ratio = reactor_conc_uM / cuvette_conc_uM  # > 1
+            cuvette_flow = flow_rate_reactor * ratio
+            flow_rate_pump4 = max(0.0, cuvette_flow - flow_rate_reactor)
+            volume_pump4 = max(0.0, (ratio - 1.0) * volume_reactor)
+    else:
+        # Production runs do not use the inline UV detector, so pump 4 is not needed.
         flow_rate_pump4 = 0.0
         volume_pump4 = 0.0
-    # If reactor concentration is above target, calculate dilution flow and volume.
-    else:
-        ratio = reactor_conc_uM / cuvette_conc_uM  # > 1
-        cuvette_flow = flow_rate_reactor * ratio
-        flow_rate_pump4 = max(0.0, cuvette_flow - flow_rate_reactor)
-        volume_pump4 = max(0.0, (ratio - 1.0) * volume_reactor)
 
     # Set Light intensity as a value between 0 (brightest) and 255 (dimmest) in integer values
     light_intensity = int(round((100.0 - light_intensity) / 100.0 * 255))
