@@ -12,6 +12,7 @@ on the optimal experimental parameters we got from our bayesian optimization cam
 as well as the desired amount of product we want to produce in our production run.
 """
 
+from preprocessing.parameters_to_commands import parameters_to_commands
 
 def calculate_production_run_parameters(
     reactor_bed_flow_rate,
@@ -22,7 +23,8 @@ def calculate_production_run_parameters(
     light_intensity,
     throughput_nmol_per_min,
     desired_mols,
-) -> None:
+    xylopyridine_analogs_concentrations_uM
+) -> dict:
     """
     This function will calculate equipment parameters for the production run based
     on the optimal experimental parameters we got from our bayesian optimization campaign
@@ -39,7 +41,24 @@ def calculate_production_run_parameters(
         reactor_bed_flow_rate=reactor_bed_flow_rate, reaction_time_min=reaction_time_min
     )
 
-    
+    trial_conditions = {
+        "flow_rate": reactor_bed_flow_rate,
+        "dilution_factor": dilution_factor,
+        "temperature": temperature,
+        "co_solvent_valve_position": cosolvent_valve_position,
+        "co_solvent_dilution_factor": fraction_of_cosolvent,
+        "light_intensity": light_intensity,
+    }
+
+    # The absorbance is not used in production run
+    instrument_commands = parameters_to_commands(trial_conditions=trial_conditions, 
+                           total_volume_through_reactor_bed=production_run_volume_uL, 
+                           xylopyridine_analogs_concentrations_uM=xylopyridine_analogs_concentrations_uM,
+                           max_absorbance_concentration_uM_uv_detector=0.0, 
+                           target_absorbance_in_the_uv_detector=0.0,
+                           production_run=True
+                           )
+    return instrument_commands
 
 
 def calculate_production_run_reaction_time(desired_nmols, throughput_nmol_per_min):

@@ -21,6 +21,7 @@ def parameters_to_commands(
     xylopyridine_analogs_concentrations_uM: float,
     max_absorbance_concentration_uM_uv_detector: float,
     target_absorbance_in_the_uv_detector: float,
+    production_run: bool = False
 ) -> Dict[str, Any]:
     """
     Convert trial conditions and bo campaign constant values into instrument parameters.
@@ -91,10 +92,11 @@ def parameters_to_commands(
     flow_rate_reactor = flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3
     volume_reactor = volume_pump1 + volume_pump2 + volume_pump3
 
+    if production_run == False:
     # Pump 4 (UV dilution): dilutes reactor output to keep detector in linear range.
     # cuvette_conc_uM is the target concentration at the detector.
-    reactor_conc_uM = dilution_factor * xylopyridine_analogs_concentrations_uM
-    cuvette_conc_uM = max_absorbance_concentration_uM_uv_detector * target_absorbance_in_the_uv_detector
+        reactor_conc_uM = dilution_factor * xylopyridine_analogs_concentrations_uM
+        cuvette_conc_uM = max_absorbance_concentration_uM_uv_detector * target_absorbance_in_the_uv_detector
 
     # If reactor concentration is already below target, no dilution needed.
     if reactor_conc_uM <= cuvette_conc_uM:

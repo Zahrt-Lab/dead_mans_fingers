@@ -2,6 +2,8 @@
 
 ## Phase 1 — Critical Bug Fixes (do these first)
 
+Solved 
+
 - [ ] **Fix undefined variable bug** — `experimental_commands/execute_bo_iteration_commands.py:175`
   - `bo_parameters` is used before it's defined (defined 9 lines later at line 184)
   - Replace with `bo_ca/clearmpaign_state.bo_parameters` at the call site
@@ -30,6 +32,8 @@
 ---
 
 ## Phase 3 — Debugging & Robustness
+
+TODO Need to inspect this, not affecting experiments but should resolve
 
 - [ ] **Fix validation stubs** — `preprocessing/experimental_parameters.py`
   - `check_required_complete_workflow_parameters()` and `check_required_production_run_parameters()` are stubs

@@ -18,9 +18,10 @@ collect the data
 import pandas as pd
 
 from extract_best_reaction_conditions import extract_best_reaction_conditions
+from calculate_production_run_parameters import calculate_production_run_parameters
+from experimental_commands.commands import save_commands_csv, run_commands
 
-
-def production_run(bo_results : str, yield_threshold: float, desired_mols: float) -> None:
+def production_run(bo_results : str, yield_threshold: float, desired_mols: float, output_dir: str) -> None:
     """
     This function will run the production run after we've converged on a set of optimal
     experimental parameters from our bayesian optimization campaign.
@@ -37,7 +38,6 @@ def production_run(bo_results : str, yield_threshold: float, desired_mols: float
 
      - None
     """
-
     (
         reactor_bed_flow_rate,
         dilution_factor,
@@ -47,8 +47,8 @@ def production_run(bo_results : str, yield_threshold: float, desired_mols: float
         light_intensity,
         throughput_nmol_per_min,
     ) = extract_best_reaction_conditions(bo_results, yield_threshold=yield_threshold)
-
-    calculate_production_run_parameters(
+    
+    experimental_parameters = calculate_production_run_parameters(
         reactor_bed_flow_rate,
         dilution_factor,
         temperature,
@@ -58,3 +58,23 @@ def production_run(bo_results : str, yield_threshold: float, desired_mols: float
         desired_mols,
         throughput_nmol_per_min,
     )
+
+    save_commands_csv(commands_path=f"{output_dir}/production_run_commands.csv", 
+                      flow_rate_pump1=experimental_parameters["flow_rate_pump1"],
+                      flow_rate_pump2=experimental_parameters["flow_rate_pump2"],
+                      flow_rate_pump3=experimental_parameters["flow_rate_pump3"],
+                      flow_rate_pump4=experimental_parameters["flow_rate_pump4"],
+                      volume_pump1=experimental_parameters["volume_pump1"],
+                      volume_pump2=experimental_parameters["volume_pump2"],
+                      volume_pump3=experimental_parameters["volume_pump3"],
+                      volume_pump4=experimental_parameters["volume_pump4"],
+                      valve_position_pump3=experimental_parameters["valve_position_pump3"],
+                      temperature=experimental_parameters["temperature"],
+                      fraction_of_cosolvent=experimental_parameters["fraction_of_cosolvent"],
+                      light_intensity=experimental_parameters["light_intensity"]
+                      )
+    run_commands(f"{output_dir}/production_run_commands.csv")
+
+
+
+    
