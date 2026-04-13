@@ -120,16 +120,18 @@ def main() -> None:
             xylopyridine_analog=xylopyridine_analog,
         )
 
-    # TODO : We need to include a production run function that will run after all the bo campaigns
-'''
     for xylopyridine_analog in experiment_config["name_of_xylopyridine_analogs_stock_solutions"]:
         print(f"Beginning production run for xylopyridine analog: {xylopyridine_analog}")
         # TODO : Will likely need to update the input parameters based on final form of code 
         if production_run is not None:
-            production_run()
+            production_run(
+                bo_results=f"{bo_input['base_directory']}/bo_results_{xylopyridine_analog}.csv",
+                yield_threshold=args.production_run_yield_threshold,
+                desired_mols=args.desired_mols,
+                output_dir=f"{bo_input['base_directory']}/production_run_{xylopyridine_analog}"
+            )
         else:
             print("Skipping production_run - not available in this environment")
-'''
 
 if __name__ == "__main__":
     main()
