@@ -172,7 +172,7 @@ def run_bayesian_optimization_iteration(
     if detect_early_convergence(
         csv_file_path,
         iteration_state.trial_conditions["flow_rate"],
-        bo_parameters["total_volume_through_reactor_bed"],
+        bo_campaign_state.bo_parameters["total_volume_through_reactor_bed"],
     ):
         print(
             "[INFO] Experiment stopped before expected duration — "

@@ -8,4 +8,15 @@ Project Dead Man's Fingers is an automated flow-chemistry optimization platform.
 
 ### Installing
 
-### 
+## Running the Tests
+
+### Sample Test
+
+### Style Test
+
+### Deployment
+
+### Built with
+
+### Contributing
+

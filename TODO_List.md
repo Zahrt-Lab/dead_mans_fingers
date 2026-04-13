@@ -4,7 +4,7 @@
 
 - [ ] **Fix undefined variable bug** — `experimental_commands/execute_bo_iteration_commands.py:175`
   - `bo_parameters` is used before it's defined (defined 9 lines later at line 184)
-  - Replace with `bo_campaign_state.bo_parameters` at the call site
+  - Replace with `bo_ca/clearmpaign_state.bo_parameters` at the call site
 
 - [ ] **Fix missing import + broken relative import** — `production_run/production_run.py`
   - Line 51 calls `calculate_production_run_parameters()` with no import
