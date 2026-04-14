@@ -83,7 +83,7 @@ def calculate_production_run_volume(reactor_bed_flow_rate, reaction_time_min) ->
     based on the flow rate and the reaction time.
 
     parameters:
-        - reactor_bed_flow_rate: The flow rate we got from our bayesian optimization campaign in mL/min.
+        - reactor_bed_flow_rate: The flow rate we got from our bayesian optimization campaign in uL/min.
         - reaction_time_min: The reaction time calculated from desired_nmols / throughput_nmol_per_min.
 
     Returns:

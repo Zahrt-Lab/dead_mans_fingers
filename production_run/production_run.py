@@ -14,12 +14,12 @@ bayesian optimization campaign.
 This will allow us to run the experiment with the optimal parameters and
 collect the data
 """
-
+# TODO : Change os to pathlib
 import os
 
 from production_run.extract_best_reaction_conditions import extract_best_reaction_conditions
 from production_run.calculate_production_run_parameters import calculate_production_run_parameters
-from experimental_commands.commands import save_commands_csv, run_commands
+from experimental_commands.commands import save_production_run_commands_to_csv, run_commands
 from experimental_commands.generate_instrument_config import save_instrument_config_csv
 
 
@@ -46,9 +46,8 @@ def production_run(
         - xylopyridine_analogs_concentrations_uM: Stock solution concentration in µM,
           used to calculate pump flow rates via mass-balance dilution math.
         - output_dir: Directory in which to write the command and instrument config CSVs.
-
-    Returns:
-        None
+    Return:
+     - None
     """
     os.makedirs(output_dir, exist_ok=True)
 
@@ -77,7 +76,7 @@ def production_run(
     commands_path = f"{output_dir}/production_run_commands.csv"
     instrument_config_path = f"{output_dir}/production_run_instrument_config.csv"
 
-    save_commands_csv(
+    save_production_run_commands_to_csv(
         commands_path=commands_path,
         flow_rate_pump1=experimental_parameters["flow_rate_pump1"],
         flow_rate_pump2=experimental_parameters["flow_rate_pump2"],
@@ -93,7 +92,11 @@ def production_run(
         light_intensity=experimental_parameters["light_intensity"],
     )
     save_instrument_config_csv(instrument_config_path)
-    run_commands(commands_path, instrument_config_path)
+
+    run_commands(f"{commands_path}_wash.csv", f"{instrument_config_path}")
+    run_commands(f"{commands_path}_temperature.csv", f"{instrument_config_path}")
+    run_commands(f"{commands_path}_light_intensity.csv", f"{instrument_config_path}")
+    run_commands(f"{commands_path}_production_run.csv", f"{instrument_config_path}")
 
 
 

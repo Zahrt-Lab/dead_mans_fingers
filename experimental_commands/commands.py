@@ -122,7 +122,7 @@ def save_commands_csv(
             )
         )
 
-def save_commands_to_csv(commands_path: str,
+def save_production_run_commands_to_csv(commands_path: str,
                          flow_rate_pump1: float,
                          flow_rate_pump2: float,
                          flow_rate_pump3: float,
@@ -149,7 +149,7 @@ def save_commands_to_csv(commands_path: str,
     temperature_commands_csv = f"{commands_path}_temperature.csv"
     wash_commands_csv = f"{commands_path}_wash.csv"
     light_intensity_commands_csv = f"{commands_path}_light_intensity.csv"
-    experiment_commands_csv = f"{commands_path}_experiment.csv"
+    experiment_commands_csv = f"{commands_path}_production_run.csv"
 
     # Generate temperature commands
     with open(temperature_commands_csv, "w", newline="", encoding="utf-8") as f:

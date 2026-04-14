@@ -15,7 +15,7 @@
 
 ## Phase 2 — Complete the Production Run Module
 
-- [ ] **Implement `generate_production_run_commands.py`** — currently an empty file
+- [x] **Implement `generate_production_run_commands.py`** — currently an empty file
   - Mirror `generate_experimental_commands.py` pattern for scale-up conditions
   - Use `commands.py` CSV-saving pattern with `IterationState` instrument parameters
 
