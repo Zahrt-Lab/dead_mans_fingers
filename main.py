@@ -18,14 +18,7 @@ from datetime import datetime
 
 from bayesian_optimizer.run_bo_campaign import run_bo_campaign
 from preprocessing.generate_bo_input import generate_bo_input_file
-
-# TODO : This import was a GPT 5.3 codex fix, temporary and needs to be fixed when getting production run code finalized.
-# Optional import: production run may not be available in all environments.
-try:
-    from production_run.production_run import production_run
-except (ImportError, ModuleNotFoundError):
-    production_run = None
-
+from production_run.production_run import production_run
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Bayesian Optimizer for the fluorescent project controlling our automated platform (qNEHVI)")
@@ -68,12 +61,6 @@ def parse_args() -> argparse.Namespace:
         default=80.0,
         help="Percent-yield threshold for production run, if greater than this value."
         "and has highest throughput it is selected for the production run (default: 80.0).",
-    )
-    parser.add_argument(
-        "--desired-mols",
-        type=float,
-        default=1000.0,
-        help="Desired nanomoles of product to produce in the production run (default: 1000.0 nmol).",
     )
     parser.add_argument(
         "--simulation",
@@ -134,8 +121,7 @@ def main() -> None:
                 bo_results=f"{bo_input['base_directory']}/bo_results_{xylopyridine_analog}.csv",
                 yield_threshold=args.production_run_yield_threshold,
                 desired_mols=args.desired_mols,
-                xylopyridine_analogs_concentrations_uM=bo_input["xylopyridine_analogs_concentrations_uM"],
-                output_dir=f"{bo_input['base_directory']}/production_run_{xylopyridine_analog}",
+                output_dir=f"{bo_input['base_directory']}/production_run_{xylopyridine_analog}"
             )
         else:
             print("Skipping production_run - not available in this environment")

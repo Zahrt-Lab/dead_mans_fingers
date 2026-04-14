@@ -1,5 +1,6 @@
 import csv
 
+from experimental_commands import generate_production_run_commands
 from experimental_commands.generate_experimental_commands import (
     generate_experimental_commands,
 )
@@ -86,6 +87,86 @@ def save_commands_csv(
     with open(experiment_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
             generate_experimental_commands(
+                flow_rate_pump1,
+                flow_rate_pump2,
+                flow_rate_pump3,
+                flow_rate_pump4,
+                volume_pump1,
+                volume_pump2,
+                volume_pump3,
+                volume_pump4,
+            )
+        )
+
+    # Generate wash commands
+    # Following the README File at Step 5:
+    # F2 = 2000 * (1 - D_cosolvent), F3 = 2000 * D_cosolvent, F4 = 1000
+    # V2 = 6000 * (1 - D_cosolvent), V3 = 6000 * D_cosolvent, V4 = 3000
+    wash_flow_rate_pump2 = 2000 * (1 - fraction_of_cosolvent)
+    wash_flow_rate_pump3 = 2000 * fraction_of_cosolvent
+    wash_flow_rate_pump4 = 1000
+    wash_volume_pump2 = 6000 * (1 - fraction_of_cosolvent)
+    wash_volume_pump3 = 6000 * fraction_of_cosolvent
+    wash_volume_pump4 = 3000
+    
+    with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(
+            generate_wash_commands(
+                wash_flow_rate_pump2,
+                wash_volume_pump2,
+                wash_flow_rate_pump3,
+                wash_volume_pump3,
+                wash_flow_rate_pump4,
+                wash_volume_pump4,
+                valve_position_pump3,
+            )
+        )
+
+def save_commands_to_csv(commands_path: str,
+                         flow_rate_pump1: float,
+                         flow_rate_pump2: float,
+                         flow_rate_pump3: float,
+                         flow_rate_pump4: float,
+                         volume_pump1: float,
+                         volume_pump2: float,
+                         volume_pump3: float,
+                         volume_pump4: float,
+                         valve_position_pump3: int,
+                         temperature: float,
+                         fraction_of_cosolvent: float,
+                         light_intensity: float,) -> None:
+    """
+    Save a list of instrument commands to a CSV file.
+
+    parameters:
+     - commands: A list of instrument commands, where each command is a list of strings
+     representing the command and its parameters.
+     - commands_path: The path to the CSV file where the commands should be saved.
+
+    return:
+     - None
+    """
+    temperature_commands_csv = f"{commands_path}_temperature.csv"
+    wash_commands_csv = f"{commands_path}_wash.csv"
+    light_intensity_commands_csv = f"{commands_path}_light_intensity.csv"
+    experiment_commands_csv = f"{commands_path}_experiment.csv"
+
+    # Generate temperature commands
+    with open(temperature_commands_csv, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(
+            generate_temperature_commands(temperature)
+        )
+
+    # Generate light intensity commands
+    with open(light_intensity_commands_csv, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(
+            generate_light_intensity_commands(light_intensity)
+        )
+
+    # Generate experiment commands
+    with open(experiment_commands_csv, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(
+            generate_production_run_commands(
                 flow_rate_pump1,
                 flow_rate_pump2,
                 flow_rate_pump3,
