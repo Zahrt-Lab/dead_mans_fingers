@@ -19,13 +19,13 @@
   - Mirror `generate_experimental_commands.py` pattern for scale-up conditions
   - Use `commands.py` CSV-saving pattern with `IterationState` instrument parameters
 
-- [ ] **Wire production run into `main.py`**
-  - Uncomment and fix the production run block (lines 123–132)
-  - Pipeline: `extract_best_reaction_conditions.py` → `calculate_production_run_parameters.py` → `generate_production_run_commands.py`
+- [x] **Wire production run into `main.py`**
+  - Fixed 4 bugs: merged dual for-loops (stale `bo_input`), added `--desired-mols` CLI arg, passed `xylopyridine_analogs_concentrations_uM` from `bo_input`, removed dead `if production_run is not None` guard
 
 - [x] **Add production run tests**
-  - `test/test_production_run/test_extract_best_reaction_conditions.py` — Pareto selection, yield threshold filtering
+  - `test/test_production_run/test_extract_best_reaction_conditions.py` — Pareto selection, yield threshold filtering, empty CSV guard
   - `test/test_production_run/test_calculate_production_run_parameters.py` — mole production math, edge cases
+  - `test/test_production_run/test_production_run.py` — orchestrator wiring (mock-based)
 
 ---
 

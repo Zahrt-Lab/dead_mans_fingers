@@ -158,3 +158,11 @@ def test_exact_threshold_boundary_is_included(tmp_path):
     (flow_rate, *_rest) = extract_best_reaction_conditions(csv_path, yield_threshold=80.0)
 
     assert flow_rate == pytest.approx(150.0)
+
+
+def test_empty_csv_raises(tmp_path):
+    """An empty CSV (no data rows) should raise ValueError."""
+    csv_path = _write_bo_csv(tmp_path, [])
+
+    with pytest.raises(ValueError):
+        extract_best_reaction_conditions(csv_path, yield_threshold=80.0)

@@ -47,7 +47,8 @@ def production_run(
           used to calculate pump flow rates via mass-balance dilution math.
         - output_dir: Directory in which to write the command and instrument config CSVs.
 
-     - None
+    Returns:
+        None
     """
     os.makedirs(output_dir, exist_ok=True)
 

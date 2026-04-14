@@ -30,7 +30,9 @@ def calculate_production_run_parameters(
     on the optimal experimental parameters we got from our bayesian optimization campaign
     as well as the desired amount of product we want to produce in our production run.
 
-     - None
+    Returns:
+        dict: Instrument parameters for the production run (pump flow rates, volumes,
+              valve position, temperature, light intensity).
     """
 
     reaction_time_min = calculate_production_run_reaction_time(
@@ -82,7 +84,10 @@ def calculate_production_run_volume(reactor_bed_flow_rate, reaction_time_min) ->
 
     parameters:
         - reactor_bed_flow_rate: The flow rate we got from our bayesian optimization campaign in mL/min.
-        - reaction_time_min: The reaction time we calculated based on the desired amount of product and
+        - reaction_time_min: The reaction time calculated from desired_nmols / throughput_nmol_per_min.
+
+    Returns:
+        float: Production volume in µL (flow_rate_uL_per_min × reaction_time_min).
     """
     production_run_volume_uL = reactor_bed_flow_rate * reaction_time_min
 

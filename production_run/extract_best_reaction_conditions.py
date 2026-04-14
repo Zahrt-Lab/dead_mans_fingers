@@ -42,9 +42,18 @@ def extract_best_reaction_conditions(
     """
     bo_results_df = pd.read_csv(bo_results)
 
+    if bo_results_df.empty:
+        raise ValueError(f"BO results CSV is empty: {bo_results}")
+
     bo_results_df_passed_threshold = bo_results_df[
         bo_results_df["percent_yield"] >= yield_threshold
     ]
+
+    if bo_results_df_passed_threshold.empty:
+        raise ValueError(
+            f"No experiments met the yield threshold of {yield_threshold}%. "
+            f"Max yield in results: {bo_results_df['percent_yield'].max():.1f}%"
+        )
 
     best_row_idx = bo_results_df_passed_threshold["throughput_nmol_per_min"].idxmax()
     best_bo_result = bo_results_df_passed_threshold.loc[best_row_idx]

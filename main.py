@@ -63,6 +63,12 @@ def parse_args() -> argparse.Namespace:
         "and has highest throughput it is selected for the production run (default: 80.0).",
     )
     parser.add_argument(
+        "--desired-mols",
+        type=float,
+        default=1000.0,
+        help="Desired nanomoles of product for the production run (default: 1000.0)",
+    )
+    parser.add_argument(
         "--simulation",
         action="store_true",
         help="Use simulated data instead of running AutoZahrt hardware",
@@ -95,13 +101,6 @@ def main() -> None:
             os.rename(ax_state_file_path, archived_state_path)
             print(f"Archived existing Ax state for fresh simulation run: {archived_state_path}")
 
-        # Before every campaign, we will run a quick test to make sure
-        # we run unit test of our code,
-        # run simulations of code,
-        # then test the hardware
-        # this will ensure everything is working before we run a campaign
-        #test_set_up()
-
         run_bo_campaign(
             input_experimental_parameters=bo_input,
             ax_previous_run_json_file_path=ax_state_file_path,
@@ -113,18 +112,14 @@ def main() -> None:
             xylopyridine_analog=xylopyridine_analog,
         )
 
-    for xylopyridine_analog in experiment_config["name_of_xylopyridine_analogs_stock_solutions"]:
         print(f"Beginning production run for xylopyridine analog: {xylopyridine_analog}")
-        # TODO : Will likely need to update the input parameters based on final form of code 
-        if production_run is not None:
-            production_run(
-                bo_results=f"{bo_input['base_directory']}/bo_results_{xylopyridine_analog}.csv",
-                yield_threshold=args.production_run_yield_threshold,
-                desired_mols=args.desired_mols,
-                output_dir=f"{bo_input['base_directory']}/production_run_{xylopyridine_analog}"
-            )
-        else:
-            print("Skipping production_run - not available in this environment")
+        production_run(
+            bo_results=f"{bo_input['base_directory']}/bo_results_{xylopyridine_analog}.csv",
+            yield_threshold=args.production_run_yield_threshold,
+            desired_mols=args.desired_mols,
+            xylopyridine_analogs_concentrations_uM=bo_input["xylopyridine_analogs_concentrations_uM"],
+            output_dir=f"{bo_input['base_directory']}/production_run_{xylopyridine_analog}",
+        )
 
 if __name__ == "__main__":
     main()
