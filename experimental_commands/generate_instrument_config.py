@@ -14,15 +14,18 @@ from typing import Dict, List, Optional
 # the experiment config file so ports can be changed per machine without
 # editing source code.
 _DEFAULT_COM_PORTS: Dict[str, str] = {
-    "vici_pump_1":           "COM21",
-    "vici_pump_2":           "COM22",
-    "valve_xylopyridine":    "COM11",
-    "valve_cosolvent":       "COM7",
+    "vici_pump_1":           "COM22",
+    "vici_pump_2":           "COM21",
+    "valve_xylopyridine":    "COM7",
+    "valve_cosolvent":       "COM11",
     "temperature_controller": "COM12",
     "Tricontinental_C24000_1": "COM17",
     "Tricontinental_C24000_2": "COM25",
+    "Tecan_pump_1":          "COM15",
+    "Tecan_pump_2":          "COM6",
+    "Tecan_pump_3":          "COM20",
     "dh2000_light_source":   "COM27",
-    "ocean_optics_uv_vis":   "COM50",
+    "ocean_optics_uv_vis":   "COM50", #Joao couldn't find
     "MirrorBox365nm":        "COM18",
 
 }
