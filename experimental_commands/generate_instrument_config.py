@@ -23,7 +23,7 @@ _DEFAULT_COM_PORTS: Dict[str, str] = {
     "Tricontinental_C24000_2": "COM25",
     "Tecan_pump_1":          "COM15",
     "Tecan_pump_2":          "COM6",
-    "Tecan_pump_3":          "COM20",
+    #"Tecan_pump_3":          "COM20",
     "dh2000_light_source":   "COM27",
     "ocean_optics_uv_vis":   "COM50", #Joao couldn't find it
     "MirrorBox365nm":        "COM18",
@@ -62,8 +62,8 @@ def generate_instrument_config(
         # TODO: Due to mechanical issues with pump 4 this has been commented out til resolved.
         #["Tricontinental_C24000",     2, "Tricontinental_C24000",       ports["Tricontinental_C24000_2"],  ""],  
         ["Tecan_pump",                1, "Tecan_pump",                 ports["Tecan_pump_1"],  ""],
-        ["Tecan_pump",                1, "Tecan_pump",                 ports["Tecan_pump_2"],  ""],        
-        ["Tecan_pump",                1, "Tecan_pump",                 ports["Tecan_pump_3"],  ""],           
+        ["Tecan_pump",                2, "Tecan_pump",                 ports["Tecan_pump_2"],  ""],        
+        #["Tecan_pump",                1, "Tecan_pump",                 ports["Tecan_pump_3"],  ""],           
         ["DH2000",                    1, "DH2000",                      ports["dh2000_light_source"],    ""],
         ["OceanOptics_UVVis",         1, "OceanOptics",                 ports["ocean_optics_uv_vis"],    ""],
         ["MirrorBox365nm",            1, "MirrorBox365nm",              ports["MirrorBox365nm"],         ""]
