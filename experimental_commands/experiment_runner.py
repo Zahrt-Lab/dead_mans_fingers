@@ -34,6 +34,10 @@ def run_hardware_experiment(
     """
     
     try:
+        print("Run the experimental commands to wash the UV-detector to clear it out")
+        wash_command_file = f"{command_path_base}_wash.csv"
+        run_commands(wash_command_file, instrument_config)
+
         print("Beginning setting temperature for the experiment")
         temperature_command_file = f"{command_path_base}_temperature.csv"
         run_commands(temperature_command_file, instrument_config)
@@ -55,6 +59,3 @@ def run_hardware_experiment(
     finally:
         print(f"Experiment completing, UV recording for {iteration_number} is turned off")
         
-        print("Run the experimental commands to wash the UV-detector to clear it out")
-        wash_command_file = f"{command_path_base}_wash.csv"
-        run_commands(wash_command_file, instrument_config)
