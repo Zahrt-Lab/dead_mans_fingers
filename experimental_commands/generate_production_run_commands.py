@@ -67,8 +67,7 @@ def generate_production_run_commands(
             "0.5"
         ])
     
-    # TODO: Waiting for VICI fittings, will uncomment once back.
-    '''
+
     if not is_zero(flow_rate_pump3, volume_pump3, zero_tolerance):
         commands.append([
             "VICI_M6_Pump_2",
@@ -77,7 +76,6 @@ def generate_production_run_commands(
             f"The flow rate of our cosolvent is {flow_rate_pump3} uL/min and volume is {volume_pump3}",
             "0.5"
         ])
-    '''
 
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
