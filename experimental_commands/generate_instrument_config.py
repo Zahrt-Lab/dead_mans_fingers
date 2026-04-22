@@ -55,9 +55,12 @@ def generate_instrument_config(
         ["Valve6Way",                 1, "Xylopyridine-Valve",          ports["valve_xylopyridine"],     ""],
         ["Valve6Way",                 2, "Cosolvent-Valve",             ports["valve_cosolvent"],        ""],
         ["Temperature",               1, "Temperature",                 ports["temperature_controller"], ""],
-        ["Tricontinental_C24000",     1, "Tricontinental_C24000",       ports["Tricontinental_C24000_1"],  ""],
+        #["Tricontinental_C24000",     1, "Tricontinental_C24000",       ports["Tricontinental_C24000_1"],  ""],
         # TODO: Due to mechanical issues with pump 4 this has been commented out til resolved.
-        #["Tricontinental_C24000",     2, "Tricontinental_C24000",       ports["Tricontinental_C24000_2"],  ""],                     
+        #["Tricontinental_C24000",     2, "Tricontinental_C24000",       ports["Tricontinental_C24000_2"],  ""],  
+        ["Tecan_pump",                1, "Tecan_pump",                 ports["Tecan_pump_1"],  ""],
+        ["Tecan_pump",                1, "Tecan_pump",                 ports["Tecan_pump_2"],  ""],        
+        ["Tecan_pump",                1, "Tecan_pump",                 ports["Tecan_pump_3"],  ""],           
         ["DH2000",                    1, "DH2000",                      ports["dh2000_light_source"],    ""],
         ["OceanOptics_UVVis",         1, "OceanOptics",                 ports["ocean_optics_uv_vis"],    ""],
         ["MirrorBox365nm",            1, "MirrorBox365nm",              ports["MirrorBox365nm"],         ""]
