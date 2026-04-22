@@ -29,19 +29,19 @@ def generate_production_run_commands(
     parameters:
     - flow_rate_pump1: Flow rate of the VICI M6 Pump 1 with our XYLO compound
     - flow_rate_pump2: Flow rate of 0.1 M HCl water for diluting our compound
-    before it reaches the detector using the Tricontinental Pump C24000 1
+    before it reaches the detector using the Tecan Pump 1
     - flow_rate_pump3: Flow rate of co-solvents for diluting our compound before it reaches the reactor bed
     using the VICI M6 Pump 2
     - flow_rate_pump4: Flow rate of 0.1 M HCL water for diluting our compound
     before it reaches the UV-detector and after the reactor bed using the
-    Tricontinental Pump C24000 2
+    Tecan Pump 2
     - volume_pump1: Volume of Xylo compound to pump using VICI M6 Pump 1
     - volume_pump2: volume 0.1 M HCl water to dilute our Xylo compound solution
-    before it reaches the UV-detector using the tricontinental Pump C24000 1
+    before it reaches the UV-detector using the tecan Pump 1
     - volume_pump3: volume of co-solvents to dilute our Xylo compound before
     it reaches the reactor bed using VICI M6 Pump 2
     - volume_pump4: volume 0.1 M HCl water to dilute our Xylo compound solution
-    after it reaches the UV-detector using the tricontinental Pump C24000 2
+    after it reaches the UV-detector using the tecan Pump 2
 
     return:
     - commands: Experimental commands for reacting the flow reaction
@@ -60,7 +60,7 @@ def generate_production_run_commands(
         ])
     if not is_zero(flow_rate_pump2, volume_pump2, zero_tolerance):
         commands.append([
-            "Tricontinental_C24000_1",
+            "Tecan_pump_1",
             "dispense",
             f"flow_rate={flow_rate_pump2},volume={volume_pump2}",
             f"The flow rate of our 0.1 M HCl Water is {flow_rate_pump2} uL/min and volume is {volume_pump2}",
@@ -81,7 +81,7 @@ def generate_production_run_commands(
 
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
         commands.append([
-            "Tricontinental_C24000_2",
+            "Tecan_pump_2",
             "dispense",
             f"flow_rate={flow_rate_pump4},volume={volume_pump4}",
             f"The flow rate of our 0.1 M HCl water pump after the reactor is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
