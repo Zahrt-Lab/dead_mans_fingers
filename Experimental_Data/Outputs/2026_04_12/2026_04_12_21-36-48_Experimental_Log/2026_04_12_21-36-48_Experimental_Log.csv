@@ -1,0 +1,28 @@
+Time,Component,Action,Parameters,Output,Notes
+75.28,METHOD,load_method,input=\home\scott\Documents\project_dead_mans_fingers\Xylopyridine_Analog_1\bo_campaign\run_001\Fluorescent_Optimization_Iteration_1_wash.csv,Loading input file: \home\scott\Documents\project_dead_mans_fingers\Xylopyridine_Analog_1\bo_campaign\run_001\Fluorescent_Optimization_Iteration_1_wash.csv,
+76.29,Valve6Way_2,go_to_position,position=2,Moved valve to position 2.0,
+77.3,Valve6Way_2,check_position,,,Valve now at position 
+77.8,Tricontinental_C24000_1,dispense,"flow_rate=1480.0, volume=4440.0",Started async dispense,exp. 180.0 s
+78.31,VICI_M6_Pump_2,dispense,"flow_rate=520.0, volume=1560.0",Started async dispense,exp. 180.0 s
+200.89,Tricontinental_C24000_1,dispense,"flow_rate=1480.0, volume=4440.0",Error in pump thread: Timed out waiting for ETX. Got: b'',
+261.53,VICI_M6_Pump_2,dispense,"flow_rate=520.0, volume=1560.0",dispense 1560.0 µL @ 520.0 µL/min,≈180.0 s
+261.53,SYNC,wait_for_pumps,,All pumps finished,
+261.53,SYNC,wait_for_pumps,,All pumps finished,
+266.76,VICI_M6_Pump_1,shutdown,success=True,OK,
+266.97,VICI_M6_Pump_2,shutdown,success=True,OK,
+266.97,Valve6Way_1,shutdown,success=True,OK,
+266.97,Valve6Way_2,shutdown,success=True,OK,
+267.09,Temperature_1,shutdown,success=True,OK,
+388.16,Tricontinental_C24000_1,shutdown,success=True,OK,
+388.16,DH2000_1,shutdown,success=True,OK,
+388.16,OceanOptics_UVVis_1,shutdown,success=True,OK,
+388.17,MirrorBox365nm_1,shutdown,success=True,OK,
+388.17,Close,Connection closed at shutdown,VICI_M6_Pump_1,OK,
+388.17,Close,Connection closed at shutdown,VICI_M6_Pump_2,OK,
+388.31,Close,Connection closed at shutdown,Valve6Way_1,OK,
+388.43,Close,Connection closed at shutdown,Valve6Way_2,OK,
+388.43,Close,Connection closed at shutdown,Temperature_1,OK,
+388.43,Close,Connection closed at shutdown,Tricontinental_C24000_1,OK,
+388.44,Close,Connection closed at shutdown,DH2000_1,OK,
+388.44,Close,Connection closed at shutdown,OceanOptics_UVVis_1,OK,
+388.44,Close,Connection closed at shutdown,MirrorBox365nm_1,OK,

@@ -25,7 +25,7 @@ _DEFAULT_COM_PORTS: Dict[str, str] = {
     "Tecan_pump_2":          "COM6",
     "Tecan_pump_3":          "COM20",
     "dh2000_light_source":   "COM27",
-    "ocean_optics_uv_vis":   "COM50", #Joao couldn't find
+    "ocean_optics_uv_vis":   "COM50", #Joao couldn't find it
     "MirrorBox365nm":        "COM18",
 
 }

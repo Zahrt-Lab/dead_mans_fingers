@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="36e67c1c-a6da-470e-ac9a-f6f6b730c95a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/liquid_handlers/bed_layout.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/liquid_handlers/bed_layout.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/liquid_handlers/ender3_liquid_handler/ender3_liquid_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/liquid_handlers/ender3_liquid_handler/ender3_liquid_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/methods/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/methods/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/methods/methods.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/methods/methods.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/methods/methods_gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/methods/methods_gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/pumps/isametic_pump/isametic_pump.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/pumps/isametic_pump/isametic_pump.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/pumps/vici_m6_pump/vici_m6_pump.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/pumps/vici_m6_pump/vici_m6_pump.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/test_status_monitor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/test_status_monitor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/uv_detectors/uv_detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/uv_detectors/uv_detector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/uv_detectors/uv_detector_gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/uv_detectors/uv_detector_gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/uv_detectors/uv_plot_gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/uv_detectors/uv_plot_gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/view_simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/view_simulation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Auto_Zahrt_v3/view_uv_simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Auto_Zahrt_v3/view_uv_simulation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/BO_results_ax_demo.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/BO_results_ax_demo.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Bayesian_Optimization_iteration_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Bayesian_Optimization_iteration_1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_1_experiment.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_1_experiment.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_1_temperature.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_1_temperature.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_1_wash.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_1_wash.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_2_experiment.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_2_experiment.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_2_temperature.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_2_temperature.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_2_wash.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_2_wash.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_3_experiment.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_3_experiment.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_3_temperature.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_3_temperature.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_3_wash.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_3_wash.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_4_experiment.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_4_experiment.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_4_temperature.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_4_temperature.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_4_wash.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_4_wash.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_5_experiment.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_5_experiment.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_5_temperature.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_5_temperature.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_5_wash.csv" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/Fluorescent_Optimization_Iteration_5_wash.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/absorbance_progress.png" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/absorbance_progress.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/bo_optimization_summary.png" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/bo_optimization_summary.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_optimization_demo_results/realtime_uvvis_iteration_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/ax_optimization_demo_results/realtime_uvvis_iteration_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ax_state.json" beforeDir="false" afterPath="$PROJECT_DIR$/ax_state.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experimental_commands/generate_experimental_commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/experimental_commands/generate_experimental_commands.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experimental_commands/generate_wash_commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/experimental_commands/generate_wash_commands.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experimental_commands/uv_vis_detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/experimental_commands/uv_vis_detector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_config_ax_demo.json" beforeDir="false" afterPath="$PROJECT_DIR$/test_config_ax_demo.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="37FYNUeHmUwlMJzRgDST5xHkBBj" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.run_ax_optimization_demo.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/zahrtlab/AutoZahrt/project_dead_mans_fingers&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-ce3d9afa04ac-ba05f1cad1b1-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.20224.347" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="36e67c1c-a6da-470e-ac9a-f6f6b730c95a" name="Changes" comment="" />
+      <created>1766500246804</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1766500246804</updated>
+    </task>
+    <servers />
+  </component>
+</project>

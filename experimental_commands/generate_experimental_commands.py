@@ -106,7 +106,9 @@ def generate_experimental_commands(
             f"The flow rate of our 0.1 M HCl Water is {flow_rate_pump2} uL/min and volume is {volume_pump2}",
             "0.5"
         ])
-        
+    
+    # TODO: Waiting for VICI fittings, will uncomment once back.
+    '''
     if not is_zero(flow_rate_pump3, volume_pump3, zero_tolerance):
         commands.append([
             "VICI_M6_Pump_2",
@@ -115,10 +117,9 @@ def generate_experimental_commands(
             f"The flow rate of our cosolvent is {flow_rate_pump3} uL/min and volume is {volume_pump3}",
             "0.5"
         ])
+    '''
 
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
-        # TODO: Due to mechanical issues with pump 4 this has been commented out til resolved. 
-        '''        
         commands.append([
             "Tricontinental_C24000_2",
             "dispense",
@@ -126,7 +127,7 @@ def generate_experimental_commands(
             f"The flow rate of our 0.1 M HCl water pump after the reactor is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
             "0.5"
         ])
-        '''
+        
     commands.append([
             "SYNC",
             "wait_for_pumps",
