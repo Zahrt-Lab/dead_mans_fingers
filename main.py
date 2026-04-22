@@ -114,6 +114,8 @@ def main() -> None:
             xylopyridine_analog=xylopyridine_analog,
         )
 
+        #TODO: STAY GONE TIL VALIDATTED
+        '''
         print(f"Beginning production run for xylopyridine analog: {xylopyridine_analog}")
         production_run(
             bo_results=f"{bo_input['base_directory']}/bo_results_{xylopyridine_analog}.csv",
@@ -122,6 +124,7 @@ def main() -> None:
             xylopyridine_analogs_concentrations_uM=bo_input["xylopyridine_analogs_concentrations_uM"],
             output_dir=f"{bo_input['base_directory']}/production_run_{xylopyridine_analog}",
         )
+        '''
 
 if __name__ == "__main__":
     main()
