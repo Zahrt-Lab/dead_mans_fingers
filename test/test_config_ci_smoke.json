@@ -2,7 +2,7 @@
   "trials": 3,
   "total_volume_through_reactor_bed": 3000,
   "target_volume_through_reactor_bed": 2500,
-  "base_directory": "/home/scott/Documents/project_dead_mans_fingers",
+  "base_directory": "C:\\Users\\zahrtlab\\AutoZahrt\\AutoZahrt_experiments",
   "name_of_xylopyridine_analogs_stock_solutions": ["Xylopyridine_Analog_1"],
   "name_of_stock_solution2": ["0.1M HCl Water"],
   "name_of_co-solvent_stock_solutions": ["Ethanol", "Acetonitrile", "THF", "Isopropanol", "DMF", "DMSO"],

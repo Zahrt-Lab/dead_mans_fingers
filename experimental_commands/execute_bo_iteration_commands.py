@@ -59,9 +59,10 @@ def run_experiment(bo_campaign_state: BoCampaignState,
     # Run experiment (hardware)
     if not bo_campaign_state.simulation_mode:
         csv_file_path = run_hardware_experiment(
-            bo_parameters["command_path_base"],
-            bo_parameters["instrument_config"],
-            iteration_state.iteration,
+            command_path_base=bo_parameters["command_path_base"],
+            instrument_config=bo_parameters["instrument_config"],
+            output_dir=bo_parameters["output_dir"],
+            iteration_number=iteration_state.iteration,
         )
 
     else:
@@ -121,8 +122,11 @@ def run_bayesian_optimization_iteration(
     base_directory.mkdir(parents=True, exist_ok=True)
     instrument_config = base_directory / Path("Instrument_Config_File.csv")
     command_path_base = base_directory / Path(f"Fluorescent_Optimization_Iteration_{iteration_state.iteration}")
+    output_dir = base_directory / "Experimental_Log"
+    output_dir.mkdir(parents=True, exist_ok=True)
     bo_campaign_state.bo_parameters["instrument_config"] = str(instrument_config)
     bo_campaign_state.bo_parameters["command_path_base"] = str(command_path_base)
+    bo_campaign_state.bo_parameters["output_dir"] = str(output_dir)
 
     print("Calculating experimental parameters for this bayesian optimization search point")
     instrument_parameters = parameters_to_commands(
@@ -167,6 +171,7 @@ def run_bayesian_optimization_iteration(
     )
 
     # Phase 2: Run experiment (hardware or simulation)
+    # TODO: This code doesn't return 
     csv_file_path = run_experiment(bo_campaign_state, iteration_state)
 
     if detect_early_convergence(

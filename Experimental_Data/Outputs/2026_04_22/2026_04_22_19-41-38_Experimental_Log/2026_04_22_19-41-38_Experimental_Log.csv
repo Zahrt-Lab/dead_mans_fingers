@@ -1,0 +1,4 @@
+Time,Component,Action,Parameters,Output,Notes
+13.18,METHOD,load_method,input=C:\Users\zahrtlab\AutoZahrt\AutoZahrt_experiments\Xylopyridine_Analog_1\bo_campaign\run_006\Fluorescent_Optimization_Iteration_1_temperature.csv,Loading input file: C:\Users\zahrtlab\AutoZahrt\AutoZahrt_experiments\Xylopyridine_Analog_1\bo_campaign\run_006\Fluorescent_Optimization_Iteration_1_temperature.csv,
+13.19,Temperature_1,set_temperature,"temp=42.56, temp_id=1",Temperature controller set to 42.56°C,
+13.7,Temperature_1,wait_convergence,"target_temp=42.56,tolerance=1,duration=60",Waiting for temperature to converge to 42.56±1.0°C for 60.0s,

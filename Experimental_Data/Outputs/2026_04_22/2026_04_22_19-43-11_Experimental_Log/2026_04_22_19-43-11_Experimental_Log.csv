@@ -1,0 +1,32 @@
+Time,Component,Action,Parameters,Output,Notes
+32.35,METHOD,load_method,input=C:\Users\zahrtlab\AutoZahrt\AutoZahrt_experiments\Xylopyridine_Analog_1\bo_campaign\run_007\Fluorescent_Optimization_Iteration_1_wash.csv,Loading input file: C:\Users\zahrtlab\AutoZahrt\AutoZahrt_experiments\Xylopyridine_Analog_1\bo_campaign\run_007\Fluorescent_Optimization_Iteration_1_wash.csv,
+33.4,Valve6Way_2,go_to_position,position=2,Moved valve to position 2.0,
+34.42,Valve6Way_2,check_position,,CP02,Valve now at position CP02
+34.92,Tecan_pump_1,dispense,"flow_rate=1700.0, volume=5100.0",Started async dispense,exp. 180.0 s
+35.42,VICI_M6_Pump_2,dispense,"flow_rate=300.0, volume=900.0",Started async dispense,exp. 180.0 s
+35.93,Tecan_pump_2,dispense,"flow_rate=1000, volume=3000",Started async dispense,exp. 180.0 s
+217.93,Tecan_pump_1,dispense,"flow_rate=1700.0, volume=5100.0",dispense 5100.0 µL @ 1700.0 µL/min,≈180.0 s
+217.99,Tecan_pump_2,dispense,"flow_rate=1000, volume=3000",dispense 3000.0 µL @ 1000.0 µL/min,≈180.0 s
+218.62,VICI_M6_Pump_2,dispense,"flow_rate=300.0, volume=900.0",dispense 900.0 µL @ 300.0 µL/min,≈180.0 s
+218.62,SYNC,wait_for_pumps,,All pumps finished,
+218.62,SYNC,wait_for_pumps,,All pumps finished,
+218.91,VICI_M6_Pump_1,shutdown,success=True,OK,
+219.13,VICI_M6_Pump_2,shutdown,success=True,OK,
+219.14,Valve6Way_1,shutdown,success=True,OK,
+219.14,Valve6Way_2,shutdown,success=True,OK,
+219.26,Temperature_1,shutdown,success=True,OK,
+219.46,Tecan_pump_1,shutdown,success=True,OK,
+219.67,Tecan_pump_2,shutdown,success=True,OK,
+219.68,DH2000_1,shutdown,success=True,OK,
+219.68,OceanOptics_UVVis_1,shutdown,success=True,OK,
+219.68,MirrorBox365nm_1,shutdown,success=True,OK,
+219.68,Close,Connection closed at shutdown,VICI_M6_Pump_1,OK,
+219.68,Close,Connection closed at shutdown,VICI_M6_Pump_2,OK,
+219.8,Close,Connection closed at shutdown,Valve6Way_1,OK,
+219.92,Close,Connection closed at shutdown,Valve6Way_2,OK,
+219.92,Close,Connection closed at shutdown,Temperature_1,OK,
+219.92,Close,Connection closed at shutdown,Tecan_pump_1,OK,
+219.92,Close,Connection closed at shutdown,Tecan_pump_2,OK,
+219.94,Close,Connection closed at shutdown,DH2000_1,OK,
+219.94,Close,Connection closed at shutdown,OceanOptics_UVVis_1,OK,
+219.94,Close,Connection closed at shutdown,MirrorBox365nm_1,OK,

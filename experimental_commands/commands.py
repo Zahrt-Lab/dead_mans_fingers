@@ -202,13 +202,14 @@ def save_production_run_commands_to_csv(commands_path: str,
             )
         )
 
-def run_commands(command_file: str, instrument_config_file: str) -> None:
+def run_commands(command_file: str, instrument_config_file: str, output_dir: str) -> None:
     """
     Run a single CSV command file against the connected instruments.
 
     parameters:
      - command_file: Path to the CSV command file to execute
      - instrument_config_file: Path to the instrument configuration CSV
+     - output_dir: Path to the directory where output files should be saved
     """
     if GeneralExperimentMethod is None:
         raise RuntimeError(
@@ -216,6 +217,6 @@ def run_commands(command_file: str, instrument_config_file: str) -> None:
             "Install the AutoZahrt hardware package or run in simulation mode."
         )
 
-    experiment = GeneralExperimentMethod(command_file, instrument_config_file)
+    experiment = GeneralExperimentMethod(command_file, instrument_config_file, output_dir)
     experiment.run_experiment()
 
