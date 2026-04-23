@@ -14,6 +14,7 @@ to run one bayesian optimization iteration.
 """
 
 from pathlib import Path
+import time
 from experimental_commands.commands import run_commands
 from utils.retrieve_latest_experimental_run import get_latest_experimental_run_csv
 
@@ -35,10 +36,14 @@ def run_hardware_experiment(
     Returns:
         str: Path to the UV-VIS data CSV written by AutoZahrt
     """
+    iteration_start_mtime = time.time()
+
     try:
+        
         print("Run the experimental commands to wash the UV-detector to clear it out")
         wash_command_file = f"{command_path_base}_wash.csv"
         run_commands(wash_command_file, instrument_config, output_dir=output_dir)
+        
 
         print("Beginning setting temperature for the experiment")
         temperature_command_file = f"{command_path_base}_temperature.csv"
@@ -59,7 +64,11 @@ def run_hardware_experiment(
         )
         raise
 
-    csv_file_path = get_latest_experimental_run_csv(Path(output_dir))
+    csv_file_path = get_latest_experimental_run_csv(
+        Path(output_dir),
+        min_mtime=max(0.0, iteration_start_mtime - 2.0),
+        timeout_seconds=30.0,
+    )
     print(f"Completed hardware experiment run, returning path to UV-VIS data CSV: {csv_file_path}")
     return csv_file_path
         
