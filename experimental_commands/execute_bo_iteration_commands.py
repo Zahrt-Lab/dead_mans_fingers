@@ -168,6 +168,8 @@ def run_bayesian_optimization_iteration(
         instrument_parameters["temperature"],
         iteration_state.trial_conditions["co_solvent_dilution_factor"],
         instrument_parameters["light_intensity"],
+        bo_campaign_state.bo_parameters["reactant_wavelength"],
+        bo_campaign_state.bo_parameters["product_wavelength"],
     )
 
     # Phase 2: Run experiment (hardware or simulation)

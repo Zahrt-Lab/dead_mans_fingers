@@ -33,6 +33,8 @@ def save_commands_csv(
     temperature: float,
     fraction_of_cosolvent: float,
     light_intensity: float,
+    reactant_wavelength: float,
+    product_wavelength: float,
 ) -> None:
     """
     The role of this csv file is to generate the csv commands for each individual
@@ -63,6 +65,8 @@ def save_commands_csv(
      - temperature: Temperature to set the thermal couple to for the experiment
      - fraction_of_cosolvent: Fraction of co-solvent to use for the experiment
      - light_intensity: Light intensity to set the mirror box to for the experiment
+     - reactant_wavelength: wavelength of the reactant to set the UV-detector to for the experiment
+     - product_wavelength: wavelength of the product to set the UV-detector to for the experiment
     return:
      - None
     """
@@ -95,6 +99,8 @@ def save_commands_csv(
                 volume_pump2,
                 volume_pump3,
                 volume_pump4,
+                reactant_wavelength,
+                product_wavelength
             )
         )
 

@@ -10,6 +10,7 @@ from typing import List
 
 from utils.is_zero import is_zero
 
+# TODO: The wavelength is currently fixed for the xylopyrdidine analogs, needs to make this more flexible for user inputs
 def generate_experimental_commands(
     flow_rate_pump1: float,
     flow_rate_pump2: float,
@@ -19,6 +20,8 @@ def generate_experimental_commands(
     volume_pump2: float,
     volume_pump3: float,
     volume_pump4: float,
+    reactant_wavelength: float,
+    product_wavelength: float,
     *,
     zero_tolerance: float = 1e-6,
 ) -> List[List[str]]:
@@ -69,7 +72,7 @@ def generate_experimental_commands(
     commands.append([
         "OceanOptics_UVVis_1",
         "set_params",
-        "integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths=409;506",
+        f"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths={reactant_wavelength};{product_wavelength}",
         "",
         "5.0"
     ])
