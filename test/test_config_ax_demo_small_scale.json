@@ -1,7 +1,7 @@
 {
   "trials" : 10,
-  "total_volume_through_reactor_bed": 2000,
-  "target_volume_through_reactor_bed": 1600,
+  "total_volume_through_reactor_bed": 3500,
+  "target_volume_through_reactor_bed": 3000,
   "base_directory": "C:\\Users\\zahrtlab\\AutoZahrt\\AutoZahrt_experiments",
   "name_of_xylopyridine_analogs_stock_solutions": ["p-nitroaniline", "water"],
   "name_of_stock_solution2": ["0.1M HCl Water"],
