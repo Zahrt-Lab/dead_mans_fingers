@@ -40,8 +40,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--throughput-threshold",
         type=float,
-        default=1e-9,
-        help="Throughput threshold (for Bayesian Optimization reference hypervolume)",
+        default=1.0,
+        help="Throughput threshold in nmol/min (qNEHVI reference point lower bound). "
+             "Set to the minimum acceptable throughput for your experiment.",
     )
     parser.add_argument(
         "--noise-sem-percent-yield",
