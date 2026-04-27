@@ -45,19 +45,19 @@ def check_volume(
     # Prompt only if insufficient
     if current_volume_uL < threshold_uL:
         print(
-            f"Stock solution {solution_name} is {current_volume_uL:.2f} µL; "
-            f"need ≥ {threshold_uL:.2f} µL (required {required_volume_uL:.2f} + "
+            f"Stock solution {solution_name} is {current_volume_uL:.2f} uL; "
+            f"need >= {threshold_uL:.2f} uL (required {required_volume_uL:.2f} + "
             f"reserve {minimum_volume_remaining_uL:.2f})."
         )
 
     # Loop while insufficient; ask user to input CURRENT volume after topping up
     while current_volume_uL < threshold_uL:
         if not interactive:
-            raise ExperimentAborted(f"{solution_name}: need ≥ {threshold_uL} µL.")
+            raise ExperimentAborted(f"{solution_name}: need >= {threshold_uL} uL.")
 
         try:
             updated_current_volume_uL = input(
-                "Add solvent ... enter CURRENT µL (or 'q' to abort): "
+                "Add solvent ... enter CURRENT uL (or 'q' to abort): "
             ).strip()
 
         except (EOFError, KeyboardInterrupt):
@@ -70,13 +70,13 @@ def check_volume(
             updated_current_volume_uL = float(updated_current_volume_uL)
 
         except ValueError:
-            print("Please enter a number (µL).")
+            print("Please enter a number (uL).")
             continue
 
         if (
             not math.isfinite(updated_current_volume_uL)
         ) or updated_current_volume_uL <= 0:
-            print("Please enter a positive amount (µL).")
+            print("Please enter a positive amount (uL).")
             continue
 
         current_volume_uL = updated_current_volume_uL
@@ -84,13 +84,13 @@ def check_volume(
         shortage = threshold_uL - current_volume_uL
         if shortage > 0:
             print(
-                f"Still short by {shortage:.2f} µL. Keep adding to '{solution_name}'."
+                f"Still short by {shortage:.2f} uL. Keep adding to '{solution_name}'."
             )
 
     remaining_volume_after_experiment = current_volume_uL - required_volume_uL
     print(
-        f"Proceeding: withdrawing {required_volume_uL:.2f} µL from '{solution_name}'. "
-        f"Remaining {remaining_volume_after_experiment:.2f} µL "
-        f"(reserve ≥ {minimum_volume_remaining_uL:.2f} µL)."
+        f"Proceeding: withdrawing {required_volume_uL:.2f} uL from '{solution_name}'. "
+        f"Remaining {remaining_volume_after_experiment:.2f} uL "
+        f"(reserve >= {minimum_volume_remaining_uL:.2f} uL)."
     )
     return remaining_volume_after_experiment
