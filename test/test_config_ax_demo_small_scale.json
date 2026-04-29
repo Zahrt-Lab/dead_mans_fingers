@@ -17,7 +17,7 @@
   "dilution_factor": [0.05, 0.5],
   "temperature": [20, 60],
   "cosolvents_valve_position": [1, 3],
-  "co_solvent_dilution_factor": [0.00, 0.4],
+  "co_solvent_dilution_factor": [0.00, 0.0],
   "light_intensity": [0, 100],
   "xylopyridine_analogs_concentrations_uM": [190, 190],
   "target_absorbance_in_the_uv_detector": [1.0, 1.0],

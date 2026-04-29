@@ -14,4 +14,6 @@
 
 8) Make option to get rid of the cosolvent (Future TODO)
 
-9) Include a warnings if flow rate any pump is below 25 uL/min (4/29/2026)
+9) Include a warnings if flow rate any pump is below 25 uL/min (4/29/2026) S
+
+10) Add temporary patch to set cosolvent range from 0 to 0 (4/29/2026) S
