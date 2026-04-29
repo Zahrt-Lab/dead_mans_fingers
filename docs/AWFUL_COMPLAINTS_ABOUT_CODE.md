@@ -7,3 +7,7 @@
 4) Need to make sure valve position is set correctly for each xylopyridine analog. (Should probably do this in the priming run)
 
 5) Need a priming protocol, think about this
+
+6) Need to get blank and dark spectra while solution is running
+
+7) We can think of tracking the absorbance at a wavelength far from the chromophore absorbance, perhaps around 700 nm. That would capture any change in the baseline.
