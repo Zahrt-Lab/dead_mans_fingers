@@ -21,11 +21,10 @@ _DEFAULT_COM_PORTS: Dict[str, str] = {
     "temperature_controller": "COM12",
     "Tricontinental_C24000_1": "COM17",
     "Tricontinental_C24000_2": "COM25",
-    "Tecan_pump_1":          "COM15",
+    "Tecan_pump_1":          "COM20",
     "Tecan_pump_2":          "COM6",
-    #"Tecan_pump_3":          "COM20",
     "dh2000_light_source":   "COM27",
-    "ocean_optics_uv_vis":   "COM50", #Joao couldn't find it
+    "ocean_optics_uv_vis":   "COM50", 
     "MirrorBox365nm":        "COM18",
 
 }
