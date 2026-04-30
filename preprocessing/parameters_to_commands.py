@@ -79,15 +79,21 @@ def parameters_to_commands(
     # Pump 1 (reactant)
     flow_rate_pump1 = flow_rate * dilution_factor
     volume_pump1 = total_volume_through_reactor_bed * dilution_factor
+    if flow_rate_pump1 <= 25 and flow_rate_pump1 > 0:
+        print(f"WARNING: LOW FLOW RATE OF {flow_rate_pump1} µL/min FOR PUMP 1 XYLOPYRIDINE ANALOG PUMP WILL HAVE LOW ACCURACY AND PRECISION")
 
     # Pump 2 (acid/water remainder after pump1 + cosolvent)
     pump2_dilution_factor = (1.0 - dilution_factor) - co_solvent_dilution_factor
     flow_rate_pump2 = flow_rate * pump2_dilution_factor
     volume_pump2 = total_volume_through_reactor_bed * pump2_dilution_factor
+    if flow_rate_pump2 <= 25 and flow_rate_pump2 > 0:
+        print(f"WARNING: LOW FLOW RATE OF {flow_rate_pump2} µL/min FOR PUMP 2 DILUTION PUMP WILL HAVE LOW ACCURACY AND PRECISION")
 
     # Pump 3 (cosolvent)
     flow_rate_pump3 = flow_rate * co_solvent_dilution_factor
     volume_pump3 = total_volume_through_reactor_bed * co_solvent_dilution_factor
+    if flow_rate_pump3 <= 25 and flow_rate_pump3 > 0:
+        print(f"WARNING: LOW FLOW RATE OF {flow_rate_pump3} µL/min FOR PUMP 3 COSOLVENT PUMP WILL HAVE LOW ACCURACY AND PRECISION")
 
     # Reactor bed flow rate and volume
     flow_rate_reactor = flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3
@@ -108,6 +114,8 @@ def parameters_to_commands(
             cuvette_flow = flow_rate_reactor * ratio
             flow_rate_pump4 = max(0.0, cuvette_flow - flow_rate_reactor)
             volume_pump4 = max(0.0, (ratio - 1.0) * volume_reactor)
+            if flow_rate_pump4 <= 25 and flow_rate_pump4 > 0:
+                print(f"WARNING: LOW FLOW RATE OF {flow_rate_pump4} µL/min FOR PUMP 4 UV DILUTION PUMP WILL HAVE LOW ACCURACY AND PRECISION")
     else:
         # Production runs do not use the inline UV detector, so pump 4 is not needed.
         flow_rate_pump4 = 0.0
