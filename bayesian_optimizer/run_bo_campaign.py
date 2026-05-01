@@ -21,6 +21,7 @@ from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 from bayesian_optimizer.init_or_load_ax import _init_or_load_ax
 from experimental_commands.execute_bo_iteration_commands import run_bayesian_optimization_iteration
 from utils.experiment_aborted import PostProcessingError
+from utils.prime_pump import prime_pump1
 
 from preprocessing.experimental_parameters import (
     load_experimental_parameters,
@@ -117,8 +118,9 @@ def run_bo_campaign(
     It will
      1) Load the experimental parameters.
      2) Initialize or loads Ax state from a previous run if it exists.
-     3) Run the optimization loop.
-     4) On exit, it will print the Pareto optimal parameter sets.
+     3) Prompt the user if priming the pump 1 (xylopyridine solution) is needed before starting the optimization loop.
+     4) Run the optimization loop.
+     5) On exit, it will print the Pareto optimal parameter sets.
 
 
     Parameters:
@@ -206,8 +208,23 @@ def run_bo_campaign(
         bo_campaign_state.update_waste_volume(
             initial_volumes.get("waste_volume_uL", 0.0)
             )
+    # 3) Prompt user to prime pump 1 if needed. Requires user input for each analog
+    #todo: make a priming countdown. If no user input, prime anyway
+    to_prime = input("Prime pump 1? (y/n): ").strip().lower()
+    if to_prime == "y":
+        print("Priming pump 1 with xylopyridine solution...")
+     
+        prime_pump1(
+            flow_rate_pump1=1000.0,
+            volume_pump1=3000.0,
+            valve1_position=1, #needs to cahnge to the correspondent analog
+            base_directory="Experimental_Data\Outputs" #still need to find this variable 
+        )
+        print("Pump 1 primed.")
+    else:
+        print("Skipping pump priming. Make sure pump 1 is primed before running the optimization loop if you haven't already.")
 
-    # 3) This is the main optimization loop,
+    # 4) This is the main optimization loop,
     iteration = IterationState()
     step = 0
 
