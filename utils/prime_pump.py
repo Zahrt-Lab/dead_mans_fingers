@@ -4,6 +4,7 @@ and dispensing the Xylopyridine solution at the specified flow rate and volume.'
 
 # ------------------------------------------------------------------------------
 # Software: AUTO_ZAHRT
+#TODO: DEcide wheter this goes into experimental commands or utils. It is a bit of both, but leaning towards utils since it is a helper function to generate the prime commands and save them to a csv file.
 
 from datetime import datetime
 import os
@@ -57,15 +58,5 @@ def prime_pump1(
 
 #     5) Run the commands to prime pump 1
     print(f"Running the commands to prime pump 1. The commands are saved in {commands_path} and the instrument config is saved in {intrument_config_path}.")
-    #run_commands(commands_path, intrument_config_path, experiment_folder + "/output.csv")
+    run_commands(commands_path, intrument_config_path, experiment_folder + "/output.csv")
 
-flow_rate_pump1 = 10.0  # uL/min
-volume_pump1 = 100.0    # uL
-valve1_position = 1     # Position of valve1 to prime pump 1
-base_directory = "Experimental_Data\Outputs"  # Base directory to save the
-prime_pump1(
-    flow_rate_pump1,
-    volume_pump1,
-    valve1_position,
-    base_directory
-)
