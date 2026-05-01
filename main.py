@@ -102,6 +102,7 @@ def main() -> None:
             os.rename(ax_state_file_path, archived_state_path)
             print(f"Archived existing Ax state for fresh simulation run: {archived_state_path}")
 
+            
         # TODO: Do we want it to run all the BO, then production runs? 
         # or Bayes OPT then production run for each analog sequentially? 
         run_bo_campaign(
