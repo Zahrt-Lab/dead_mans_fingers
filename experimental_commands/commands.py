@@ -226,3 +226,13 @@ def run_commands(command_file: str, instrument_config_file: str, output_dir: str
     experiment = GeneralExperimentMethod(command_file, instrument_config_file, output_dir)
     experiment.run_experiment()
 
+def save_prime_commands_to_csv(commands_path: str, commands) -> None:
+    """
+    Save a list of prime commands to a CSV file.
+
+    parameters:
+     - commands_path: The path to the CSV file where the commands should be saved.
+     - commands: A list of prime commands, where each command is a list of strings representing the command and its parameters.
+    """
+    with open(commands_path, "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerows(commands)
