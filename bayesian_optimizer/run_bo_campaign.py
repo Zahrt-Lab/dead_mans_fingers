@@ -209,21 +209,26 @@ def run_bo_campaign(
             initial_volumes.get("waste_volume_uL", 0.0)
             )
     # 3) Prompt user to prime pump 1 if needed. Requires user input for each analog
+    
     #todo: make a priming countdown. If no user input, prime anyway
+    #set priming experimental folder
+    experimental_folder = bo_campaign_state.bo_parameters["base_directory"] + "/Experimental_Log"
     to_prime = input("Prime pump 1? (y/n): ").strip().lower()
     if to_prime == "y":
         print("Priming pump 1 with xylopyridine solution...")
+        
      
         prime_pump1(
             flow_rate_pump1=1000.0,
             volume_pump1=3000.0,
             valve1_position=1, #needs to cahnge to the correspondent analog
-            base_directory="Experimental_Data\Outputs" #still need to find this variable 
+            base_directory=experimental_folder #still need to find this variable 
         )
         print("Pump 1 primed.")
-    else:
+    elif to_prime == "n":
         print("Skipping pump priming. Make sure pump 1 is primed before running the optimization loop if you haven't already.")
-
+    else:
+        print("Invalid input. Skipping pump priming. Make sure pump 1 is primed before running the optimization loop if you haven't already.")
     # 4) This is the main optimization loop,
     iteration = IterationState()
     step = 0
