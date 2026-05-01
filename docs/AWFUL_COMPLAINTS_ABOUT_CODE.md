@@ -17,3 +17,5 @@
 9) Include a warnings if flow rate any pump is below 25 uL/min (4/29/2026) S
 
 10) Add temporary patch to set cosolvent range from 0 to 0 (4/29/2026) S
+
+11) There is a bug in the generate_instrument_config.py. If com_ports, then ports.update runs and gives an error. Something about different dictionary sizes. I came across this when developing the priming function. I guess update has never been called so far, that's why we never had this bug before.
