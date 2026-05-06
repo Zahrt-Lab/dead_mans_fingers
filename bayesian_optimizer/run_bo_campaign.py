@@ -180,6 +180,7 @@ def run_bo_campaign(
            f" - {experimental_bounds['light_intensity_max']}")
 
     # 2) Generating ax object for optimization of xylopyridine analogs
+    # TODO: This stopped asking user if they want to resume or start a new campaign.
     ax = _init_or_load_ax(
         ax_previous_run_json_file_path,
         experimental_bounds,
@@ -220,7 +221,7 @@ def run_bo_campaign(
      
         prime_pump1(
             flow_rate_pump1=1000.0,
-            volume_pump1=3000.0,
+            volume_pump1=1500.0,
             valve1_position=1, #needs to cahnge to the correspondent analog
             base_directory=experimental_folder #still need to find this variable 
         )

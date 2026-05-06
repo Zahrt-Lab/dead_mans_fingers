@@ -99,6 +99,7 @@ def save_commands_csv(
                 volume_pump2,
                 volume_pump3,
                 volume_pump4,
+                light_intensity,
                 reactant_wavelength,
                 product_wavelength
             )
@@ -110,10 +111,12 @@ def save_commands_csv(
     # V2 = 6000 * (1 - D_cosolvent), V3 = 6000 * D_cosolvent, V4 = 3000
     wash_flow_rate_pump2 = 2000 * (1 - fraction_of_cosolvent)
     wash_flow_rate_pump3 = 2000 * fraction_of_cosolvent
-    wash_flow_rate_pump4 = 1000
+    # The wash flow rate for pump 4 is set to the same flow rate in experiment 4 to make sure the cosolvents are consistent
+    wash_flow_rate_pump4 = flow_rate_pump4
     wash_volume_pump2 = 6000 * (1 - fraction_of_cosolvent)
     wash_volume_pump3 = 6000 * fraction_of_cosolvent
-    wash_volume_pump4 = 3000
+    # This is meant to run for 3 minutes so this will be flow_rate_ul_min * 3 minutes = wash_volume_pump4
+    wash_volume_pump4 = wash_flow_rate_pump4 * 3
     
     with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
@@ -188,13 +191,13 @@ def save_production_run_commands_to_csv(commands_path: str,
     # Following the README File at Step 5:
     # F2 = 2000 * (1 - D_cosolvent), F3 = 2000 * D_cosolvent, F4 = 1000
     # V2 = 6000 * (1 - D_cosolvent), V3 = 6000 * D_cosolvent, V4 = 3000
-    wash_flow_rate_pump2 = 2000 * (1 - fraction_of_cosolvent)
-    wash_flow_rate_pump3 = 2000 * fraction_of_cosolvent
-    wash_flow_rate_pump4 = 1000
-    wash_volume_pump2 = 6000 * (1 - fraction_of_cosolvent)
-    wash_volume_pump3 = 6000 * fraction_of_cosolvent
-    wash_volume_pump4 = 3000
-    
+    wash_flow_rate_pump2 = 1000 * (1 - fraction_of_cosolvent)
+    wash_flow_rate_pump3 = 1000 * fraction_of_cosolvent
+    wash_flow_rate_pump4 = flow_rate_pump4
+    wash_volume_pump2 = 4000 * (1 - fraction_of_cosolvent)
+    wash_volume_pump3 = 4000 * fraction_of_cosolvent
+    wash_volume_pump4 = wash_flow_rate_pump4 * 4
+
     with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
             generate_wash_commands(

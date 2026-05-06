@@ -20,6 +20,7 @@ def generate_experimental_commands(
     volume_pump2: float,
     volume_pump3: float,
     volume_pump4: float,
+    light_intensity: float,
     reactant_wavelength: float,
     product_wavelength: float,
     *,
@@ -52,6 +53,16 @@ def generate_experimental_commands(
 
     header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [header]
+
+    # TODO: Delete specific light intensity workflow, this should be used instead
+    commands.append([
+            "MirrorBox365nm_1",
+            "set_dimmer",
+            f"value={light_intensity}",
+            f"Setting light intensity to {int(light_intensity)} for the experiment",
+            0.5
+        ]
+    )
 
     commands.append([ 
         "DH2000_1","halogen_toggle","","","5.0"
