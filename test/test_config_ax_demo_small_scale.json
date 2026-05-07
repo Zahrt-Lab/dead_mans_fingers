@@ -24,6 +24,7 @@
   "max_absorbance_concentration_uM_uv_detector": [96, 96],
   "reactant_wavelength": [380.0, 380.0],
   "product_wavelength": [506.0, 506.0],
+  "reference_wavelength": [700.0, 700.0],
   "epsilon_reactant_at_lambda1_L_per_mol_cm": [10388.0, 10388.0],
   "epsilon_product_at_lambda1_L_per_mol_cm": [5, 5],
   "epsilon_reactant_at_lambda2_L_per_mol_cm": [1962, 1962],

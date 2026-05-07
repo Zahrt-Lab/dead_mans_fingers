@@ -23,6 +23,7 @@ def generate_experimental_commands(
     light_intensity: float,
     reactant_wavelength: float,
     product_wavelength: float,
+    reference_wavelength: float,
     *,
     zero_tolerance: float = 1e-6,
 ) -> List[List[str]]:
@@ -83,7 +84,7 @@ def generate_experimental_commands(
     commands.append([
         "OceanOptics_UVVis_1",
         "set_params",
-        f"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths={reactant_wavelength};{product_wavelength}",
+        f"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths={reactant_wavelength};{product_wavelength};{reference_wavelength},reference_wavelength={reference_wavelength}",
         "",
         "5.0"
     ])

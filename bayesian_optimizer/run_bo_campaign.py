@@ -211,7 +211,7 @@ def run_bo_campaign(
             )
     # 3) Prompt user to prime pump 1 if needed. Requires user input for each analog
     
-    #todo: make a priming countdown. If no user input, prime anyway
+    #TODO: make a priming countdown. If no user input, prime anyway (I'm not a fan of a timer implementation since it can cause significant delays in experiments")
     #set priming experimental folder
     experimental_folder = bo_campaign_state.bo_parameters["base_directory"] + "/Experimental_Log"
     to_prime = input("Prime pump 1? (y/n): ").strip().lower()

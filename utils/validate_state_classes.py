@@ -21,6 +21,7 @@ _REQUIRED_BO_KEYS = {
     "target_volume_through_reactor_bed",
     "reactant_wavelength",
     "product_wavelength",
+    "reference_wavelength",
     "Fluorescent_Bayesian_Optimization_results_filename",
     "epsilon_reactant_at_lambda1_L_per_mol_cm",
     "epsilon_product_at_lambda2_L_per_mol_cm",
