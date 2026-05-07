@@ -22,6 +22,8 @@ _REQUIRED_BO_KEYS = {
     "reactant_wavelength",
     "product_wavelength",
     "reference_wavelength",
+    "blank_light_intensity_threshold",
+    "wavelength_for_blank_light_intensity_check",
     "Fluorescent_Bayesian_Optimization_results_filename",
     "epsilon_reactant_at_lambda1_L_per_mol_cm",
     "epsilon_product_at_lambda2_L_per_mol_cm",

@@ -25,6 +25,8 @@
   "reactant_wavelength": [380.0, 380.0],
   "product_wavelength": [506.0, 506.0],
   "reference_wavelength": [700.0, 700.0],
+  "blank_light_intensity_threshold": [500, 500],
+  "wavelength_for_blank_light_intensity_check": [400.0, 400.0],
   "epsilon_reactant_at_lambda1_L_per_mol_cm": [10388.0, 10388.0],
   "epsilon_product_at_lambda1_L_per_mol_cm": [5, 5],
   "epsilon_reactant_at_lambda2_L_per_mol_cm": [1962, 1962],

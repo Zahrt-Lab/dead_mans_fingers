@@ -171,6 +171,8 @@ def run_bayesian_optimization_iteration(
         bo_campaign_state.bo_parameters["reactant_wavelength"],
         bo_campaign_state.bo_parameters["product_wavelength"],
         bo_campaign_state.bo_parameters["reference_wavelength"],
+        bo_campaign_state.bo_parameters["blank_light_intensity_threshold"],
+        bo_campaign_state.bo_parameters["wavelength_for_blank_light_intensity_check"],
     )
 
     # Phase 2: Run experiment (hardware or simulation)

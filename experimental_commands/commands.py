@@ -36,6 +36,8 @@ def save_commands_csv(
     reactant_wavelength: float,
     product_wavelength: float,
     reference_wavelength: float,
+    blank_light_intensity_threshold: float,
+    wavelength_for_blank_light_intensity_check: float,
 ) -> None:
     """
     The role of this csv file is to generate the csv commands for each individual
@@ -104,6 +106,8 @@ def save_commands_csv(
                 reactant_wavelength,
                 product_wavelength,
                 reference_wavelength,
+                blank_light_intensity_threshold,
+                wavelength_for_blank_light_intensity_check,
             )
         )
 
