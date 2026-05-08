@@ -43,7 +43,12 @@ def detect_early_convergence(
         True if the recording ended more than tolerance_seconds before the
         expected experiment duration, False otherwise.
     """
-    df = pd.read_csv(csv_file_path)
+    try:
+        df = pd.read_csv(csv_file_path)
+    except pd.errors.EmptyDataError:
+        return False
+    if df.empty or "Time(s)" not in df.columns:
+        return False
     actual_max_time = df["Time(s)"].max()
     expected_duration = (total_volume / flow_rate) * 60
     return bool(actual_max_time < expected_duration - tolerance_seconds)
