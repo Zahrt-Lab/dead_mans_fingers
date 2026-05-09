@@ -112,17 +112,16 @@ def save_commands_csv(
         )
 
     # Generate wash commands
-    # Following the README File at Step 5:
-    # F2 = 2000 * (1 - D_cosolvent), F3 = 2000 * D_cosolvent, F4 = 1000
-    # V2 = 6000 * (1 - D_cosolvent), V3 = 6000 * D_cosolvent, V4 = 3000
-    wash_flow_rate_pump2 =  * (1 - fraction_of_cosolvent)
-    wash_flow_rate_pump3 = 2000 * fraction_of_cosolvent
-    # The wash flow rate for pump 4 is set to the same flow rate in experiment 4 to make sure the cosolvents are consistent
-    wash_flow_rate_pump4 = flow_rate_pump4
-    wash_volume_pump2 = 6000 * (1 - fraction_of_cosolvent)
-    wash_volume_pump3 = 6000 * fraction_of_cosolvent
-    # This is meant to run for 3 minutes so this will be flow_rate_ul_min * 3 minutes = wash_volume_pump4
-    wash_volume_pump4 = wash_flow_rate_pump4 * 3
+    # We wanted to keep wash flow rate at 3000 uL/min when washing the total_flow_rate
+    total_flow_rate = flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3 + flow_rate_pump4
+    # This wash scaling will make the wash flow rate constant at 3000 uL/min
+    wash_scaling = total_flow_rate / 3000
+    wash_flow_rate_pump2 = (flow_rate_pump1 + flow_rate_pump2) / wash_scaling
+    wash_flow_rate_pump3 = flow_rate_pump3 / wash_scaling
+    wash_flow_rate_pump4 = flow_rate_pump4 / wash_scaling
+    wash_volume_pump2 = 4000 * (1 - fraction_of_cosolvent)
+    wash_volume_pump3 = 4000 * fraction_of_cosolvent
+    wash_volume_pump4 = wash_flow_rate_pump4 * 4
     
     with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(

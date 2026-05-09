@@ -17,12 +17,13 @@ from __future__ import annotations
 import math
 from pathlib import Path
 
+from ax.exceptions.core import OptimizationShouldStop
+
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 from bayesian_optimizer.init_or_load_ax import _init_or_load_ax
 from experimental_commands.execute_bo_iteration_commands import run_bayesian_optimization_iteration
 from utils.experiment_aborted import PostProcessingError
 from utils.prime_pump import prime_pump1
-
 from preprocessing.experimental_parameters import (
     load_experimental_parameters,
     check_required_bo_campaign_parameters,
@@ -242,7 +243,13 @@ def run_bo_campaign(
 
     try:
         while True if int(bo_campaign_state.bo_parameters["trials"]) == 0 else (step < int(target)):
-            experiment_trial_conditions, trial_index = ax.get_next_trial()
+
+            try:
+                experiment_trial_conditions, trial_index = ax.get_next_trial()
+            except OptimizationShouldStop as exc: 
+                print("Optimization campaign stopped.")
+                print(exc.message)
+                break
 
             # Updates trials conditions for our experiment state
             iteration.update_iteration(trial_index + 1)
@@ -272,7 +279,8 @@ def run_bo_campaign(
                 f"throughput={experimental_results['throughput'][0]:.6g} "
                 f"at experimental parameters={experiment_trial_conditions}"
             )
-
+        
+        print("Bayesian Optimization campaign completed.")
 
     except KeyboardInterrupt:
         print("Keyboard interrupt received stopping Bayesian Optimization.")
