@@ -192,7 +192,7 @@ def save_production_run_commands_to_csv(commands_path: str,
                 volume_pump4,
             )
         )
-
+        
     # Generate wash commands
     # We wanted to keep wash flow rate at 3000 uL/min when washing the total_flow_rate
     total_flow_rate = flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3 + flow_rate_pump4
