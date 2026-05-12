@@ -119,10 +119,11 @@ def save_commands_csv(
     wash_flow_rate_pump2 = (flow_rate_pump1 + flow_rate_pump2) / wash_scaling
     wash_flow_rate_pump3 = flow_rate_pump3 / wash_scaling
     wash_flow_rate_pump4 = flow_rate_pump4 / wash_scaling
-    wash_volume_pump2 = 4000 * (1 - fraction_of_cosolvent)
-    wash_volume_pump3 = 4000 * fraction_of_cosolvent
-    wash_volume_pump4 = wash_flow_rate_pump4 * 4
-    
+    wash_total_flow_rate = wash_flow_rate_pump2 + wash_flow_rate_pump3 + wash_flow_rate_pump4
+    wash_volume_pump2 = 6000 * (wash_flow_rate_pump2 / wash_total_flow_rate)
+    wash_volume_pump3 = 6000 * (wash_flow_rate_pump3 / wash_total_flow_rate)
+    wash_volume_pump4 = 6000 * (wash_flow_rate_pump4 / wash_total_flow_rate)
+
     with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
             generate_wash_commands(

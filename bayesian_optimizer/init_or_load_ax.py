@@ -12,7 +12,6 @@ setting up the experiment parameters and objectives for the Bayesian optimizatio
 
 References for AxClient usage:
 1) https://ax.dev/docs/0.5.0/tutorials/gss/
-2) 
 '''
 
 # bayesian_optimizer/init_or_load_ax.py
