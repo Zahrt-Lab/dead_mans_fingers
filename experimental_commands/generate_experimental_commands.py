@@ -20,8 +20,12 @@ def generate_experimental_commands(
     volume_pump2: float,
     volume_pump3: float,
     volume_pump4: float,
+    light_intensity: float,
     reactant_wavelength: float,
     product_wavelength: float,
+    reference_wavelength: float,
+    blank_light_intensity_threshold: float,
+    wavelength_for_blank_light_intensity_check: float,
     *,
     zero_tolerance: float = 1e-6,
 ) -> List[List[str]]:
@@ -53,6 +57,16 @@ def generate_experimental_commands(
     header = ["Component", "Action", "Parameters", "Notes", "delay"]
     commands = [header]
 
+    # TODO: Delete specific light intensity workflow, this should be used instead
+    commands.append([
+            "MirrorBox365nm_1",
+            "set_dimmer",
+            f"value={light_intensity}",
+            f"Setting light intensity to {int(light_intensity)} for the experiment",
+            0.5
+        ]
+    )
+
     commands.append([ 
         "DH2000_1","halogen_toggle","","","5.0"
         ]
@@ -72,7 +86,7 @@ def generate_experimental_commands(
     commands.append([
         "OceanOptics_UVVis_1",
         "set_params",
-        f"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths={reactant_wavelength};{product_wavelength}",
+        f"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths={reactant_wavelength};{product_wavelength};{reference_wavelength},reference_wavelength={reference_wavelength},blank_light_intensity_threshold={blank_light_intensity_threshold},wavelength_for_blank_light_intensity_check={wavelength_for_blank_light_intensity_check}",
         "",
         "5.0"
     ])

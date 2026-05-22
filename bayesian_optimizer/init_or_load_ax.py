@@ -9,6 +9,9 @@
 '''
 The purpose of this module is to initialize a new AxClient or load an existing one from a JSON file,
 setting up the experiment parameters and objectives for the Bayesian optimization campaign.
+
+References for AxClient usage:
+1) https://ax.dev/docs/0.5.0/tutorials/gss/
 '''
 
 # bayesian_optimizer/init_or_load_ax.py
@@ -18,6 +21,7 @@ import os
 from typing import Callable, Optional
 
 from ax.service.ax_client import AxClient, ObjectiveProperties
+from ax.global_stopping.strategies.improvement import ImprovementGlobalStoppingStrategy
 
 
 def _prompt_resume_or_restart(
@@ -82,16 +86,23 @@ def _init_or_load_ax(
         AxClient: AxClient instance ready for optimization campaign (with experiment created and objectives set)
     """
     
+    # Stops if hypervolume hasn't improved by ≥5% over the last 5 trials, after a minimum of 10 trials.
+    # Created before the resume branch so it can be re-attached to a loaded client (not serialized in JSON).
+    stopping_strategy = ImprovementGlobalStoppingStrategy(min_trials=10, window_size=5, improvement_bar=0.05)
+
     if os.path.exists(ax_previous_run_json_file_path):
         resume = _prompt_resume_or_restart(ax_previous_run_json_file_path, ask_user_fn)
         if resume:
             ax = AxClient.load_from_json_file(ax_previous_run_json_file_path)
+            ax.global_stopping_strategy = stopping_strategy
             print(f"Resumed Ax experiment with {len(ax.get_trials_data_frame())} trials.")
             return ax
         os.remove(ax_previous_run_json_file_path)
         print("Existing campaign file deleted. Starting a new campaign.")
 
-    ax = AxClient()
+    # Initializes a new client and creates a new experiment
+    ax = AxClient(global_stopping_strategy=stopping_strategy, random_seed=0, verbose_logging=False)
+
     ax.create_experiment(
         name="project_dead_mans_fingers_moo_ax",
         parameters=[

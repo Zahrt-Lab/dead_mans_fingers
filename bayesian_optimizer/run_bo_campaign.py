@@ -17,12 +17,13 @@ from __future__ import annotations
 import math
 from pathlib import Path
 
+from ax.exceptions.core import OptimizationShouldStop
+
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 from bayesian_optimizer.init_or_load_ax import _init_or_load_ax
 from experimental_commands.execute_bo_iteration_commands import run_bayesian_optimization_iteration
 from utils.experiment_aborted import PostProcessingError
 from utils.prime_pump import prime_pump1
-
 from preprocessing.experimental_parameters import (
     load_experimental_parameters,
     check_required_bo_campaign_parameters,
@@ -180,6 +181,7 @@ def run_bo_campaign(
            f" - {experimental_bounds['light_intensity_max']}")
 
     # 2) Generating ax object for optimization of xylopyridine analogs
+    # TODO: This stopped asking user if they want to resume or start a new campaign.
     ax = _init_or_load_ax(
         ax_previous_run_json_file_path,
         experimental_bounds,
@@ -210,7 +212,7 @@ def run_bo_campaign(
             )
     # 3) Prompt user to prime pump 1 if needed. Requires user input for each analog
     
-    #todo: make a priming countdown. If no user input, prime anyway
+    #TODO: make a priming countdown. If no user input, prime anyway (I'm not a fan of a timer implementation since it can cause significant delays in experiments")
     #set priming experimental folder
     experimental_folder = bo_campaign_state.bo_parameters["base_directory"] + "/Experimental_Log"
     to_prime = input("Prime pump 1? (y/n): ").strip().lower()
@@ -220,7 +222,7 @@ def run_bo_campaign(
      
         prime_pump1(
             flow_rate_pump1=1000.0,
-            volume_pump1=3000.0,
+            volume_pump1=1500.0,
             valve1_position=1, #needs to cahnge to the correspondent analog
             base_directory=experimental_folder #still need to find this variable 
         )
@@ -241,7 +243,13 @@ def run_bo_campaign(
 
     try:
         while True if int(bo_campaign_state.bo_parameters["trials"]) == 0 else (step < int(target)):
-            experiment_trial_conditions, trial_index = ax.get_next_trial()
+
+            try:
+                experiment_trial_conditions, trial_index = ax.get_next_trial()
+            except OptimizationShouldStop as exc: 
+                print("Optimization campaign stopped.")
+                print(exc.message)
+                break
 
             # Updates trials conditions for our experiment state
             iteration.update_iteration(trial_index + 1)
@@ -271,7 +279,8 @@ def run_bo_campaign(
                 f"throughput={experimental_results['throughput'][0]:.6g} "
                 f"at experimental parameters={experiment_trial_conditions}"
             )
-
+        
+        print("Bayesian Optimization campaign completed.")
 
     except KeyboardInterrupt:
         print("Keyboard interrupt received stopping Bayesian Optimization.")

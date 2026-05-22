@@ -92,6 +92,19 @@ def generate_bo_input_file(
     bo_workflow_parameters["product_wavelength"] = complete_workflow_parameters[
         "product_wavelength"
     ][xylopyridine_analog_index]
+
+    bo_workflow_parameters["reference_wavelength"] = complete_workflow_parameters[
+        "reference_wavelength"
+    ][xylopyridine_analog_index]
+
+    bo_workflow_parameters["blank_light_intensity_threshold"] = complete_workflow_parameters[
+        "blank_light_intensity_threshold"
+    ][xylopyridine_analog_index]
+
+    bo_workflow_parameters["wavelength_for_blank_light_intensity_check"] = complete_workflow_parameters[
+        "wavelength_for_blank_light_intensity_check"
+    ][xylopyridine_analog_index]
+
     bo_workflow_parameters["epsilon_reactant_at_lambda1_L_per_mol_cm"] = (
         complete_workflow_parameters["epsilon_reactant_at_lambda1_L_per_mol_cm"][
             xylopyridine_analog_index
