@@ -1,0 +1,15 @@
+{
+    "total_flow_rate": 200,
+    "volume": 3000,
+    "initial_concentration": 190,
+    "expected_extinction_coefficient": 10388,
+    "light_path_length": 1,
+    "std_wavelength": 380,
+    "product_wavelength": 506,
+    "reference_wavelength": 700,
+    "blank_light_intensity_threshold": 100,
+    "wavelength_for_blank_light_intensity_check": 600,
+    "base_directory": "C:\\Users\\Joao_Luiz\\Documents\\Python\\Results\\simulation\\Calibration_curve",
+    "temperature": 25,
+    "light_intensity": 255
+}
