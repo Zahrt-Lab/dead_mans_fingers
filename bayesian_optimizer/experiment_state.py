@@ -181,3 +181,19 @@ class IterationState:
         """
         for species, absorbance in absorbance_at_steady_state.items():
             self.absorbance_at_steady_state[species] = absorbance
+
+@dataclass
+class CalibrationState:
+    """
+    Data class to hold the state of a single calibration campaign.
+    """
+
+    # Calibration parameters
+    calibration_parameters: Dict[str, Any] = field(default_factory=dict)
+
+    def update_calibration_parameters(self, calibration_parameters: Dict[str, Any]) -> None:
+        """
+        Update the calibration parameters.
+        """
+        self.calibration_parameters.clear()
+        self.calibration_parameters.update(calibration_parameters)
