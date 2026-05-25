@@ -23,8 +23,9 @@ from bayesian_optimizer.experiment_state import CalibrationState
 from experimental_commands.commands import save_commands_csv
 from experimental_commands.experiment_runner import run_hardware_experiment
 from experimental_commands.generate_instrument_config import save_instrument_config_csv
-from post_processing.post_process_uv_recording import post_process_uv_recording
 from post_processing.average_absorbance import average_absorbance
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 
@@ -74,10 +75,17 @@ save_instrument_config_csv(instrument_config_path)
 
 output_dir = base_directory / "output"
 
+# Dataframe to keep all the results of the calibration experiment
+calibration_results_df = pd.DataFrame(columns=[
+    "concentration_M",
+    "average_absorbance_std"
+])
+
 
 #Start a for loop to go over the concentrations and generate the commands for each one of them
 for i, dilution_factor in enumerate(dilution_factors, start=1):
     # The total flow rate will be the sum of flow_rat_pump_1 and flow_rate_pump_3
+    concentration_M = initial_concentration_uM * dilution_factor * 1e-6 # Convert uM to M
     flow_rate_pump1 = total_flow_rate * (dilution_factor)
     volume_pump1 = volume * dilution_factor
     flow_rate_pump2 = total_flow_rate * (1 - dilution_factor)
@@ -113,29 +121,79 @@ for i, dilution_factor in enumerate(dilution_factors, start=1):
 
     
 
-    # # Run the experiment sequence
-    # uv_data_dir_path = run_hardware_experiment(commands_path, instrument_config_path, output_dir, i)
+    # Run the experiment sequence
+    uv_data_dir_path = run_hardware_experiment(commands_path, instrument_config_path, output_dir, i)
 
-    # #PostProcess UV data
-    # uv_vis_recording_post_processing_df = post_process_uv_recording(
-    #     flow_rate = flow_rate_pump1 + flow_rate_pump2,
-    #     target_volume = volume,
-    #     uv_vis_absorbance_results_csv=uv_data_dir_path,
-    #     experiment_converged_early=False
-    # )
-    # #Calculate the average absorbance for the standard wavelength
-    # average_absorbance_std = average_absorbance(
-    #     uv_vis_recording_post_processing_df,
-    #     std_wavelength
-    # )
-    # print(f"The average absorbance for the standard wavelength {std_wavelength} nm is {average_absorbance_std}")
-
+    #PostProcess UV data. Create my own processing of the UV data
+    # Put the UV data into a dataframe
+    uv_vis_recording_df = pd.read_csv(uv_data_dir_path)
+    #Select only the last minute of the recording for post-processing
+    max_time = uv_vis_recording_df["Time(s)"].max()
+    uv_vis_recording_post_processing_df = uv_vis_recording_df[
+        uv_vis_recording_df["Time(s)"] >= max_time - 60
+    ]  
+        
+    #Calculate the average absorbance for the standard wavelength
+    average_absorbance_std = average_absorbance(
+        uv_vis_recording_post_processing_df,
+        std_wavelength
+    )
+    print(f"The average absorbance for the standard wavelength {std_wavelength} nm is {average_absorbance_std}")
+    #Save the results in the dataframe
+    calibration_results_df = calibration_results_df.append({
+        "concentration_M": concentration_M,
+        "average_absorbance_std": average_absorbance_std
+    }, ignore_index=True)
 
     #Run hardware returns the UV data file dir path. The next step is to read this file and extract the important data
 
     print(f"Experiment for dilution factor {dilution_factor} completed. Commands saved at {commands_path}.")
 print("All experiments completed. Proceed to analyze the results and plot the calibration curve.")
 
-# Open files and get the absorbance values for each run
+#Save the calibration results to a CSV file
+calibration_results_csv_path = base_directory / "calibration_results.csv"
+calibration_results_df.to_csv(calibration_results_csv_path, index=False)
+print(f"Calibration results saved to {calibration_results_csv_path}.")
+# Calculate the linear fit for the calibration curve
+coefficients = np.polyfit(calibration_results_df["concentration_M"], calibration_results_df["average_absorbance_std"], 1)
+slope, intercept = coefficients
+# Calculate the extinction coefficient from the slope of the calibration curve (slope = extinction_coefficient * light_path_length)
+calculated_extinction_coefficient = slope / light_path_length
+
+
 # Plot the calibration curve
+plt.figure(figsize=(8, 6))
+plt.plot(calibration_results_df["concentration_M"], calibration_results_df["average_absorbance_std"], marker="o")
+# Plto the linear fit
+x_fit = np.linspace(calibration_results_df["concentration_M"].min(), calibration_results_df["concentration_M"].max(), 100)
+y_fit = slope * x_fit + intercept
+plt.plot(x_fit, y_fit, color="red", linestyle="--", label=f"Linear Fit (y = {slope:.2f}x + {intercept:.2f})\nCalculated Extinction Coefficient = {calculated_extinction_coefficient:.2e} M^-1 cm^-1)")
+plt.title("Calibration Curve")
+plt.xlabel("Concentration (M)")
+plt.ylabel("Average Absorbance")
+plt.legend()
 # Compare the extinction coefficient obtained with the expected one for the compound
+plt.annotate(
+    f"Expected Extinction Coefficient = {expected_extinction_coefficient:.2e} M^-1 cm^-1",
+    xy=(0.05, 0.95),
+    xycoords="axes fraction",
+    fontsize=10,
+    ha="left",
+    va="top",
+    bbox=dict(boxstyle="round,pad=0.5", fc="yellow", alpha=0.5)
+)
+#save the plot
+calibration_curve_plot_path = base_directory / "calibration_curve.png"
+plt.savefig(calibration_curve_plot_path)
+print(f"Calibration curve plot saved to {calibration_curve_plot_path}.")
+
+#Save the calibration data in one file for future analysis, containing the expected and calculated extinction coefficients, the slope and intercept of the calibration curve, and the R-squared value of the linear fit
+calibration_analysis_df = pd.DataFrame({
+    "Expected Extinction Coefficient": [expected_extinction_coefficient],
+    "Calculated Extinction Coefficient": [calculated_extinction_coefficient],
+    "Slope": [slope],
+    "Intercept": [intercept]
+})
+calibration_analysis_csv_path = base_directory / "calibration_analysis.csv"
+calibration_analysis_df.to_csv(calibration_analysis_csv_path, index=False)
+print(f"Calibration analysis saved to {calibration_analysis_csv_path}.")
