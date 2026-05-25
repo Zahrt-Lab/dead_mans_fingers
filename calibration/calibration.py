@@ -80,7 +80,7 @@ calibration_results_df = pd.DataFrame(columns=[
     "concentration_M",
     "average_absorbance_std"
 ])
-
+calibration_results_csv_path = base_directory / "calibration_results.csv"
 
 #Start a for loop to go over the concentrations and generate the commands for each one of them
 for i, dilution_factor in enumerate(dilution_factors, start=1):
@@ -140,10 +140,15 @@ for i, dilution_factor in enumerate(dilution_factors, start=1):
     )
     print(f"The average absorbance for the standard wavelength {std_wavelength} nm is {average_absorbance_std}")
     #Save the results in the dataframe
-    calibration_results_df = calibration_results_df.append({
-        "concentration_M": concentration_M,
-        "average_absorbance_std": average_absorbance_std
-    }, ignore_index=True)
+    calibration_results_df = pd.concat([
+        calibration_results_df, 
+        pd.DataFrame({
+        "concentration_M": [concentration_M],
+        "average_absorbance_std": [average_absorbance_std]
+    })], ignore_index=True)
+    
+    calibration_results_df.to_csv(calibration_results_csv_path, index=False)
+    print(f"Calibration results saved to {calibration_results_csv_path}.")
 
     #Run hardware returns the UV data file dir path. The next step is to read this file and extract the important data
 
@@ -151,9 +156,8 @@ for i, dilution_factor in enumerate(dilution_factors, start=1):
 print("All experiments completed. Proceed to analyze the results and plot the calibration curve.")
 
 #Save the calibration results to a CSV file
-calibration_results_csv_path = base_directory / "calibration_results.csv"
-calibration_results_df.to_csv(calibration_results_csv_path, index=False)
-print(f"Calibration results saved to {calibration_results_csv_path}.")
+
+
 # Calculate the linear fit for the calibration curve
 coefficients = np.polyfit(calibration_results_df["concentration_M"], calibration_results_df["average_absorbance_std"], 1)
 slope, intercept = coefficients
