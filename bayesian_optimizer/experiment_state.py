@@ -190,6 +190,8 @@ class CalibrationState:
 
     # Calibration parameters
     calibration_parameters: Dict[str, Any] = field(default_factory=dict)
+    is_simulation: bool = field(default=False)
+    
 
     def update_calibration_parameters(self, calibration_parameters: Dict[str, Any]) -> None:
         """
@@ -197,3 +199,10 @@ class CalibrationState:
         """
         self.calibration_parameters.clear()
         self.calibration_parameters.update(calibration_parameters)
+
+    def set_simulation_mode(self, is_simulation: bool) -> None:
+        """
+        Set the simulation mode flag for the calibration campaign.
+        """
+        self.is_simulation = is_simulation
+        
