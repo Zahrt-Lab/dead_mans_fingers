@@ -12,7 +12,9 @@ and provide utility functions to update the state between iterations and experim
 """
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Dict, Tuple
+import pandas as pd
 
 
 @dataclass
@@ -191,6 +193,15 @@ class CalibrationState:
     # Calibration parameters
     calibration_parameters: Dict[str, Any] = field(default_factory=dict)
     is_simulation: bool = field(default=False)
+    calibration_iteration: int = field(default=0)
+    commands_dir: Path = field(default=Path(""))
+    results_dir: Path = field(default=Path(""))
+    instrument_config_path: Path = field(default=Path(""))
+    calibration_results_df: pd.DataFrame = field(default_factory=lambda: pd.DataFrame(columns=[
+        "concentration_M",
+        "average_absorbance_std"
+    ]))
+    dilution_factor: float = field(default=1.0)
     
 
     def update_calibration_parameters(self, calibration_parameters: Dict[str, Any]) -> None:
@@ -205,4 +216,44 @@ class CalibrationState:
         Set the simulation mode flag for the calibration campaign.
         """
         self.is_simulation = is_simulation
+    
+    def update_calibration_iteration(self, calibration_iteration: int) -> None:
+        """
+        Update the current calibration iteration number.
+        """
+        self.calibration_iteration = calibration_iteration
+    
+    def update_commands_dir(self, commands_dir: Path) -> None:
+        """
+        Update the directory path for saving experimental command CSV files.
+        """
+        self.commands_dir = commands_dir
+
+    def update_results_dir(self, results_dir: Path) -> None:
+        """
+        Update the directory path for saving experimental results CSV files.
+        """
+        self.results_dir = results_dir
+
+    def update_instrument_config_path(self, instrument_config_path: Path) -> None:
+        """
+        Update the file path for the instrument configuration CSV.
+        """
+        self.instrument_config_path = instrument_config_path
+    
+    def update_calibration_results_df(self, concentration_M: float, average_absorbance_std: float) -> None:
+        """
+        Update the calibration results dataframe with new results from the current iteration.
+        """
+        new_entry_df = pd.DataFrame({
+            "concentration_M": [concentration_M],
+            "average_absorbance_std": [average_absorbance_std]
+        })
+        self.calibration_results_df = pd.concat([self.calibration_results_df, new_entry_df], ignore_index=True)
+    
+    def update_dilution_factor(self, dilution_factor: float) -> None:
+        """
+        Update the dilution factor for the current iteration.
+        """
+        self.dilution_factor = dilution_factor
         
