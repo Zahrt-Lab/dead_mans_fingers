@@ -257,6 +257,17 @@ def run_bo_campaign(
 
             try:
                 percent_yield, throughput = run_bayesian_optimization_iteration(bo_campaign_state, iteration)
+            except FileNotFoundError as e:
+                ax.abandon_trial(trial_index=trial_index)
+                print(f"[WARNING] Trial {trial_index} abandoned — UV output file not found: {e}")
+                print("This likely means the UV-detector blank spectrum calibration failed before the experiment ran.")
+                fixed = input("Have you recalibrated the UV-detector and resolved the issue? (y/n): ").strip().lower()
+                if fixed == "y":
+                    print("Continuing campaign with a new trial (the abandoned trial is not retried).")
+                    continue
+                else:
+                    print("Stopping campaign. Please recalibrate the UV-detector and restart.")
+                    break
             except PostProcessingError as e:
                 ax.abandon_trial(trial_index=trial_index)
                 print(f"[WARNING] Trial {trial_index} abandoned — post-processing failed: {e}")
