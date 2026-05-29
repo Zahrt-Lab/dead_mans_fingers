@@ -14,6 +14,8 @@ and average the absorbance.
 
 import pandas as pd
 
+from utils.experiment_aborted import PostProcessingError
+
 def average_absorbance(
     uv_vis_absorbance_over_time_df: pd.DataFrame,
     wavelength: float,
@@ -34,9 +36,15 @@ def average_absorbance(
     wavelength_column = str(wavelength)
 
     if wavelength_column not in uv_vis_absorbance_over_time_df.columns:
-        raise ValueError(
+        raise PostProcessingError(
             f"Wavelength {wavelength_column} not found in CSV headers: "
             f"{list(uv_vis_absorbance_over_time_df.columns)}"
+        )
+    
+    if (uv_vis_absorbance_over_time_df[wavelength_column] < -0.3).any() or \
+       (uv_vis_absorbance_over_time_df[wavelength_column] > 1.3).any():
+        raise PostProcessingError(
+            f"Values in column {wavelength_column} are out of expected range (-0.3 to 1.3)."
         )
 
     # Calculates the average absorbance at the specified wavelength

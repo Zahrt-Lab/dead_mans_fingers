@@ -271,8 +271,14 @@ def run_bo_campaign(
             except PostProcessingError as e:
                 ax.abandon_trial(trial_index=trial_index)
                 print(f"[WARNING] Trial {trial_index} abandoned — post-processing failed: {e}")
-                step += 1
-                continue
+                print("This likely means there was an issue with the UV-VIS data (e.g. out-of-range absorbance values).")
+                fixed = input("Have you resolved the issue with the UV-VIS data? (y/n): ").strip().lower()
+                if fixed == "y":
+                    print("Continuing campaign with a new trial (the abandoned trial is not retried).")
+                    continue
+                else:
+                    print("Stopping campaign. Please resolve the issue with the UV-VIS data and restart.")
+                    break
 
             experimental_results = {
                 "percent_yield": (float(percent_yield), bo_campaign_state.noise_sem_percent_yield),
