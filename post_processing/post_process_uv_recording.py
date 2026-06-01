@@ -37,23 +37,23 @@ def post_process_uv_recording(
 
         print(
             "Experiment converged early, " \
-            "we selected the last 5 minutes of data for post-processing."
+            "we selected the last 2 minutes of data for post-processing."
         )
         uv_vis_recording = pd.read_csv(uv_vis_absorbance_results_csv)
 
         # Find the last time point in the UV-VIS data recording
         max_time = uv_vis_recording["Time(s)"].max()
-
-        if max_time < 300:
+    
+        if max_time < 120:
             raise ValueError(
-                f"Experiment converged early but fewer than 5 minutes (300 s) of data "
+                f"Experiment converged early but fewer than 2 minutes (120 s) of data "
                 f"were recorded (recording ends at {max_time:.1f} s). "
                 "Inspect the hardware and UV-Vis recording before continuing."
             )
 
-        # Select only rows where Time(s) is within the last 5 minutes (300 seconds)
+        # Select only rows where Time(s) is within the last 2 minutes (120 seconds)
         uv_vis_recording_after_target_volume = uv_vis_recording[
-            uv_vis_recording["Time(s)"] >= max_time - 300
+            uv_vis_recording["Time(s)"] >= max_time - 120
         ]
 
         base_name, ext = os.path.splitext(uv_vis_absorbance_results_csv)
