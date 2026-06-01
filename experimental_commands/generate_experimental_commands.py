@@ -66,14 +66,14 @@ def generate_experimental_commands(
             0.5
         ]
     )
-
-    commands.append([ 
-        "DH2000_1","halogen_toggle","","","5.0"
-        ]
-    )
-    commands.append([
-        "DH2000_1","deuterium_toggle","","","5.0"
-    ])
+    # We decided to not use toggle the talogen and deuterium lamp since we are worried about quality of light source
+    #commands.append([ 
+    #    "DH2000_1","halogen_toggle","","","5.0"
+    #    ]
+    #)
+    #commands.append([
+    #    "DH2000_1","deuterium_toggle","","","5.0"
+    #])
     commands.append([
         "DH2000_1","shutter_open","","","5.0"
     ])
@@ -155,13 +155,14 @@ def generate_experimental_commands(
         "OceanOptics_UVVis_1","stop_continuous","","","3.0"
         ])
     
-    commands.append([
-        "DH2000_1","halogen_toggle","","","3.0"
-        ])
+    # This deletes the specific light turning on and off commands while during the bayesian optimization campaign.
+    #commands.append([
+    #    "DH2000_1","halogen_toggle","","","3.0"
+    #    ])
 
-    commands.append([
-        "DH2000_1","deuterium_toggle","","","3.0"
-        ])
+    #commands.append([
+    #    "DH2000_1","deuterium_toggle","","","3.0"
+    #    ])
     
     commands.append([
         "DH2000_1","shutter_close","","","3.0"
