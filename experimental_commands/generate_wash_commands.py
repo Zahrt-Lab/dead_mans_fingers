@@ -48,6 +48,25 @@ def generate_wash_commands(
             "0.5",
         ]
     )
+
+    if not is_zero(flow_rate_pump3, volume_pump3, zero_tolerance):
+        commands.append([
+            "Tecan_pump_3",
+            "dispense",
+            f"flow_rate=1000, volume=1000",
+            f"Flushing with co-solvent at flow rate of 1000 uL/min and volume of 1000 uL",
+            "0.5",
+            ]
+        )
+    
+    commands.append([
+            "SYNC",
+            "wait_for_pumps",
+            "",                                         
+            "Waiting for co-solvent pump to complete",
+            "0.5",
+        ]   )
+
     if not is_zero(flow_rate_pump2, volume_pump2, zero_tolerance):
         commands.append([
             "Tecan_pump_1",
