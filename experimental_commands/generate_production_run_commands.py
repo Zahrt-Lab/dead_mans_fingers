@@ -70,7 +70,7 @@ def generate_production_run_commands(
 
     if not is_zero(flow_rate_pump3, volume_pump3, zero_tolerance):
         commands.append([
-            "VICI_M6_Pump_2",
+            "Tecan_pump_3",
             "dispense",
             f"flow_rate={flow_rate_pump3},volume={volume_pump3}",
             f"The flow rate of our cosolvent is {flow_rate_pump3} uL/min and volume is {volume_pump3}",

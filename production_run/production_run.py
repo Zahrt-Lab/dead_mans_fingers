@@ -73,7 +73,7 @@ def production_run(
         xylopyridine_analogs_concentrations_uM,
     )
 
-    commands_path = f"{output_dir}/production_run_commands.csv"
+    commands_path = f"{output_dir}/production_run_commands"
     instrument_config_path = f"{output_dir}/production_run_instrument_config.csv"
 
     save_production_run_commands_to_csv(
@@ -93,10 +93,10 @@ def production_run(
     )
     save_instrument_config_csv(instrument_config_path)
 
-    run_commands(f"{commands_path}_wash.csv", f"{instrument_config_path}")
-    run_commands(f"{commands_path}_temperature.csv", f"{instrument_config_path}")
-    run_commands(f"{commands_path}_light_intensity.csv", f"{instrument_config_path}")
-    run_commands(f"{commands_path}_production_run.csv", f"{instrument_config_path}")
+    run_commands(f"{commands_path}_wash.csv", instrument_config_path, output_dir)
+    run_commands(f"{commands_path}_temperature.csv", instrument_config_path, output_dir)
+    run_commands(f"{commands_path}_light_intensity.csv", instrument_config_path, output_dir)
+    run_commands(f"{commands_path}_production_run.csv", instrument_config_path, output_dir)
 
 
 
