@@ -1,6 +1,6 @@
 import csv
 
-from experimental_commands import generate_production_run_commands
+from experimental_commands.generate_production_run_commands import generate_production_run_commands
 from experimental_commands.generate_experimental_commands import (
     generate_experimental_commands,
 )

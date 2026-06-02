@@ -112,7 +112,7 @@ def run_bo_campaign(
     noise_sem_throughput: float = 1.0,
     simulation_mode: bool = True,
     xylopyridine_analog: str = "",
-) -> None:
+) -> str:
     """
     This script runs the Bayesian Optimization campaign for our experiment per
     each xylopyridine analog.
@@ -301,4 +301,6 @@ def run_bo_campaign(
 
     except KeyboardInterrupt:
         print("Keyboard interrupt received stopping Bayesian Optimization.")
-    
+
+    return bo_campaign_state.bo_parameters["base_directory"]
+

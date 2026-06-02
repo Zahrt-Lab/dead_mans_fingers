@@ -16,17 +16,19 @@ the product with the percent yield above the specified threshold (ex. 80%) that 
 highest throughput (moles of product produced per unit time) based on the optimizer
 """
 
+from pathlib import Path
+
 import pandas as pd
 
 
 def extract_best_reaction_conditions(
-    bo_results: str, yield_threshold: float
+    bo_results: Path, yield_threshold: float
 ) -> tuple:
     """
     This function will extract the best reaction conditions from our bayesian optimization
     campaign results and will then select the optimal experimental parameters to run in
     our production run based.
-
+    
     The selection criteria for the optimal experimental parameters will be based on the
     the product with the percent yield above the specified threshold (ex. 80%) that has the
     highest throughput (moles of product produced per unit time) based on the optimizer

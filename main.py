@@ -15,6 +15,7 @@ import argparse
 import json
 import os
 from datetime import datetime
+from pathlib import Path
 
 from bayesian_optimizer.run_bo_campaign import run_bo_campaign
 from preprocessing.generate_bo_input import generate_bo_input_file
@@ -105,7 +106,7 @@ def main() -> None:
             
         # TODO: Do we want it to run all the BO, then production runs? 
         # or Bayes OPT then production run for each analog sequentially? 
-        run_bo_campaign(
+        final_base_dir = run_bo_campaign(
             input_experimental_parameters=bo_input,
             ax_previous_run_json_file_path=ax_state_file_path,
             percent_yield_threshold=args.yield_threshold,
@@ -119,11 +120,11 @@ def main() -> None:
         #TODO: STAY GONE TIL VALIDATTED
         print(f"Beginning production run for xylopyridine analog: {xylopyridine_analog}")
         production_run(
-            bo_results=f"{bo_input['base_directory']}/bo_results_{xylopyridine_analog}.csv",
+            bo_results=Path(final_base_dir) / bo_input["Fluorescent_Bayesian_Optimization_results_filename"],
             yield_threshold=args.production_run_yield_threshold,
             desired_mols=args.desired_mols,
             xylopyridine_analogs_concentrations_uM=bo_input["xylopyridine_analogs_concentrations_uM"],
-            output_dir=f"{bo_input['base_directory']}/production_run_{xylopyridine_analog}",
+            output_dir=Path(final_base_dir) / f"production_run_{xylopyridine_analog}",
         )
         
 

@@ -16,6 +16,7 @@ collect the data
 """
 # TODO : Change os to pathlib
 import os
+from pathlib import Path
 
 from production_run.extract_best_reaction_conditions import extract_best_reaction_conditions
 from production_run.calculate_production_run_parameters import calculate_production_run_parameters
@@ -24,11 +25,11 @@ from experimental_commands.generate_instrument_config import save_instrument_con
 
 
 def production_run(
-    bo_results: str,
+    bo_results: Path,
     yield_threshold: float,
     desired_mols: float,
     xylopyridine_analogs_concentrations_uM: float,
-    output_dir: str,
+    output_dir: Path,
 ) -> None:
     """
     This function will run the production run after we've converged on a set of optimal
