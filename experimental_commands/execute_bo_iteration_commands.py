@@ -138,6 +138,12 @@ def run_bayesian_optimization_iteration(
     )
     iteration_state.update_instrument_parameters(instrument_parameters)
 
+    print("Calculating convergence time for this experiment based on flow rate")
+    if iteration_state.trial_conditions["flow_rate"] > 100:
+        convergence_time = 120.0
+    else:
+        convergence_time = 240.0
+
     if not bo_campaign_state.simulation_mode:
         
         volumes_used = calculate_volumes_used(
@@ -173,6 +179,7 @@ def run_bayesian_optimization_iteration(
         bo_campaign_state.bo_parameters["reference_wavelength"],
         bo_campaign_state.bo_parameters["blank_light_intensity_threshold"],
         bo_campaign_state.bo_parameters["wavelength_for_blank_light_intensity_check"],
+        convergence_time,
     )
 
     # Phase 2: Run experiment (hardware or simulation)
