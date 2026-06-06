@@ -28,6 +28,21 @@ from experimental_commands.commands import save_commands_csv, run_commands
 
 _HEADER = ["Component", "Action", "Parameters", "Notes", "delay"]
 
+# UV parameters added to save_commands_csv signature
+_REACTANT_WAVELENGTH = 506.0
+_PRODUCT_WAVELENGTH = 380.0
+_REFERENCE_WAVELENGTH = 700.0
+_BLANK_THRESHOLD = 200.0
+_BLANK_CHECK_WAVELENGTH = 600.0
+_CONVERGENCE_TIME = 120.0
+
+def _save(base, fraction=0.2, light_intensity=75):
+    save_commands_csv(
+        str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, fraction, light_intensity,
+        _REACTANT_WAVELENGTH, _PRODUCT_WAVELENGTH, _REFERENCE_WAVELENGTH,
+        _BLANK_THRESHOLD, _BLANK_CHECK_WAVELENGTH, _CONVERGENCE_TIME,
+    )
+
 
 # ---------------------------------------------------------------------------
 # Tier 1 — save_commands_csv tests (always run)
@@ -35,30 +50,30 @@ _HEADER = ["Component", "Action", "Parameters", "Notes", "delay"]
 
 def test_save_commands_csv_creates_temperature_file(tmp_path):
     base = tmp_path / "iteration_1"
-    save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, 0.2, 75)
+    _save(base)
     assert (tmp_path / "iteration_1_temperature.csv").exists()
 
 
 def test_save_commands_csv_creates_light_intensity_file(tmp_path):
     base = tmp_path / "iteration_1"
-    save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, 0.2, 75)
+    _save(base)
     assert (tmp_path / "iteration_1_light_intensity.csv").exists()
 
 def test_save_commands_csv_creates_experiment_file(tmp_path):
     base = tmp_path / "iteration_1"
-    save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, 0.2, 75)
+    _save(base)
     assert (tmp_path / "iteration_1_experiment.csv").exists()
 
 
 def test_save_commands_csv_creates_wash_file(tmp_path):
     base = tmp_path / "iteration_1"
-    save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, 0.2, 75)
+    _save(base)
     assert (tmp_path / "iteration_1_wash.csv").exists()
 
 
 def test_save_commands_csv_temperature_file_has_correct_header(tmp_path):
     base = tmp_path / "iteration_1"
-    save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, 0.2, 75)
+    _save(base)
     with open(tmp_path / "iteration_1_temperature.csv", newline="", encoding="utf-8") as f:
         header = next(csv.reader(f))
     assert header == _HEADER
@@ -66,7 +81,7 @@ def test_save_commands_csv_temperature_file_has_correct_header(tmp_path):
 
 def test_save_commands_csv_light_intensity_file_has_correct_header(tmp_path):
     base = tmp_path / "iteration_1"
-    save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, 0.2, 75)
+    _save(base)
     with open(tmp_path / "iteration_1_light_intensity.csv", newline="", encoding="utf-8") as f:
         header = next(csv.reader(f))
     assert header == _HEADER
@@ -74,7 +89,7 @@ def test_save_commands_csv_light_intensity_file_has_correct_header(tmp_path):
 
 def test_save_commands_csv_experiment_file_has_correct_header(tmp_path):
     base = tmp_path / "iteration_1"
-    save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, 0.2, 75)
+    _save(base)
     with open(tmp_path / "iteration_1_experiment.csv", newline="", encoding="utf-8") as f:
         header = next(csv.reader(f))
     assert header == _HEADER
@@ -82,23 +97,24 @@ def test_save_commands_csv_experiment_file_has_correct_header(tmp_path):
 
 def test_save_commands_csv_wash_file_has_correct_header(tmp_path):
     base = tmp_path / "iteration_1"
-    save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, 0.2, 75)
+    _save(base)
     with open(tmp_path / "iteration_1_wash.csv", newline="", encoding="utf-8") as f:
         header = next(csv.reader(f))
     assert header == _HEADER
 
 
-def test_save_commands_csv_wash_volumes_computed_from_cosolvent_fraction(tmp_path):
-    """Wash pump volumes follow F2 = 2000*(1-D), F3 = 2000*D, F4 = 1000."""
+def test_save_commands_csv_wash_pump2_volume_proportional_to_flow_rates(tmp_path):
+    """Wash pump2 volume is 6000 µL × (pump1+pump2 fraction of total flow)."""
     base = tmp_path / "iteration_1"
-    fraction = 0.25
-    save_commands_csv(str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, fraction, 75)
+    _save(base, fraction=0.25)
     with open(tmp_path / "iteration_1_wash.csv", newline="", encoding="utf-8") as f:
         rows = list(csv.reader(f))
 
-    # Collect all parameter strings from pump rows
-    param_strings = " ".join(r[2] for r in rows[1:] if r[0].startswith("VICI"))
-    assert f"flow_rate={2000 * (1 - fraction)}" in param_strings
+    # _save uses pump1=100, pump2=50, pump3=25, pump4=0 → total=175
+    # wash_volume_pump2 = 6000 * (150/175)
+    expected_volume = 6000 * (100 + 50) / (100 + 50 + 25 + 0)
+    param_strings = " ".join(r[2] for r in rows[1:] if r[0].startswith("Tecan_pump_1"))
+    assert f"volume={expected_volume}" in param_strings
 
 
 # ---------------------------------------------------------------------------
@@ -109,20 +125,20 @@ def test_run_commands_raises_when_hardware_unavailable():
     """run_commands raises RuntimeError when GeneralExperimentMethod is None."""
     with patch("experimental_commands.commands.GeneralExperimentMethod", None):
         with pytest.raises(RuntimeError, match="GeneralExperimentMethod not available"):
-            run_commands("some_commands.csv", "Instrument_Config_File.csv")
+            run_commands("some_commands.csv", "Instrument_Config_File.csv", "/output")
 
 
 def test_run_commands_instantiates_general_experiment_method():
     mock_gem = MagicMock()
     with patch("experimental_commands.commands.GeneralExperimentMethod", mock_gem):
-        run_commands("temperature.csv", "Instrument_Config_File.csv")
-    mock_gem.assert_called_once_with("temperature.csv", "Instrument_Config_File.csv")
+        run_commands("temperature.csv", "Instrument_Config_File.csv", "/output")
+    mock_gem.assert_called_once_with("temperature.csv", "Instrument_Config_File.csv", "/output")
 
 
 def test_run_commands_calls_run_experiment():
     mock_gem = MagicMock()
     with patch("experimental_commands.commands.GeneralExperimentMethod", mock_gem):
-        run_commands("temperature.csv", "Instrument_Config_File.csv")
+        run_commands("temperature.csv", "Instrument_Config_File.csv", "/output")
     mock_gem.return_value.run_experiment.assert_called_once()
 
 

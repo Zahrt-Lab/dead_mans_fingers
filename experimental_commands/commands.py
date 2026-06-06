@@ -109,6 +109,7 @@ def save_commands_csv(
                 reference_wavelength,
                 blank_light_intensity_threshold,
                 wavelength_for_blank_light_intensity_check,
+                convergence_time=convergence_time,
             )
         )
 

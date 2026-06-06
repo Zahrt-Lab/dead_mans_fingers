@@ -37,11 +37,15 @@ def make_bo_state(tmp_path, simulation_mode=True):
     state.set_simulation_mode(simulation_mode)
     state.update_bo_parameters({
         "base_directory": str(tmp_path),
+        "output_dir": str(tmp_path / "output"),
         "xylopyridine_analogs_concentrations_uM": 1000.0,
         "total_volume_through_reactor_bed": 500,
         "target_volume_through_reactor_bed": 500,
         "reactant_wavelength": 409,
         "product_wavelength": 506,
+        "reference_wavelength": 700,
+        "blank_light_intensity_threshold": 200.0,
+        "wavelength_for_blank_light_intensity_check": 600.0,
         "Fluorescent_Bayesian_Optimization_results_filename": "results.csv",
         "command_path_base": str(tmp_path / "cmd"),
         "instrument_config": str(tmp_path / "Instrument_Config_File.csv"),
@@ -77,12 +81,14 @@ def mock_all():
          patch(f"{_PATCH_BASE}.save_commands_csv") as m_commands, \
          patch(f"{_PATCH_BASE}.run_simulated_experiment", return_value="path/to/uv.csv") as m_sim, \
          patch(f"{_PATCH_BASE}.run_hardware_experiment", return_value="path/to/uv.csv") as m_hw, \
+         patch(f"{_PATCH_BASE}.detect_early_convergence", return_value=False) as m_convergence, \
          patch(f"{_PATCH_BASE}.analyze_experiment_results", return_value=(0.8, 0.4, 50.0, 12.5)) as m_analyze, \
          patch(f"{_PATCH_BASE}.append_bayesian_experimental_results") as m_append:
         yield {
             "constrain": m_constrain, "standardize": m_std, "params": m_params,
             "config": m_config, "commands": m_commands,
             "sim": m_sim, "hw": m_hw,
+            "convergence": m_convergence,
             "analyze": m_analyze, "append": m_append,
         }
 

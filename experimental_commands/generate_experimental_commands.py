@@ -26,6 +26,7 @@ def generate_experimental_commands(
     reference_wavelength: float,
     blank_light_intensity_threshold: float,
     wavelength_for_blank_light_intensity_check: float,
+    convergence_time: float,
     *,
     zero_tolerance: float = 1e-6,
 ) -> List[List[str]]:
@@ -66,14 +67,14 @@ def generate_experimental_commands(
             0.5
         ]
     )
-    # We decided to not use toggle the talogen and deuterium lamp since we are worried about quality of light source
-    #commands.append([ 
-    #    "DH2000_1","halogen_toggle","","","5.0"
-    #    ]
-    #)
-    #commands.append([
-    #    "DH2000_1","deuterium_toggle","","","5.0"
-    #])
+
+    commands.append([ 
+        "DH2000_1","halogen_toggle","","","5.0"
+        ]
+    )
+    commands.append([
+        "DH2000_1","deuterium_toggle","","","5.0"
+    ])
     commands.append([
         "DH2000_1","shutter_open","","","5.0"
     ])
@@ -86,7 +87,7 @@ def generate_experimental_commands(
     commands.append([
         "OceanOptics_UVVis_1",
         "set_params",
-        f"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths={reactant_wavelength};{product_wavelength};{reference_wavelength},reference_wavelength={reference_wavelength},blank_light_intensity_threshold={blank_light_intensity_threshold},wavelength_for_blank_light_intensity_check={wavelength_for_blank_light_intensity_check}",
+        f"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths={reactant_wavelength};{product_wavelength};{reference_wavelength},reference_wavelength={reference_wavelength},blank_light_intensity_threshold={blank_light_intensity_threshold},wavelength_for_blank_light_intensity_check={wavelength_for_blank_light_intensity_check}, convergence_time = {convergence_time}",
         "",
         "5.0"
     ])
@@ -155,14 +156,13 @@ def generate_experimental_commands(
         "OceanOptics_UVVis_1","stop_continuous","","","3.0"
         ])
     
-    # This deletes the specific light turning on and off commands while during the bayesian optimization campaign.
-    #commands.append([
-    #    "DH2000_1","halogen_toggle","","","3.0"
-    #    ])
+    commands.append([
+        "DH2000_1","halogen_toggle","","","3.0"
+        ])
 
-    #commands.append([
-    #    "DH2000_1","deuterium_toggle","","","3.0"
-    #    ])
+    commands.append([
+        "DH2000_1","deuterium_toggle","","","3.0"
+        ])
     
     commands.append([
         "DH2000_1","shutter_close","","","3.0"

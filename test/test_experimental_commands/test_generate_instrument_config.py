@@ -25,16 +25,18 @@ _EXPECTED_HEADER = ["InstrumentType", "DeviceNumber", "Name", "COMPort", "OtherP
 _EXPECTED_COLUMN_COUNT = 5
 _INSTRUMENT_CONFIG = [
         ["InstrumentType", "DeviceNumber", "Name", "COMPort", "OtherParams"],
-        ["VICI_M6_Pump",	1,	"Pump",	"COM21", ""],
-        ["VICI_M6_Pump",	2,	"Pump",	"COM22", ""],
-        ["Valve6Way",	1,	"Xylopyridine-Valve",	"COM11", ""],
-        ["Valve6Way",	2,	"Cosolvent-Valve",	"COM7", ""],
-        ["Temperature",	1,	"Temperature",	"COM12", ""],
-        ["Tricontinental_C24000",	1,	"Tricontinental_C24000",	"COM17", ""],
-        ["Tricontinental_C24000",	2,	"Tricontinental_C24000",	"COM25", ""],
-        ["DH2000", 1, "DH2000", "COM27", ""],
-        ["OceanOptics_UVVis", 1, "OceanOptics", "COM50", ""],
-        ["MirrorBox365nm", 1, "MirrorBox365nm", "COM18", ""]
+        ["VICI_M6_Pump",        1, "Pump",                    "COM22", ""],
+        ["VICI_M6_Pump",        2, "Pump",                    "COM21", ""],
+        ["Valve6Way",           1, "Xylopyridine-Valve",       "COM7",  ""],
+        ["Valve6Way",           2, "Cosolvent-Valve",          "COM11", ""],
+        ["Valve10way",          1, "Production-Run-Valve",     "COM14", ""],
+        ["Temperature",         1, "Temperature",              "COM12", ""],
+        ["Tecan_pump",          1, "Tecan_pump",               "COM20", ""],
+        ["Tecan_pump",          2, "Tecan_pump",               "COM6",  ""],
+        ["Tecan_pump",          3, "Tecan_pump",               "COM15", ""],
+        ["DH2000",              1, "DH2000",                   "COM27", ""],
+        ["OceanOptics_UVVis",   1, "OceanOptics",              "COM50", ""],
+        ["MirrorBox365nm",      1, "MirrorBox365nm",           "COM18", ""],
         ]
 
 
@@ -108,8 +110,8 @@ def test_generate_instrument_config_partial_override_keeps_defaults():
     rows = generate_instrument_config(com_ports=custom_ports)
     com_ports_in_rows = [row[3] for row in rows[1:]]
     assert "COM99" in com_ports_in_rows
-    # Unoverridden port should still use the default
-    assert "COM22" in com_ports_in_rows
+    # vici_pump_2 default (COM21) should still be present
+    assert "COM21" in com_ports_in_rows
 
 
 def test_save_instrument_config_csv_uses_provided_com_ports(tmp_path: Path) -> None:

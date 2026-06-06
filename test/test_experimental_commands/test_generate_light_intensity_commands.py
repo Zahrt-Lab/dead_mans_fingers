@@ -29,8 +29,8 @@ _COMMANDS = [
         "MirrorBox365nm_1",
         "set_dimmer",
         f"value={75.00}",
-        f"Setting light intensity to {int(75.00)}",
-        "0.5",
+        f"Setting light intensity to {int(75.00)} for the experiment",
+        0.5,
         ],
 ]
 
@@ -45,7 +45,7 @@ def test_generate_light_intensity_commands_header_is_correct():
 
 def test_generate_light_intensity_commands_has_command_rows():
     commands = generate_light_intensity_commands(75.00)
-    assert len(commands) == 3
+    assert len(commands) == 2
 
 def test_generate_light_intensity_commands_command_rows_have_correct_column_count():
     commands = generate_light_intensity_commands(75.00)
@@ -57,9 +57,8 @@ def test_generate_light_intensity_commands_command_rows_have_correct_column_coun
 def test_generate_light_intensity_output_is_correct():
     light_intensity = 75.00
     commands = generate_light_intensity_commands(light_intensity)
-    expected_output = f"Setting Light Intensity to {round(light_intensity, 2)} for the experiment"
-    output_light_intensity_str =commands[2][2].split(",")[0]
-    output_light_intensity_float = round(float(output_light_intensity_str.replace("intensity=", "")), 2)
+    output_light_intensity_str = commands[1][2].split(",")[0]
+    output_light_intensity_float = round(float(output_light_intensity_str.replace("value=", "")), 2)
     assert output_light_intensity_float == light_intensity, (
         f"Expected output '{light_intensity}', but got '{output_light_intensity_float}'"
     )

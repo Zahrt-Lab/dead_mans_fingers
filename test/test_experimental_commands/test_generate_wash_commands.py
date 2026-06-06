@@ -29,21 +29,35 @@ _COMMANDS = [
         "0.5",
     ],
     [
-        "Tricontinental_C24000_1",
+        "Tecan_pump_3",
+        "dispense",
+        "flow_rate=1000, volume=1000",
+        "Flushing with co-solvent at flow rate of 1000 uL/min and volume of 1000 uL",
+        "0.5",
+    ],
+    [
+        "SYNC",
+        "wait_for_pumps",
+        "",
+        "Waiting for co-solvent pump to complete",
+        "0.5",
+    ],
+    [
+        "Tecan_pump_1",
         "dispense",
         "flow_rate=100, volume=300",
         "The flow rate of our 0.1 M HCl Water is 100 uL/min and volume is 300",
         "0.5",
     ],
     [
-        "VICI_M6_Pump_2",
+        "Tecan_pump_3",
         "dispense",
         "flow_rate=50, volume=150",
         "The flow rate of our cosolvent is 50 uL/min and volume is 150",
         "0.5",
     ],
     [
-        "Tricontinental_C24000_2",
+        "Tecan_pump_2",
         "dispense",
         "flow_rate=25, volume=75",
         "The flow rate of our 0.1 M HCl water pump is 25 uL/min and volume is 75",
@@ -88,51 +102,51 @@ def test_generate_wash_commands_sync_always_last():
 
 
 def test_generate_wash_commands_minimum_row_count_when_all_pumps_zero():
-    # header + valve + sync = 3 rows
+    # header + valve + SYNC(cosolvent) + SYNC(xylo) = 4 rows
     commands = generate_wash_commands(0, 0, 0, 0, 0, 0, 3)
-    assert len(commands) == 3
+    assert len(commands) == 4
 
 
 def test_generate_wash_commands_maximum_row_count_when_all_pumps_nonzero():
-    # header + valve + pump2 + pump3 + pump4 + sync = 6 rows
+    # header + valve + Tecan3_flush + SYNC(cosolvent) + Tecan1 + Tecan3 + Tecan2 + SYNC(xylo) = 8 rows
     commands = generate_wash_commands(100, 300, 50, 150, 25, 75, 3)
-    assert len(commands) == 6
+    assert len(commands) == 8
 
 
 def test_generate_wash_pump2_included_when_nonzero():
     commands = generate_wash_commands(100, 300, 0, 0, 0, 0, 3)
     components = [cmd[0] for cmd in commands]
-    assert "Tricontinental_C24000_1" in components
+    assert "Tecan_pump_1" in components
 
 
 def test_generate_wash_pump2_omitted_when_zero_flow_rate():
     commands = generate_wash_commands(0, 300, 0, 0, 0, 0, 3)
     components = [cmd[0] for cmd in commands]
-    assert "Tricontinental_C24000_1" not in components
+    assert "Tecan_pump_1" not in components
 
 
 def test_generate_wash_pump3_included_when_nonzero():
     commands = generate_wash_commands(0, 0, 50, 150, 0, 0, 3)
     components = [cmd[0] for cmd in commands]
-    assert "VICI_M6_Pump_2" in components
+    assert "Tecan_pump_3" in components
 
 
 def test_generate_wash_pump3_omitted_when_zero_volume():
     commands = generate_wash_commands(0, 0, 50, 0, 0, 0, 3)
     components = [cmd[0] for cmd in commands]
-    assert "VICI_M6_Pump_2" not in components
+    assert "Tecan_pump_3" not in components
 
 
 def test_generate_wash_pump4_included_when_nonzero():
     commands = generate_wash_commands(0, 0, 0, 0, 25, 75, 3)
     components = [cmd[0] for cmd in commands]
-    assert "Tricontinental_C24000_2" in components
+    assert "Tecan_pump_2" in components
 
 
 def test_generate_wash_pump4_omitted_when_zero():
     commands = generate_wash_commands(0, 0, 0, 0, 0, 0, 3)
     components = [cmd[0] for cmd in commands]
-    assert "Tricontinental_C24000_2" not in components
+    assert "Tecan_pump_2" not in components
 
 
 def test_generate_wash_commands_full_output_matches_expected():

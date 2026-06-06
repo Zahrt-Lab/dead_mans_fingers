@@ -10,7 +10,7 @@
 Tests for production_run/production_run.py
 
 Verifies that the orchestrator wires extract_best_reaction_conditions,
-calculate_production_run_parameters, save_commands_csv,
+calculate_production_run_parameters, save_production_run_commands_to_csv,
 save_instrument_config_csv, and run_commands together correctly.
 """
 
@@ -78,7 +78,7 @@ def _run_with_mocks(tmp_path, **kwargs):
     with (
         patch(f"{_PATCH_BASE}.extract_best_reaction_conditions", return_value=_BEST_CONDITIONS) as mock_extract,
         patch(f"{_PATCH_BASE}.calculate_production_run_parameters", return_value=_INSTRUMENT_PARAMS) as mock_calculate,
-        patch(f"{_PATCH_BASE}.save_commands_csv") as mock_save_commands,
+        patch(f"{_PATCH_BASE}.save_production_run_commands_to_csv") as mock_save_commands,
         patch(f"{_PATCH_BASE}.save_instrument_config_csv") as mock_save_config,
         patch(f"{_PATCH_BASE}.run_commands") as mock_run,
     ):
@@ -106,7 +106,7 @@ def test_output_dir_is_created(tmp_path):
     with (
         patch(f"{_PATCH_BASE}.extract_best_reaction_conditions", return_value=_BEST_CONDITIONS),
         patch(f"{_PATCH_BASE}.calculate_production_run_parameters", return_value=_INSTRUMENT_PARAMS),
-        patch(f"{_PATCH_BASE}.save_commands_csv"),
+        patch(f"{_PATCH_BASE}.save_production_run_commands_to_csv"),
         patch(f"{_PATCH_BASE}.save_instrument_config_csv"),
         patch(f"{_PATCH_BASE}.run_commands"),
     ):
@@ -147,8 +147,8 @@ def test_calculate_called_with_correct_conditions(tmp_path):
     assert args[8] == pytest.approx(2000.0)  # xylopyridine_analogs_concentrations_uM
 
 
-def test_save_commands_csv_called_with_instrument_params(tmp_path):
-    """save_commands_csv must be called with all pump parameters from calculate."""
+def test_save_production_run_commands_to_csv_called_with_instrument_params(tmp_path):
+    """save_production_run_commands_to_csv must be called with all pump parameters from calculate."""
     mocks = _run_with_mocks(tmp_path)
 
     kwargs = mocks["save_commands"].call_args.kwargs
@@ -161,7 +161,7 @@ def test_save_commands_csv_called_with_instrument_params(tmp_path):
     assert kwargs["valve_position_pump3"] == 3
 
 
-def test_save_commands_csv_path_is_in_output_dir(tmp_path):
+def test_save_production_run_commands_to_csv_path_is_in_output_dir(tmp_path):
     """The commands CSV must be written inside output_dir."""
     mocks = _run_with_mocks(tmp_path)
 
@@ -178,7 +178,7 @@ def test_save_instrument_config_path_is_in_output_dir(tmp_path):
     assert config_path.startswith(mocks["output_dir"])
 
 
-def test_run_commands_called_once(tmp_path):
-    """run_commands must be called exactly once."""
+def test_run_commands_called_four_times(tmp_path):
+    """run_commands must be called four times: wash, temperature, light_intensity, production_run."""
     mocks = _run_with_mocks(tmp_path)
-    mocks["run_commands"].assert_called_once()
+    assert mocks["run_commands"].call_count == 4

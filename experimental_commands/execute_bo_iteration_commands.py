@@ -138,11 +138,12 @@ def run_bayesian_optimization_iteration(
     )
     iteration_state.update_instrument_parameters(instrument_parameters)
 
-    print("Calculating convergence time for this experiment based on flow rate")
-    if iteration_state.trial_conditions["flow_rate"] > 100:
-        convergence_time = 120.0
-    else:
-        convergence_time = 240.0
+    print("Calculating convergence time for this experiment based on flow rate and target volume")
+    target_volume = bo_campaign_state.bo_parameters["target_volume_through_reactor_bed"]
+    flow_rate = iteration_state.trial_conditions["flow_rate"]
+    # We set the convergence time to be be either a minimum of 2 minutes
+    # or 20% of the time it takes to reach the target volume, whichever is greater.
+    convergence_time = max(120.0, (target_volume / flow_rate) * 60 * 0.20)
 
     if not bo_campaign_state.simulation_mode:
         

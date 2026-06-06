@@ -18,7 +18,8 @@ from pathlib import Path
 # Add the project root directory to sys.path to allow imports
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from post_processing.average_absorbance import average_absorbance   
+from post_processing.average_absorbance import average_absorbance
+from utils.experiment_aborted import PostProcessingError
 
 UV_VIS_DATAFRAME = pd.DataFrame()
 
@@ -55,5 +56,5 @@ def test_calculate_average_absorbance_not_valid():
     Test with invalid input
     '''
 
-    with pytest.raises(ValueError):
+    with pytest.raises(PostProcessingError):
         average_absorbance(UV_VIS_DATAFRAME, "999")

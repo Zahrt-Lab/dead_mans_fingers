@@ -25,79 +25,89 @@ from experimental_commands.experiment_runner import run_hardware_experiment
 
 _INSTRUMENT_CONFIG = "Instrument_Config_File.csv"
 _COMMAND_BASE = "iteration_1"
+_OUTPUT_DIR = "/tmp/output"
 
-# TODO : I don't understand the unittest.mock library well enough 
+_MOCK_CSV = "path/to/uv_vis.csv"
+_PATCH_LATEST = "experimental_commands.experiment_runner.get_latest_experimental_run_csv"
 
 # ---------------------------------------------------------------------------
 # Tier 1 — mock tests (always run)
 # ---------------------------------------------------------------------------
 
+@patch(_PATCH_LATEST, return_value=_MOCK_CSV)
 @patch("experimental_commands.experiment_runner.run_commands")
-def test_temperature_command_file_path(mock_run):
-    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
+def test_temperature_command_file_path(mock_run, _mock_latest):
+    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, _OUTPUT_DIR, 1)
     calls = [c.args[0] for c in mock_run.call_args_list]
     assert f"{_COMMAND_BASE}_temperature.csv" in calls
 
 
+@patch(_PATCH_LATEST, return_value=_MOCK_CSV)
 @patch("experimental_commands.experiment_runner.run_commands")
-def test_light_intensity_command_file_path(mock_run):
-    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
+def test_light_intensity_command_file_path(mock_run, _mock_latest):
+    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, _OUTPUT_DIR, 1)
     calls = [c.args[0] for c in mock_run.call_args_list]
     assert f"{_COMMAND_BASE}_light_intensity.csv" in calls
 
 
+@patch(_PATCH_LATEST, return_value=_MOCK_CSV)
 @patch("experimental_commands.experiment_runner.run_commands")
-def test_experiment_command_file_path(mock_run):
-    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
+def test_experiment_command_file_path(mock_run, _mock_latest):
+    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, _OUTPUT_DIR, 1)
     calls = [c.args[0] for c in mock_run.call_args_list]
     assert f"{_COMMAND_BASE}_experiment.csv" in calls
 
 
+@patch(_PATCH_LATEST, return_value=_MOCK_CSV)
 @patch("experimental_commands.experiment_runner.run_commands")
-def test_wash_command_file_path(mock_run):
-    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
+def test_wash_command_file_path(mock_run, _mock_latest):
+    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, _OUTPUT_DIR, 1)
     calls = [c.args[0] for c in mock_run.call_args_list]
     assert f"{_COMMAND_BASE}_wash.csv" in calls
 
 
+@patch(_PATCH_LATEST, return_value=_MOCK_CSV)
 @patch("experimental_commands.experiment_runner.run_commands")
-def test_instrument_config_passed_to_all_calls(mock_run):
-    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
+def test_instrument_config_passed_to_all_calls(mock_run, _mock_latest):
+    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, _OUTPUT_DIR, 1)
     for c in mock_run.call_args_list:
         assert c.args[1] == _INSTRUMENT_CONFIG
 
 
+@patch(_PATCH_LATEST, return_value=_MOCK_CSV)
 @patch("experimental_commands.experiment_runner.run_commands")
-def test_command_execution_order(mock_run):
-    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
+def test_command_execution_order(mock_run, _mock_latest):
+    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, _OUTPUT_DIR, 1)
     actual_files = [c.args[0] for c in mock_run.call_args_list]
     expected_order = [
+        f"{_COMMAND_BASE}_wash.csv",
         f"{_COMMAND_BASE}_temperature.csv",
         f"{_COMMAND_BASE}_light_intensity.csv",
         f"{_COMMAND_BASE}_experiment.csv",
-        f"{_COMMAND_BASE}_wash.csv",
     ]
     assert actual_files == expected_order
 
 
+@patch(_PATCH_LATEST, return_value=_MOCK_CSV)
 @patch("experimental_commands.experiment_runner.run_commands")
-def test_wash_runs_even_when_experiment_raises(mock_run):
-    """Wash step must always execute — it is in the finally block."""
-    def raise_on_experiment(command_file, _config):
+def test_wash_runs_even_when_experiment_raises(mock_run, _mock_latest):
+    """Wash runs before experiment commands so it always executes even if experiment fails."""
+    def raise_on_experiment(command_file, _config, **kwargs):
         if "_experiment" in command_file:
             raise RuntimeError("Simulated hardware failure")
 
     mock_run.side_effect = raise_on_experiment
     with pytest.raises(RuntimeError):
-        run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
+        run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, _OUTPUT_DIR, 1)
 
     called_files = [c.args[0] for c in mock_run.call_args_list]
     assert f"{_COMMAND_BASE}_wash.csv" in called_files
 
 
+@patch(_PATCH_LATEST, return_value=_MOCK_CSV)
 @patch("experimental_commands.experiment_runner.run_commands")
-def test_run_commands_called_four_times(mock_run):
-    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, 1)
+def test_run_commands_called_four_times(mock_run, _mock_latest):
+    run_hardware_experiment(_COMMAND_BASE, _INSTRUMENT_CONFIG, _OUTPUT_DIR, 1)
     assert mock_run.call_count == 4
 
 
