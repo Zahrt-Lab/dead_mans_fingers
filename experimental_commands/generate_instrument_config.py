@@ -58,7 +58,7 @@ def generate_instrument_config(
         ["VICI_M6_Pump",              2, "Pump",                       ports["vici_pump_2"],            ""],
         ["Valve6Way",                 1, "Xylopyridine-Valve",          ports["valve_xylopyridine"],     ""],
         ["Valve6Way",                 2, "Cosolvent-Valve",             ports["valve_cosolvent"],        ""],
-        ["Valve10way",                1, "Production-Run-Valve",        ports["valve_production_run"],   ""],
+        ["Valve10Way",                1, "Production-Run-Valve",        ports["valve_production_run"],   ""],
         ["Temperature",               1, "Temperature",                 ports["temperature_controller"], ""],
         #["Tricontinental_C24000",     1, "Tricontinental_C24000",       ports["Tricontinental_C24000_1"],  ""],
         # TODO: Due to mechanical issues with pump 4 this has been commented out til resolved.

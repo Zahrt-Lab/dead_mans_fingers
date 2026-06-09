@@ -68,13 +68,13 @@ def generate_experimental_commands(
         ]
     )
 
-    commands.append([ 
-        "DH2000_1","halogen_toggle","","","5.0"
-        ]
-    )
-    commands.append([
-        "DH2000_1","deuterium_toggle","","","5.0"
-    ])
+    #commands.append([ 
+    #    "DH2000_1","halogen_toggle","","","5.0"
+    #    ]
+    #)
+    #commands.append([
+    #    "DH2000_1","deuterium_toggle","","","5.0"
+    #])
     commands.append([
         "DH2000_1","shutter_open","","","5.0"
     ])
@@ -156,13 +156,13 @@ def generate_experimental_commands(
         "OceanOptics_UVVis_1","stop_continuous","","","3.0"
         ])
     
-    commands.append([
-        "DH2000_1","halogen_toggle","","","3.0"
-        ])
+    #commands.append([
+    #    "DH2000_1","halogen_toggle","","","3.0"
+    #    ])
 
-    commands.append([
-        "DH2000_1","deuterium_toggle","","","3.0"
-        ])
+    #commands.append([
+    #    "DH2000_1","deuterium_toggle","","","3.0"
+    #    ])
     
     commands.append([
         "DH2000_1","shutter_close","","","3.0"
