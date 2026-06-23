@@ -39,16 +39,29 @@ def _resolve_output_directory(bo_campaign_state: BoCampaignState, ax) -> None:
     Redirect to a numbered subdirectory (run_001, run_002, ...) when starting a
     fresh campaign into a base_directory that already contains output files.
 
-    Only acts on a fresh start (ax has no completed trials). On resume, the
-    existing directory is used as-is.
+    On resume, continue in the highest-numbered existing run_### directory
+    under base_directory, if one exists.
     """
+    base_dir = Path(bo_campaign_state.bo_parameters["base_directory"])
+
     if getattr(ax, "_project_dmf_resumed_from_json", False):
+        run_dirs = []
+        if base_dir.exists():
+            for path in base_dir.iterdir():
+                if path.is_dir() and path.name.startswith("run_"):
+                    try:
+                        run_dirs.append((int(path.name.replace("run_", "", 1)), path))
+                    except ValueError:
+                        continue
+        if run_dirs:
+            latest_run_dir = max(run_dirs, key=lambda item: item[0])[1]
+            bo_campaign_state.bo_parameters["base_directory"] = str(latest_run_dir)
+            print(f"Resumed campaign output directory: {latest_run_dir}")
         return  # explicit resume from an Ax JSON file - don't redirect
 
     if not ax.get_trials_data_frame().empty:
         return  # resuming an existing campaign — don't redirect
 
-    base_dir = Path(bo_campaign_state.bo_parameters["base_directory"])
     if not base_dir.exists() or not any(base_dir.iterdir()):
         return  # directory is empty or does not exist — no collision
 
