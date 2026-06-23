@@ -42,8 +42,8 @@ def _prompt_resume_or_restart(
     """
     print(
         f"\nWarning: An existing Ax campaign file was found at:\n  {path}\n"
-        "Note: The in-memory results cache is not saved between runs. Resuming\n"
-        "may cause previously-run parameter sets to be repeated.\n"
+        "Note: Completed Ax trials will be loaded and used to continue the campaign.\n"
+        "The in-memory results cache will be rebuilt from those completed trials.\n"
         "\nOptions:\n"
         "  [1] Resume the existing campaign\n"
         "  [2] Delete the file and start a new campaign\n"
@@ -96,7 +96,12 @@ def _init_or_load_ax(
             ax = AxClient.load_from_json_file(ax_previous_run_json_file_path)
             ax.global_stopping_strategy = stopping_strategy
             ax._project_dmf_resumed_from_json = True
-            print(f"Resumed Ax experiment with {len(ax.get_trials_data_frame())} trials.")
+            saved_trials = len(getattr(ax.experiment, "trials", {}))
+            completed_rows = len(ax.get_trials_data_frame())
+            print(
+                "Resumed Ax experiment with "
+                f"{saved_trials} saved trial(s) and {completed_rows} completed result row(s)."
+            )
             return ax
         os.remove(ax_previous_run_json_file_path)
         print("Existing campaign file deleted. Starting a new campaign.")
