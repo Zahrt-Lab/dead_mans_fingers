@@ -42,6 +42,9 @@ def _resolve_output_directory(bo_campaign_state: BoCampaignState, ax) -> None:
     Only acts on a fresh start (ax has no completed trials). On resume, the
     existing directory is used as-is.
     """
+    if getattr(ax, "_project_dmf_resumed_from_json", False):
+        return  # explicit resume from an Ax JSON file - don't redirect
+
     if not ax.get_trials_data_frame().empty:
         return  # resuming an existing campaign — don't redirect
 

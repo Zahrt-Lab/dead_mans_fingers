@@ -95,6 +95,7 @@ def _init_or_load_ax(
         if resume:
             ax = AxClient.load_from_json_file(ax_previous_run_json_file_path)
             ax.global_stopping_strategy = stopping_strategy
+            ax._project_dmf_resumed_from_json = True
             print(f"Resumed Ax experiment with {len(ax.get_trials_data_frame())} trials.")
             return ax
         os.remove(ax_previous_run_json_file_path)
@@ -102,6 +103,7 @@ def _init_or_load_ax(
 
     # Initializes a new client and creates a new experiment
     ax = AxClient(global_stopping_strategy=stopping_strategy, random_seed=0, verbose_logging=False)
+    ax._project_dmf_resumed_from_json = False
 
     ax.create_experiment(
         name="project_dead_mans_fingers_moo_ax",
