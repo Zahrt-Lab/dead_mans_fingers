@@ -49,7 +49,8 @@ def run_calibration_iteration(calibration_state: CalibrationState):
                     calibration_state.calibration_parameters["product_wavelength"],
                     calibration_state.calibration_parameters["reference_wavelength"],
                     calibration_state.calibration_parameters["blank_light_intensity_threshold"],
-                    calibration_state.calibration_parameters["wavelength_for_blank_light_intensity_check"]
+                    calibration_state.calibration_parameters["wavelength_for_blank_light_intensity_check"],
+                    convergence_time=5.0
                     )
 
     # Run the experiment sequence
