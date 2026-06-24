@@ -249,13 +249,20 @@ def run_bo_campaign(
         print("Invalid input. Skipping pump priming. Make sure pump 1 is primed before running the optimization loop if you haven't already.")
     # 4) This is the main optimization loop,
     iteration = IterationState()
-    step = 0
 
     # If configured trial count is 0, default to 30 iterations.
     if int(bo_campaign_state.bo_parameters["trials"]) == 0:
         target = 30
     else:
         target = int(bo_campaign_state.bo_parameters["trials"])
+
+    step = (
+        len(ax.get_trials_data_frame())
+        if getattr(ax, "_project_dmf_resumed_from_json", False)
+        else 0
+    )
+    if step:
+        print(f"Continuing Bayesian Optimization campaign from completed step {step}/{target}.")
 
     try:
         while True if int(bo_campaign_state.bo_parameters["trials"]) == 0 else (step < int(target)):
