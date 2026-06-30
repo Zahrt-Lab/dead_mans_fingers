@@ -58,6 +58,7 @@ def append_bayesian_experimental_results(
         "average_absorbance_product",
         "percent_yield",
         "throughput_nmol_per_min",
+        "hypervolume",
         "timestamp",
         "status",
         "error_message",

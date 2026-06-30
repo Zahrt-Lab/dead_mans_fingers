@@ -27,8 +27,9 @@ from preprocessing.volume_tracking import calculate_volumes_used, check_and_upda
 from experimental_commands.generate_instrument_config import save_instrument_config_csv
 from experimental_commands.commands import save_commands_csv
 from experimental_commands.experiment_runner import run_hardware_experiment
-from post_processing.post_processing_results import analyze_experiment_results
+from post_processing.post_processing_results import analyze_experiment_results, get_current_hypervolume
 from post_processing.append_bayesian_experimental_results import append_bayesian_experimental_results
+from post_processing.post_processing_results import get_hypervolume
 from utils.run_simulation import run_simulated_experiment
 from post_processing.detect_early_convergence import detect_early_convergence
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
@@ -207,6 +208,9 @@ def run_bayesian_optimization_iteration(
         avg_abs_reactant, avg_abs_product, percent_yield, throughput = analyze_experiment_results(
             bo_campaign_state, iteration_state, csv_file_path
         )
+
+        hypervolume = get_current_hypervolume(bo_campaign_state.ax_client)
+
     except ValueError as e:
         print(f"[ERROR] Post-processing failed for iteration {iteration_state.iteration}: {e}")
         append_bayesian_experimental_results(
@@ -226,6 +230,7 @@ def run_bayesian_optimization_iteration(
                 "average_absorbance_product": 0.0,
                 "percent_yield": 0.0,
                 "throughput_nmol_per_min": 0.0,
+                "hypervolume": 0.0,
                 "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
                 "status": "error",
                 "error_message": str(e),
@@ -251,6 +256,7 @@ def run_bayesian_optimization_iteration(
             "average_absorbance_product": avg_abs_product,
             "percent_yield": percent_yield,
             "throughput_nmol_per_min": throughput,
+            "hypervolume": hypervolume,
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
             "status": "ok",
             "error_message": "",

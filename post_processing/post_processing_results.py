@@ -24,6 +24,8 @@ from post_processing.calculate_concentration_in_reactor_bed import (
 from post_processing.calculate_product_throughput import calculate_product_throughput
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 
+from ax.service.ax_client import AxClient
+
 def analyze_experiment_results(
     bo_campaign_state: BoCampaignState,
     iteration_state: IterationState,
@@ -97,3 +99,19 @@ def analyze_experiment_results(
         product_percent_yield,
         product_throughput_nmol_per_min,
     )
+
+def get_current_hypervolume(ax: AxClient) -> float | None:
+    '''
+    Get the current hypervolume of the Pareto front from the AxClient.
+    '''
+    from ax.service.utils.best_point import get_trace
+
+    hv_trace = get_trace(
+        experiment=ax.experiment,
+        optimization_config=ax.experiment.optimization_config,
+    )
+
+    if not hv_trace:
+        return None
+
+    return hv_trace[-1]

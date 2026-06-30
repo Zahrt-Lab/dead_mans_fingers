@@ -129,6 +129,11 @@ class BoCampaignState:
             "light_intensity_min": light_intensity_min,
             "light_intensity_max": light_intensity_max,
         }
+    def set_ax_client(self, ax_client) -> None:
+        """
+        Set the AxClient instance for the Bayesian optimization campaign.
+        """
+        self.ax_client = ax_client
 
 
 @dataclass

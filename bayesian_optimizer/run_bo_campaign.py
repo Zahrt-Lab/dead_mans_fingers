@@ -216,6 +216,8 @@ def run_bo_campaign(
         Path(ax_previous_run_json_file_path).parent / "volume_state.json"
     )
 
+    bo_campaign_state.set_ax_client(ax)  # Store the AxClient in the campaign state for later use
+
     # Initialize stock-solution and waste volumes (hardware mode only)
     if not bo_campaign_state.simulation_mode:
         initial_volumes = initialize_volume_state(
