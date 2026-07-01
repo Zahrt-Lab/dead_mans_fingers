@@ -13,7 +13,7 @@ This module handles post-processing of UV-VIS data and calculation of
 optimization objectives (percent yield and product throughput).
 """
 
-from typing import Tuple
+from typing import Optional, Tuple
 
 from post_processing.post_process_uv_recording import post_process_uv_recording
 from post_processing.average_absorbance import average_absorbance
@@ -100,18 +100,12 @@ def analyze_experiment_results(
         product_throughput_nmol_per_min,
     )
 
-def get_current_hypervolume(ax: AxClient) -> float | None:
+def get_current_hypervolume(ax: AxClient):
     '''
     Get the current hypervolume of the Pareto front from the AxClient.
     '''
-    from ax.service.utils.best_point import get_trace
-
-    hv_trace = get_trace(
-        experiment=ax.experiment,
-        optimization_config=ax.experiment.optimization_config,
-    )
-
-    if not hv_trace:
+    try:
+        return float(ax.get_hypervolume())
+    except Exception as e:
+        print(f"Could not calculate hypervolume yet: {e}")
         return None
-
-    return hv_trace[-1]
