@@ -22,6 +22,7 @@ from ax.exceptions.core import OptimizationShouldStop
 from bayesian_optimizer.experiment_state import BoCampaignState, IterationState
 from bayesian_optimizer.init_or_load_ax import _init_or_load_ax
 from experimental_commands.execute_bo_iteration_commands import run_bayesian_optimization_iteration
+from post_processing.post_processing_results import get_current_hypervolume
 from utils.experiment_aborted import PostProcessingError
 from utils.prime_pump import prime_pump1
 from preprocessing.experimental_parameters import (
@@ -33,6 +34,8 @@ from preprocessing.volume_tracking import (
     save_volume_log_csv,
     save_volume_state_json,
 )
+
+from post_processing.post_processing_results import get_current_hypervolume
 
 def _resolve_output_directory(bo_campaign_state: BoCampaignState, ax) -> None:
     """
@@ -310,6 +313,19 @@ def run_bo_campaign(
                 "throughput": (float(throughput), bo_campaign_state.noise_sem_throughput),
             }
             ax.complete_trial(trial_index=trial_index, raw_data=experimental_results)
+            
+            hypervolume = get_current_hypervolume(bo_campaign_state.ax_client)
+            # Write the hypervolume and iteration to a csv file
+            hv_dir = Path(bo_campaign_state.bo_parameters["base_directory"]) / "hypervolume_results.csv"
+            hv_dir.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                with open(hv_dir, "x") as f:
+                    f.write("iteration,hypervolume\n")
+                    f.write(f"{step+1},{hypervolume}\n")
+            except FileExistsError:
+                with open(hv_dir, "a") as f:
+                    f.write(f"{step+1},{hypervolume}\n")
+
             step += 1
 
             # At the end of each step, we save the Ax state to a JSON file
