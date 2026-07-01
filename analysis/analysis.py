@@ -1,0 +1,68 @@
+'''
+This is the entry point for the analysis. It is responsible to handle the argument parser and call the appropriate functions to plot the results.
+'''
+import argparse
+import os
+from pathlib import Path
+import pandas as pd
+from analysis.plot_results import plot_pareto_front, plot_variable_vs_objective, iterate_over_folders_and_plot_absorbance, plot_hypervolume_improvement
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Analysis of the results of the bayesian optimization campaign")
+    parser.add_argument("csv_dir_path", help="Path to the directory containing the CSV files with the results of the bayesian optimization campaign")
+    parser.add_argument(
+        "--save-dir-path",
+        type=str,
+        default=None,
+        help="Path to save the plots (default: None, plots will be shown but not saved)",
+    )
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+    csv_dir_path = Path(args.csv_dir_path)
+    save_dir_path = args.save_dir_path
+    if save_dir_path is not None:
+        save_dir_path = Path(save_dir_path)
+        print(f"Using provided save directory path: {save_dir_path}")
+    else:
+        save_dir_path = csv_dir_path / "analysis_results"
+        print(f"No save directory path provided. Using default: {save_dir_path}")
+
+    if not csv_dir_path.exists():
+        raise FileNotFoundError(f"The specified CSV directory path does not exist: {csv_dir_path}")
+
+    # Create the save directory if it doesn't exist
+    if not save_dir_path.exists():
+        os.makedirs(save_dir_path)
+
+    csv_file_path = next(csv_dir_path.glob("BO_Results_*_results.csv"), None)
+
+    if csv_file_path is None:
+        raise FileNotFoundError("No BO results file found.")
+    
+    # Read the CSV file into a DataFrame
+    df = pd.read_csv(csv_file_path)
+    plot_save_dir = save_dir_path / "plots"
+    if not plot_save_dir.exists():
+        os.makedirs(plot_save_dir)
+    pareto_plot_path = plot_save_dir / "pareto_front.png"
+
+    # Plot the Pareto front and variable vs objective plots
+    plot_pareto_front(df, pareto_plot_path)
+    plot_variable_vs_objective(df, plot_save_dir)
+
+    #Plot hypervolume improvement
+    hypervolume_plot_path = csv_dir_path / "hypervolume_results.csv"
+    hypervolume_save_path = plot_save_dir / "hypervolume_improvement.png"
+    if hypervolume_plot_path.exists():
+        df_hv = pd.read_csv(hypervolume_plot_path)
+        plot_hypervolume_improvement(df_hv, hypervolume_save_path)
+    else:
+        print(f"No hypervolume results file found at {hypervolume_plot_path}")
+    
+    # Iterate over folders and plot absorbance vs time
+    iterate_over_folders_and_plot_absorbance(data_folder=csv_dir_path, save_folder=plot_save_dir)
+
+if __name__ == "__main__":
+    main()
