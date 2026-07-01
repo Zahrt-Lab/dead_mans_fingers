@@ -88,7 +88,7 @@ def _init_or_load_ax(
     
     # Stops if hypervolume hasn't improved by ≥5% over the last 5 trials, after a minimum of 10 trials.
     # Created before the resume branch so it can be re-attached to a loaded client (not serialized in JSON).
-    stopping_strategy = ImprovementGlobalStoppingStrategy(min_trials=10, window_size=5, improvement_bar=0.05)
+    stopping_strategy = ImprovementGlobalStoppingStrategy(min_trials=20, window_size=10, improvement_bar=0.05)
 
     if os.path.exists(ax_previous_run_json_file_path):
         resume = _prompt_resume_or_restart(ax_previous_run_json_file_path, ask_user_fn)
