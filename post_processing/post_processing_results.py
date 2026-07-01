@@ -105,7 +105,7 @@ def get_current_hypervolume(ax: AxClient):
     Get the current hypervolume of the Pareto front from the AxClient.
     '''
     try:
-        return float(ax.get_hypervolume())
+        return float(ax.get_hypervolume(use_model_predictions=False))
     except Exception as e:
         print(f"Could not calculate hypervolume yet: {e}")
         return None
