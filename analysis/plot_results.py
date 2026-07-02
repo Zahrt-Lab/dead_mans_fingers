@@ -146,11 +146,19 @@ def plot_hypervolume_improvement(df, save_path=None):
     """
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    ax.plot(df['iteration'], df['hypervolume'], marker='o', linestyle='-', color='purple')
+    try:
+        ax.plot(df['iteration'], df['hypervolume_no_prediction'], marker='o', linestyle='-', color='purple', label='Hypervolume without Prediction')
+    except KeyError:
+        print("Column 'hypervolume_no_prediction' not found in DataFrame. Skipping this plot.")
+    try:
+        ax.plot(df['iteration'], df['hypervolume_with_prediction'], marker='o', linestyle='-', color='orange', label='Hypervolume with Prediction')
+    except KeyError:
+        print("Column 'hypervolume_with_prediction' not found in DataFrame. Skipping this plot.")
     ax.set_xlabel('Iteration')
     ax.set_ylabel('Hypervolume')
     ax.set_title('Hypervolume Improvement Over Iterations')
     ax.grid(True)
+    ax.legend()
 
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
