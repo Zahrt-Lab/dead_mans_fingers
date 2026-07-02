@@ -314,17 +314,18 @@ def run_bo_campaign(
             }
             ax.complete_trial(trial_index=trial_index, raw_data=experimental_results)
             
-            hypervolume = get_current_hypervolume(bo_campaign_state.ax_client)
+            hypervolume_no_prediction = get_current_hypervolume(bo_campaign_state.ax_client, False)
+            hypervolume_with_prediction = get_current_hypervolume(bo_campaign_state.ax_client, True)
             # Write the hypervolume and iteration to a csv file
             hv_dir = Path(bo_campaign_state.bo_parameters["base_directory"]) / "hypervolume_results.csv"
             hv_dir.parent.mkdir(parents=True, exist_ok=True)
             try:
                 with open(hv_dir, "x") as f:
-                    f.write("iteration,hypervolume\n")
-                    f.write(f"{step+1},{hypervolume}\n")
+                    f.write("iteration,hypervolume_no_prediction,hypervolume_with_prediction\n")
+                    f.write(f"{step+1},{hypervolume_no_prediction},{hypervolume_with_prediction}\n")
             except FileExistsError:
                 with open(hv_dir, "a") as f:
-                    f.write(f"{step+1},{hypervolume}\n")
+                    f.write(f"{step+1},{hypervolume_no_prediction},{hypervolume_with_prediction}\n")
 
             step += 1
 

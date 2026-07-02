@@ -100,12 +100,12 @@ def analyze_experiment_results(
         product_throughput_nmol_per_min,
     )
 
-def get_current_hypervolume(ax: AxClient):
+def get_current_hypervolume(ax: AxClient, use_model_predictions: Optional[bool] = False) -> Optional[float]:
     '''
     Get the current hypervolume of the Pareto front from the AxClient.
     '''
     try:
-        return float(ax.get_hypervolume(use_model_predictions=False))
+        return float(ax.get_hypervolume(use_model_predictions=use_model_predictions))
     except Exception as e:
         print(f"Could not calculate hypervolume yet: {e}")
         return None
