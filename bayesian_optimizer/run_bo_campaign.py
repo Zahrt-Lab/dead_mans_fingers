@@ -314,6 +314,9 @@ def run_bo_campaign(
             }
             ax.complete_trial(trial_index=trial_index, raw_data=experimental_results)
             
+            # At the end of each step, we save the Ax state to a JSON file
+            ax.save_to_json_file(filepath=ax_previous_run_json_file_path)
+            
             hypervolume_no_prediction = get_current_hypervolume(bo_campaign_state.ax_client, False)
             hypervolume_with_prediction = get_current_hypervolume(bo_campaign_state.ax_client, True)
             # Write the hypervolume and iteration to a csv file
@@ -328,9 +331,6 @@ def run_bo_campaign(
                     f.write(f"{step+1},{hypervolume_no_prediction},{hypervolume_with_prediction}\n")
 
             step += 1
-
-            # At the end of each step, we save the Ax state to a JSON file
-            ax.save_to_json_file(filepath=ax_previous_run_json_file_path)
 
             print(
                 f"[Step {step}/{target}] Trial {trial_index} -> "
