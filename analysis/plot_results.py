@@ -24,8 +24,10 @@ def plot_pareto_front(df, save_path=None):
     fig, ax = plt.subplots(figsize=(8, 6))
     ax.scatter(df['percent_yield'], df['throughput_nmol_per_min'], c='blue', label='Results')
     ax.set_xlabel('Percent Yield (%)')
-    ax.set_ylabel('Throughput (units/time)')
+    ax.set_ylabel('Throughput (nmol/min)')
     ax.set_title('Pareto Front')
+    ax.set_xlim(0, 100)  # Set x-axis limits from 0 to 100
+    ax.set_ylim(0, df['throughput_nmol_per_min'].max() * 1.2)  # Set y-axis limits
     ax.legend()
     ax.grid(True)
 
@@ -33,10 +35,35 @@ def plot_pareto_front(df, save_path=None):
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Saved Pareto front plot to {save_path}")
 
+def plot_pareto_front_with_color_iteration(df, save_path=None):
+    """
+    Plot the Pareto front of the results with color indicating iteration.
+
+    Args:
+        df: DataFrame containing the results with 'percent_yield', 'throughput', and 'iteration' columns
+        save_path: Optional path to save the figure
+    """
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+    scatter = ax.scatter(df['percent_yield'], df['throughput_nmol_per_min'], c=df['iteration'], cmap='Blues', label='Results', s=80, edgecolor='black', zorder=2, linewidth=0.5)
+    ax.set_xlabel('Percent Yield (%)')
+    ax.set_ylabel('Throughput (nmol/min)')
+    ax.set_title('Pareto Front with Iteration Color')
+    cbar = plt.colorbar(scatter, ax=ax, label='Iteration')
+    cbar.set_label('Iteration')
+    ax.set_title('Pareto Front')
+    ax.set_xlim(0, 100)  # Set x-axis limits from 0 to 100
+    ax.set_ylim(0, df['throughput_nmol_per_min'].max() * 1.2)  # Set y-axis limits
+    ax.legend()
+    ax.grid(True)
+
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"Saved Pareto front plot with iteration color to {save_path}")
 
 def plot_variable_vs_objective(df, save_path=None):
     """
-    Plot all variables (flow_rate, reactor_concentration_uM, temperature, co_solvent_dilution_factor) against an objective (percent_yield or throughput_nmol_per_min).
+    Plot all variables (flow_rate, reactor_concentration_uM, temperature, co_solvent_dilution_factor, light_intensity) against an objective (percent_yield or throughput_nmol_per_min).
 
     Args:
         df: DataFrame containing the results
@@ -45,7 +72,7 @@ def plot_variable_vs_objective(df, save_path=None):
         save_path: Optional path to save the figure
     """
 
-    variables = ['flow_rate', 'reactor_concentration_uM', 'temperature', 'co_solvent_dilution_factor']
+    variables = ['flow_rate', 'reactor_concentration_uM', 'temperature', 'co_solvent_dilution_factor', 'light_intensity']
     objectives = ['percent_yield', 'throughput_nmol_per_min']
 
     for variable in variables:
@@ -163,6 +190,100 @@ def plot_hypervolume_improvement(df, save_path=None):
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Saved hypervolume improvement plot to {save_path}")
+
+def plot_parallel_coordinate_plot(df, save_path=None):
+    """
+    Plot a parallel coordinate plot for the variables and objectives.
+
+    Args:
+        df: DataFrame containing the results
+        save_path: Optional path to save the figure
+    """
+    from pandas.plotting import parallel_coordinates
+    from matplotlib import colormaps
+    from matplotlib.colors import Normalize
+    from matplotlib.cm import ScalarMappable
+
+    # Select only the relevant columns for the parallel coordinate plot
+    cols = ['flow_rate', 'reactor_concentration_uM', 'temperature', 'light_intensity']
+    plot_df = df[cols + ["iteration"]].copy()
+
+    # Normalize each plotted column from 0 to 1
+    for col in cols:
+        plot_df[col] = (plot_df[col] - plot_df[col].min()) / (plot_df[col].max() - plot_df[col].min())
+    # Convert iteration into categories for coloring
+    plot_df["iteration_label"] = plot_df["iteration"].astype(str)
+
+    color_by = "percent_yield"
+
+    cmap = colormaps["Blues"]
+    norm = Normalize(df[color_by].min(), df[color_by].max())
+
+    colors = [cmap(norm(v)) for v in df[color_by]]
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    parallel_coordinates(
+        plot_df[cols + ["iteration_label"]],
+        class_column="iteration_label",
+        color=colors,
+        linewidth=1.5,
+        alpha=0.75,
+        ax=ax
+    )
+
+    ax.legend_.remove()
+    ax.set_ylabel("Normalized value")
+    ax.set_title("Parallel coordinate plot of BO experiments")
+
+    sm = ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax)
+    cbar.set_label(color_by)
+
+    plt.tight_layout()
+
+    if save_path:
+        save_path_stem = Path(save_path).stem
+        save_path = Path(save_path).parent / f"{save_path_stem}_yield_colored.png"
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"Saved parallel coordinate plot to {save_path}")
+
+    # Plot Throughput colored parallel coordinate plot
+    color_by = "throughput_nmol_per_min"
+
+    cmap = colormaps["Blues"]
+    norm = Normalize(df[color_by].min(), df[color_by].max())
+
+    colors = [cmap(norm(v)) for v in df[color_by]]
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    parallel_coordinates(
+        plot_df[cols + ["iteration_label"]],
+        class_column="iteration_label",
+        color=colors,
+        linewidth=1.5,
+        alpha=0.75,
+        ax=ax
+    )
+
+    ax.legend_.remove()
+    ax.set_ylabel("Normalized value")
+    ax.set_title("Parallel coordinate plot of BO experiments")
+
+    sm = ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = plt.colorbar(sm, ax=ax)
+    cbar.set_label(color_by)
+
+    plt.tight_layout()
+
+    if save_path:
+        save_path_stem = Path(save_path).stem
+        save_path = Path(save_path).parent / f"{save_path_stem}_throughput_colored.png"
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"Saved parallel coordinate plot to {save_path}")
 
 # csv_file_path = Path(r"G:\\My Drive\\Chenoweth Lab\\Projects\Automated photoflow reactor\\Results\Book1_Experiment61\Book1_Experiment61\\xylopyridine_analog_1\bo_campaign\\run_001\BO_Results_xylopyridine_analog_1_results.csv")
 # save_file_path = Path(r"G:\\My Drive\\Chenoweth Lab\\Projects\Automated photoflow reactor\\Results\Book1_Experiment61\Book1_Experiment61\\xylopyridine_analog_1\bo_campaign\\run_001\\plots\\pareto_front_plot.png")

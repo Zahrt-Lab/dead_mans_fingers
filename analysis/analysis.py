@@ -5,7 +5,7 @@ import argparse
 import os
 from pathlib import Path
 import pandas as pd
-from analysis.plot_results import plot_pareto_front, plot_variable_vs_objective, iterate_over_folders_and_plot_absorbance, plot_hypervolume_improvement
+from analysis.plot_results import plot_pareto_front, plot_variable_vs_objective, iterate_over_folders_and_plot_absorbance, plot_hypervolume_improvement, plot_pareto_front_with_color_iteration, plot_parallel_coordinate_plot
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Analysis of the results of the bayesian optimization campaign")
@@ -50,6 +50,8 @@ def main():
 
     # Plot the Pareto front and variable vs objective plots
     plot_pareto_front(df, pareto_plot_path)
+    plot_pareto_front_with_color_iteration(df, plot_save_dir / "pareto_front_with_color_iteration.png")
+    plot_parallel_coordinate_plot(df, plot_save_dir / "parallel_coordinate_plot.png")
     plot_variable_vs_objective(df, plot_save_dir)
 
     #Plot hypervolume improvement
