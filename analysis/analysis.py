@@ -5,7 +5,8 @@ import argparse
 import os
 from pathlib import Path
 import pandas as pd
-from analysis.plot_results import plot_pareto_front, plot_variable_vs_objective, iterate_over_folders_and_plot_absorbance, plot_hypervolume_improvement, plot_pareto_front_with_color_iteration, plot_parallel_coordinate_plot
+from analysis.plot_results import plot_pareto_front, plot_variable_vs_objective, iterate_over_folders_and_plot_absorbance, plot_hypervolume_improvement, plot_pareto_front_with_color_iteration, plot_parallel_coordinate_plot, plot_correlation_heat_map
+from analysis.print_results import print_flow_rate_iterations
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Analysis of the results of the bayesian optimization campaign")
@@ -52,6 +53,7 @@ def main():
     plot_pareto_front(df, pareto_plot_path)
     plot_pareto_front_with_color_iteration(df, plot_save_dir / "pareto_front_with_color_iteration.png")
     plot_parallel_coordinate_plot(df, plot_save_dir / "parallel_coordinate_plot.png")
+    plot_correlation_heat_map(df, plot_save_dir / "correlation_heatmap.png")
     plot_variable_vs_objective(df, plot_save_dir)
 
     #Plot hypervolume improvement
@@ -65,6 +67,10 @@ def main():
     
     # Iterate over folders and plot absorbance vs time
     iterate_over_folders_and_plot_absorbance(data_folder=csv_dir_path, save_folder=plot_save_dir)
+
+    # Print the flow rate iterations to a CSV file
+    csv_save_dir = save_dir_path / "table_results"
+    print_flow_rate_iterations(csv_dir_path, csv_save_dir)
 
 if __name__ == "__main__":
     main()
