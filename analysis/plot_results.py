@@ -285,6 +285,33 @@ def plot_parallel_coordinate_plot(df, save_path=None):
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Saved parallel coordinate plot to {save_path}")
 
+def plot_correlation_heat_map(df, save_path=None):
+    """
+    Plot a correlation heatmap for the variables and objectives.
+
+    Args:
+        df: DataFrame containing the results
+        save_path: Optional path to save the figure
+    """
+    import seaborn as sns
+
+    # Select only the relevant columns for the correlation heatmap
+    cols = ['flow_rate', 'reactor_concentration_uM', 'temperature', 'light_intensity', 'percent_yield', 'throughput_nmol_per_min']
+    corr_df = df[cols].copy()
+
+    # Calculate the correlation matrix
+    corr_matrix = corr_df.corr()
+
+    fig, ax = plt.subplots(figsize=(10, 8))
+    sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap="coolwarm", cbar=True, ax=ax)
+    ax.set_title("Correlation Heatmap of Variables and Objectives")
+
+    plt.tight_layout()
+
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"Saved correlation heatmap to {save_path}")
+
 # csv_file_path = Path(r"G:\\My Drive\\Chenoweth Lab\\Projects\Automated photoflow reactor\\Results\Book1_Experiment61\Book1_Experiment61\\xylopyridine_analog_1\bo_campaign\\run_001\BO_Results_xylopyridine_analog_1_results.csv")
 # save_file_path = Path(r"G:\\My Drive\\Chenoweth Lab\\Projects\Automated photoflow reactor\\Results\Book1_Experiment61\Book1_Experiment61\\xylopyridine_analog_1\bo_campaign\\run_001\\plots\\pareto_front_plot.png")
 # os.makedirs(save_file_path.parent, exist_ok=True)
