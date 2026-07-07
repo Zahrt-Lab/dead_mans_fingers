@@ -36,8 +36,6 @@ _REQUIRED_TRIAL_KEYS = {
     "flow_rate",
     "dilution_factor",
     "temperature",
-    "co_solvent_valve_position",
-    "co_solvent_dilution_factor",
     "light_intensity",
 }
 

@@ -75,8 +75,6 @@ def _init_or_load_ax(
         flow_rate_min, flow_rate_max: Bounds for flow rate parameter
         dilution_factor_min, dilution_factor_max: Bounds for dilution factor parameter
         temperature_min, temperature_max: Bounds for temperature parameter
-        co_solvent_valve_position_min, co_solvent_valve_position_max: Bounds for co-solvent valve position parameter
-        co_solvent_dilution_factor_min, co_solvent_dilution_factor_max: Bounds for co-solvent dilution factor parameter
         light_intensity_min, light_intensity_max: Bounds for light intensity parameter
         percent_yield_threshold: Threshold for percent yield objective (for Ax)
         throughput_threshold: Threshold for throughput objective (for Ax)
@@ -131,18 +129,7 @@ def _init_or_load_ax(
                 "bounds": [experimental_bounds['temperature_min'], experimental_bounds['temperature_max']],
                 "value_type": "float",
             },
-            {
-                "name": "co_solvent_valve_position",
-                "type": "range",
-                "bounds": [experimental_bounds['cosolvent_valve_position_min'], experimental_bounds['cosolvent_valve_position_max']],
-                "value_type": "int",
-            },
-            {
-                "name": "co_solvent_dilution_factor",
-                "type": "range",
-                "bounds": [experimental_bounds['co_solvent_dilution_factor_min'], experimental_bounds['co_solvent_dilution_factor_max']],
-                "value_type": "float",
-            },
+            
             {
                 "name": "light_intensity",
                 "type": "range",

@@ -64,8 +64,6 @@ def extract_best_reaction_conditions(
         float(best_bo_result["flow_rate"]),
         float(best_bo_result["dilution_factor"]),
         float(best_bo_result["temperature"]),
-        float(best_bo_result["co_solvent_valve_position"]),
-        float(best_bo_result["co_solvent_dilution_factor"]),
         float(best_bo_result["light_intensity"]),
         float(best_bo_result["throughput_nmol_per_min"]),
     )

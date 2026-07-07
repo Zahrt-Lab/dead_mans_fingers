@@ -56,8 +56,6 @@ def production_run(
         reactor_bed_flow_rate,
         dilution_factor,
         temperature,
-        cosolvent_valve_position,
-        fraction_of_cosolvent,
         light_intensity,
         throughput_nmol_per_min,
     ) = extract_best_reaction_conditions(bo_results, yield_threshold=yield_threshold)
@@ -66,8 +64,6 @@ def production_run(
         reactor_bed_flow_rate,
         dilution_factor,
         temperature,
-        cosolvent_valve_position,
-        fraction_of_cosolvent,
         light_intensity,
         throughput_nmol_per_min,
         desired_mols,
@@ -89,7 +85,6 @@ def production_run(
         volume_pump4=experimental_parameters["volume_pump4"],
         valve_position_pump3=experimental_parameters["position_valve2"],
         temperature=experimental_parameters["temperature"],
-        fraction_of_cosolvent=fraction_of_cosolvent,
         light_intensity=experimental_parameters["light_intensity"],
     )
     save_instrument_config_csv(instrument_config_path)

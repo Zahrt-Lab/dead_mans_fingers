@@ -41,25 +41,13 @@ def parameters_to_commands(
     flow_rate = trial_conditions["flow_rate"]
     dilution_factor = trial_conditions["dilution_factor"]
     temperature = trial_conditions["temperature"]
-    cosolvent_position = trial_conditions["co_solvent_valve_position"]
-    co_solvent_dilution_factor = trial_conditions["co_solvent_dilution_factor"]
     light_intensity = trial_conditions["light_intensity"]
 
     if flow_rate <= 0:
         raise ValueError("flow_rate must be > 0 µL/min.")
     if not (0.0 <= dilution_factor <= 1.0):
         raise ValueError("dilution_factor must be in [0, 1].")
-    if not (1 <= cosolvent_position <= 6):
-        raise ValueError(
-            f"cosolvents_valve_position must be in [1, 6], got {cosolvent_position}."
-        )
-    if not (0.0 <= co_solvent_dilution_factor <= 1.0):
-        raise ValueError("co_solvent_dilution_factor must be in [0, 1].")
-    if co_solvent_dilution_factor > (1.0 - dilution_factor):
-        raise ValueError(
-            "co_solvent_dilution_factor cannot exceed (1 - dilution_factor) "
-            "because pump2 would go negative."
-        )
+
     if not (0.0 <= light_intensity <= 100.0):
         raise ValueError("light_intensity must be in [0, 100].")
 
@@ -83,12 +71,13 @@ def parameters_to_commands(
         print(f"WARNING: LOW FLOW RATE OF {flow_rate_pump1} µL/min FOR PUMP 1 XYLOPYRIDINE ANALOG PUMP WILL HAVE LOW ACCURACY AND PRECISION")
 
     # Pump 2 (acid/water remainder after pump1 + cosolvent)
-    pump2_dilution_factor = (1.0 - dilution_factor) - co_solvent_dilution_factor
+    pump2_dilution_factor = (1.0 - dilution_factor)
     flow_rate_pump2 = flow_rate * pump2_dilution_factor
     volume_pump2 = total_volume_through_reactor_bed * pump2_dilution_factor
     if flow_rate_pump2 <= 25 and flow_rate_pump2 > 0:
         print(f"WARNING: LOW FLOW RATE OF {flow_rate_pump2} µL/min FOR PUMP 2 DILUTION PUMP WILL HAVE LOW ACCURACY AND PRECISION")
-
+    
+    co_solvent_dilution_factor = 0.0
     # Pump 3 (cosolvent)
     flow_rate_pump3 = flow_rate * co_solvent_dilution_factor
     volume_pump3 = total_volume_through_reactor_bed * co_solvent_dilution_factor
@@ -123,6 +112,8 @@ def parameters_to_commands(
 
     # Set Light intensity as a value between 0 (brightest) and 255 (dimmest) in integer values
     light_intensity = int(round((100.0 - light_intensity) / 100.0 * 255))
+
+    cosolvent_position = 1  # For now, we are not using a co-solvent, so the valve position is set to 1.
 
     return {
         "flow_rate_pump1": float(round(flow_rate_pump1, 2)),

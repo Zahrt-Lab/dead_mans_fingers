@@ -35,10 +35,9 @@ def constrain_to_search_space(bo_campaign_state: BoCampaignState,
     bo_parameters = bo_campaign_state.bo_parameters
     trial_conditions = iteration_state.trial_conditions
 
-    if len(trial_conditions) != 6:
+    if len(trial_conditions) != 4:
         raise ValueError(
-            f"Expected 6 parameters (flow_rate, dilution_factor, temperature, "
-            f"cosolvent_valve_position, fraction_of_cosolvent, light_intensity), "
+            f"Expected 4 parameters (flow_rate, dilution_factor, temperature, light_intensity), "
             f"got {len(trial_conditions)}"
         )
     
@@ -58,19 +57,6 @@ def constrain_to_search_space(bo_campaign_state: BoCampaignState,
     temp_min, temp_max = bo_parameters["temperature"]
     temperature = round(float(trial_conditions["temperature"]),2)
     temperature = round(min(temp_max, max(temp_min, temperature)),2)
-
-    # Extract and constrain cosolvent valve position
-    cosolvent_min, cosolvent_max = bo_parameters["cosolvents_valve_position"]
-    cosolvent_valve_position = float(round(trial_conditions["co_solvent_valve_position"]))
-    cosolvent_valve_position = float(
-        min(cosolvent_max, max(cosolvent_min, cosolvent_valve_position))
-    )
-
-    # Extract and constrain co-solvent fraction
-    fraction_min, fraction_max = bo_parameters["co_solvent_dilution_factor"]
-    fraction_of_cosolvent = round(float(
-        min(max(trial_conditions["co_solvent_dilution_factor"], fraction_min), fraction_max)
-    ), 2)
 
     # Extract and constrain light intensity
     light_intensity_min, light_intensity_max = bo_parameters["light_intensity"]
@@ -93,30 +79,10 @@ def constrain_to_search_space(bo_campaign_state: BoCampaignState,
             f"Temperature {temperature}°C is outside heater module boundaries (0-100°C)"
         )
     
-    # Validate valve position against physical limits (1-6)
-    if not (1 <= cosolvent_valve_position <= 6):
-        raise ValueError(
-            f"Cosolvent valve position {cosolvent_valve_position} is outside valid range (1-6)"
-        )
-
-    # Validate co-solvent fraction bounds (0-1)    
-    if fraction_of_cosolvent < 0 or fraction_of_cosolvent > 1:
-        raise ValueError(
-            f"Fraction of co-solvent {fraction_of_cosolvent} must be between 0 and 1"
-        )
-    
-    # Validate co-solvent fraction bounds (0-1)
-    if light_intensity < 0 or light_intensity > 100:
-        raise ValueError(
-            f"Light intensity {light_intensity} must be between 0 and 100%"
-        )
-    
     iteration_state.update_trial_conditions({
         "flow_rate": flow_rate,
         "dilution_factor": dilution_factor,
         "temperature": temperature,
-        "co_solvent_valve_position": cosolvent_valve_position,
-        "co_solvent_dilution_factor": fraction_of_cosolvent,
         "light_intensity": light_intensity,
     })
 

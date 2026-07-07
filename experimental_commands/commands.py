@@ -31,7 +31,6 @@ def save_commands_csv(
     volume_pump4: float,
     valve_position_pump3: int,
     temperature: float,
-    fraction_of_cosolvent: float,
     light_intensity: float,
     reactant_wavelength: float,
     product_wavelength: float,
@@ -150,7 +149,6 @@ def save_production_run_commands_to_csv(commands_path: str,
                          volume_pump4: float,
                          valve_position_pump3: int,
                          temperature: float,
-                         fraction_of_cosolvent: float,
                          light_intensity: float,) -> None:
     """
     Save a list of instrument commands to a CSV file.
@@ -194,7 +192,7 @@ def save_production_run_commands_to_csv(commands_path: str,
                 volume_pump4,
             )
         )
-        
+    fraction_of_cosolvent = 1
     # Generate wash commands
     # We wanted to keep wash flow rate at 3000 uL/min when washing the total_flow_rate
     total_flow_rate = flow_rate_pump1 + flow_rate_pump2 + flow_rate_pump3 + flow_rate_pump4

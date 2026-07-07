@@ -18,8 +18,6 @@ def calculate_production_run_parameters(
     reactor_bed_flow_rate,
     dilution_factor,
     temperature,
-    cosolvent_valve_position,
-    fraction_of_cosolvent,
     light_intensity,
     throughput_nmol_per_min,
     desired_mols,
@@ -47,8 +45,6 @@ def calculate_production_run_parameters(
         "flow_rate": reactor_bed_flow_rate,
         "dilution_factor": dilution_factor,
         "temperature": temperature,
-        "co_solvent_valve_position": cosolvent_valve_position,
-        "co_solvent_dilution_factor": fraction_of_cosolvent,
         "light_intensity": light_intensity,
     }
 
