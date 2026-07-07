@@ -1,5 +1,5 @@
 '''
-This module caontains functions to gather results and print them into tables. It is callable from the analysis.py script.
+This module contains functions to gather results and print them into tables. It is callable from the analysis.py script.
 
 print_flow_rate_iterations: Iterates over the *experiment.csv files and saves the flow rates of each itaration and each pump into a csv file.
 '''

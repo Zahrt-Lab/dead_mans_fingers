@@ -5,7 +5,7 @@ import argparse
 import os
 from pathlib import Path
 import pandas as pd
-from analysis.plot_results import plot_pareto_front, plot_variable_vs_objective, iterate_over_folders_and_plot_absorbance, plot_hypervolume_improvement, plot_pareto_front_with_color_iteration, plot_parallel_coordinate_plot, plot_correlation_heat_map
+from analysis.plot_results import plot_pareto_front, plot_variable_vs_objective, iterate_over_folders_and_plot_absorbance, plot_hypervolume_improvement, plot_pareto_front_with_color_iteration, plot_parallel_coordinate_plot, plot_correlation_heat_map, plot_pair_plot
 from analysis.print_results import print_flow_rate_iterations
 
 def parse_args() -> argparse.Namespace:
@@ -54,6 +54,7 @@ def main():
     plot_pareto_front_with_color_iteration(df, plot_save_dir / "pareto_front_with_color_iteration.png")
     plot_parallel_coordinate_plot(df, plot_save_dir / "parallel_coordinate_plot.png")
     plot_correlation_heat_map(df, plot_save_dir / "correlation_heatmap.png")
+    plot_pair_plot(df, plot_save_dir / "pair_plot.png")
     plot_variable_vs_objective(df, plot_save_dir)
 
     #Plot hypervolume improvement
