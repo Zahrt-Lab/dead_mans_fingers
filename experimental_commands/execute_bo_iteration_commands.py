@@ -150,7 +150,7 @@ def run_bayesian_optimization_iteration(
         
         volumes_used = calculate_volumes_used(
             instrument_parameters,
-            iteration_state.trial_conditions["co_solvent_dilution_factor"],
+            # iteration_state.trial_conditions["co_solvent_dilution_factor"], removed because it is not used in the function
         )
         check_and_update_all_volumes(
             bo_campaign_state,

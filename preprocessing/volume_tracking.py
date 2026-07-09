@@ -128,7 +128,7 @@ def initialize_volume_state(
 
 def calculate_volumes_used(
     instrument_parameters: Dict[str, Any],
-    co_solvent_dilution_factor: float,
+    # co_solvent_dilution_factor: float, removed because it is not used in the function
 ) -> Dict[str, float]:
     """
     Calculate the total volume consumed per pump for one iteration.
@@ -144,7 +144,7 @@ def calculate_volumes_used(
         pump1, pump2, pump3, pump4, waste
     where *waste* is the sum of all pump volumes (everything pumped enters waste).
     """
-    d = float(co_solvent_dilution_factor)
+    d = 0 # float(co_solvent_dilution_factor) # volume of pump 3 not used
 
     exp_pump1 = float(instrument_parameters["volume_pump1"])
     exp_pump2 = float(instrument_parameters["volume_pump2"])
