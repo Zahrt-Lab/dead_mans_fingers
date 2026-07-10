@@ -64,7 +64,7 @@ def plot_pareto_front_with_color_iteration(df, save_path=None):
 
 def plot_variable_vs_objective(df, save_path=None):
     """
-    Plot all variables (flow_rate, reactor_concentration_uM, temperature, co_solvent_dilution_factor, light_intensity) against an objective (percent_yield or throughput_nmol_per_min).
+    Plot all variables (flow_rate, reactor_concentration_uM, temperature, light_intensity) against an objective (percent_yield or throughput_nmol_per_min).
 
     Args:
         df: DataFrame containing the results
@@ -73,7 +73,7 @@ def plot_variable_vs_objective(df, save_path=None):
         save_path: Optional path to save the figure
     """
 
-    variables = ['flow_rate', 'reactor_concentration_uM', 'temperature', 'co_solvent_dilution_factor', 'light_intensity']
+    variables = ['flow_rate', 'reactor_concentration_uM', 'temperature', 'light_intensity']
     objectives = ['percent_yield', 'throughput_nmol_per_min']
 
     for variable in variables:
