@@ -125,6 +125,12 @@ def save_commands_csv(
     wash_volume_pump3 = 6000 * (wash_flow_rate_pump3 / wash_total_flow_rate)
     wash_volume_pump4 = 6000 * (wash_flow_rate_pump4 / wash_total_flow_rate)
 
+    # Fix the wash volume, so both reactor and cuvvette are washed with 3000 uL of solvent.
+    wash_flow_rate_pump2 = 1500
+    wash_volume_pump2 = 3000
+    wash_flow_rate_pump4 = 1500
+    wash_volume_pump4 = 3000
+
     with open(wash_commands_csv, "w", newline="", encoding="utf-8") as f:
         csv.writer(f).writerows(
             generate_wash_commands(
