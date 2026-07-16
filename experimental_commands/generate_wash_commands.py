@@ -89,8 +89,17 @@ def generate_wash_commands(
         )
 
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
+        # Commenting this out because we started using the tricontinental pump as pump 4
+        # commands.append([
+        #     "Tecan_pump_2",
+        #     "dispense",
+        #     f"flow_rate={flow_rate_pump4}, " f"volume={volume_pump4}",
+        #     f"The flow rate of our 0.1 M HCl water pump is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
+        #     "0.5",
+        #     ]
+        # )
         commands.append([
-            "Tecan_pump_2",
+            "Tricontinental_C24000_1",
             "dispense",
             f"flow_rate={flow_rate_pump4}, " f"volume={volume_pump4}",
             f"The flow rate of our 0.1 M HCl water pump is {flow_rate_pump4} uL/min and volume is {volume_pump4}",

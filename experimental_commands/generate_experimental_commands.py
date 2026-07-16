@@ -108,6 +108,22 @@ def generate_experimental_commands(
     commands.append([
         "OceanOptics_UVVis_1","start_continuous","stop_upon_convergence=True","","0.5"
     ])
+
+    commands.append([
+        "Tricontinental_C24000_1",
+        "dispense",
+        f"flow_rate=1000, " f"volume=100",
+        f"The tricontnent pump is initializing",
+        "0.5",
+        ]
+    )
+    commands.append([
+            "SYNC",
+            "wait_for_pumps",
+            "",
+            "Waiting for XYLO and WATER pumps to complete",
+            "0.5",
+        ])
     if not is_zero(flow_rate_pump1, volume_pump1, zero_tolerance):
         commands.append([
             "VICI_M6_Pump_1",
@@ -137,13 +153,21 @@ def generate_experimental_commands(
     
 
     if not is_zero(flow_rate_pump4, volume_pump4, zero_tolerance):
+        # commands.append([
+        #     "Tecan_pump_2",
+        #     "dispense",
+        #     f"flow_rate={flow_rate_pump4},volume={volume_pump4}",
+        #     f"The flow rate of our 0.1 M HCl water pump after the reactor is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
+        #     "0.5"
+        # ])
         commands.append([
-            "Tecan_pump_2",
+            "Tricontinental_C24000_1",
             "dispense",
-            f"flow_rate={flow_rate_pump4},volume={volume_pump4}",
-            f"The flow rate of our 0.1 M HCl water pump after the reactor is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
-            "0.5"
-        ])
+            f"flow_rate={flow_rate_pump4}, " f"volume={volume_pump4}",
+            f"The flow rate of our 0.1 M HCl water pump is {flow_rate_pump4} uL/min and volume is {volume_pump4}",
+            "0.5",
+            ]
+        )
 
     commands.append([
             "SYNC",
