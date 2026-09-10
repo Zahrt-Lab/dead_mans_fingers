@@ -217,7 +217,7 @@ def plot_parallel_coordinate_plot(df, save_path=None):
 
     color_by = "percent_yield"
 
-    cmap = colormaps["Blues"]
+    cmap = colormaps["RdYlGn"]
     norm = Normalize(df[color_by].min(), df[color_by].max())
 
     colors = [cmap(norm(v)) for v in df[color_by]]
@@ -253,7 +253,7 @@ def plot_parallel_coordinate_plot(df, save_path=None):
     # Plot Throughput colored parallel coordinate plot
     color_by = "throughput_nmol_per_min"
 
-    cmap = colormaps["Blues"]
+    cmap = colormaps["RdYlGn"]
     norm = Normalize(df[color_by].min(), df[color_by].max())
 
     colors = [cmap(norm(v)) for v in df[color_by]]
