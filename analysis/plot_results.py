@@ -36,31 +36,153 @@ def plot_pareto_front(df, save_path=None):
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Saved Pareto front plot to {save_path}")
 
-def plot_pareto_front_with_color_iteration(df, save_path=None):
+def plot_pareto_front_with_color_iteration(
+    df,
+    save_path=None,
+    batch_point=None,
+    tradeoff_point=None
+):
     """
-    Plot the Pareto front of the results with color indicating iteration.
+    Plot yield vs throughput with color indicating experimental iteration.
 
-    Args:
-        df: DataFrame containing the results with 'percent_yield', 'throughput', and 'iteration' columns
-        save_path: Optional path to save the figure
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        DataFrame containing 'percent_yield',
+        'throughput_nmol_per_min', and 'iteration'.
+
+    save_path : str, optional
+        Base path used to save PNG and PDF versions.
+
+    batch_point : tuple, optional
+        Batch reference point as (yield, throughput).
+        Example: batch_point=(60, 1.5)
     """
 
-    fig, ax = plt.subplots(figsize=(8, 6))
-    scatter = ax.scatter(df['percent_yield'], df['throughput_nmol_per_min'], c=df['iteration'], cmap='Blues', label='Results', s=80, edgecolor='black', zorder=2, linewidth=0.5)
-    ax.set_xlabel('Percent Yield (%)')
-    ax.set_ylabel('Throughput (nmol/min)')
-    ax.set_title('Pareto Front with Iteration Color')
-    cbar = plt.colorbar(scatter, ax=ax, label='Iteration')
-    cbar.set_label('Iteration')
-    ax.set_title('Pareto Front')
-    ax.set_xlim(0, 100)  # Set x-axis limits from 0 to 100
-    ax.set_ylim(0, df['throughput_nmol_per_min'].max() * 1.2)  # Set y-axis limits
-    ax.legend()
-    ax.grid(True)
+    # Publication formatting
+    plt.rcParams.update({
+        'font.family': 'Arial',
+        'font.size': 8,
+        'axes.labelsize': 8,
+        'xtick.labelsize': 7,
+        'ytick.labelsize': 7,
+        'axes.linewidth': 0.5,
+        'xtick.major.width': 0.8,
+        'ytick.major.width': 0.8,
+        'xtick.major.size': 3,
+        'ytick.major.size': 3,
+    })
+
+    fig, ax = plt.subplots(figsize=(3.3, 2.6))
+
+    # Autonomous experiments
+    scatter = ax.scatter(
+        df['percent_yield'],
+        df['throughput_nmol_per_min'],
+        c=df['iteration'],
+        cmap='Blues',
+        s=28,
+        edgecolor='black',
+        linewidth=0.4,
+        zorder=2,
+        label='Optimization'
+    )
+
+    # Batch reference
+    if batch_point[0] is not None:
+        batch_yield, batch_throughput = batch_point
+
+        ax.scatter(
+            batch_yield,
+            batch_throughput,
+            marker='*',
+            s=35,
+            facecolor='maroon',
+            edgecolor='black',
+            linewidth=0.4,
+            label='Batch',
+            zorder=4
+        )
+    if tradeoff_point[0] is not None:
+        tradeoff_yield, tradeoff_throughput = tradeoff_point
+
+        ax.scatter(
+            tradeoff_yield,
+            tradeoff_throughput,
+            marker='o',
+            s=28,
+            facecolor='orange',
+            edgecolor='black',
+            linewidth=0.4,
+            zorder=5,
+            label='Selected Trade-off',
+        )
+
+    # Axis labels
+    ax.set_xlabel('Yield (%)')
+    ax.set_ylabel(r'Throughput (nmol min$^{-1}$)')
+
+    ax.set_xlim(-5, 105)
+
+    # Determine y-axis limit including batch point
+    max_throughput = df['throughput_nmol_per_min'].max()
+
+    if batch_point is not None:
+        max_throughput = max(max_throughput, batch_point[1])
+
+    ax.set_ylim(-5, max_throughput * 1.10)
+
+    # Iteration color bar
+    cbar = fig.colorbar(
+        scatter,
+        ax=ax,
+        pad=0.03,
+        fraction=0.06
+    )
+
+    cbar.set_label('Iteration', fontsize=8)
+    cbar.ax.tick_params(
+        labelsize=7,
+        width=0.8,
+        length=3
+    )
+
+    # Only show legend if batch reference is included
+    if batch_point is not None:
+        ax.legend(
+            frameon=True,
+            fontsize=7,
+            loc='best'
+        )
+
+    # Light grid
+    ax.grid(
+        True,
+        linestyle=':',
+        linewidth=0.5,
+        alpha=0.5
+    )
+
+    fig.tight_layout()
 
     if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"Saved Pareto front plot with iteration color to {save_path}")
+        fig.savefig(
+            f'{save_path}.png',
+            dpi=600,
+            bbox_inches='tight'
+        )
+
+        fig.savefig(
+            f'{save_path}.pdf',
+            bbox_inches='tight'
+        )
+
+        print(
+            f'Saved to {save_path}.png '
+            f'and {save_path}.pdf'
+        )
+
+    return fig, ax
 
 def plot_variable_vs_objective(df, save_path=None):
     """
@@ -166,125 +288,318 @@ def iterate_over_folders_and_plot_absorbance(data_folder, save_folder):
 
 def plot_hypervolume_improvement(df, save_path=None):
     """
-    Plot the hypervolume improvement over iterations.
+    Plot hypervolume improvement over iterations.
 
     Args:
-        df: DataFrame containing the results with 'iteration' and 'hypervolume' columns
-        save_path: Optional path to save the figure
+        df: DataFrame containing 'iteration' and
+            'hypervolume_no_prediction' columns
+        save_path: Optional base path to save PNG and PDF files
     """
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    # Publication formatting
+    # Publication formatting
+    plt.rcParams.update({
+        'font.family': 'Arial',
+        'font.size': 8,
+        'axes.labelsize': 8,
+        'xtick.labelsize': 7,
+        'ytick.labelsize': 7,
+        'axes.linewidth': 0.5,
+        'xtick.major.width': 0.8,
+        'ytick.major.width': 0.8,
+        'xtick.major.size': 3,
+        'ytick.major.size': 3,
+    })
+
+    fig, ax = plt.subplots(figsize=(3.3, 2.6))
+
     try:
-        ax.plot(df['iteration'], df['hypervolume_no_prediction'], marker='o', linestyle='-', color='purple', label='Hypervolume without Prediction')
+        ax.plot(
+            df['iteration'],
+            df['hypervolume_no_prediction'],
+            marker='o',
+            linestyle='-',
+            markersize=4,
+            linewidth=1.2,
+            color='purple'
+        )
     except KeyError:
-        print("Column 'hypervolume_no_prediction' not found in DataFrame. Skipping this plot.")
-    try:
-        ax.plot(df['iteration'], df['hypervolume_with_prediction'], marker='o', linestyle='-', color='orange', label='Hypervolume with Prediction')
-    except KeyError:
-        print("Column 'hypervolume_with_prediction' not found in DataFrame. Skipping this plot.")
+        print(
+            "Column 'hypervolume_no_prediction' "
+            "not found in DataFrame."
+        )
+        return fig, ax
+
     ax.set_xlabel('Iteration')
     ax.set_ylabel('Hypervolume')
-    ax.set_title('Hypervolume Improvement Over Iterations')
-    ax.grid(True)
-    ax.legend()
+
+    ax.grid(
+        True,
+        linestyle=':',
+        linewidth=0.5,
+        alpha=0.5
+    )
+
+    fig.tight_layout()
 
     if save_path:
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"Saved hypervolume improvement plot to {save_path}")
+        fig.savefig(
+            f'{save_path}.png',
+            dpi=600,
+            bbox_inches='tight'
+        )
+
+        fig.savefig(
+            f'{save_path}.pdf',
+            bbox_inches='tight'
+        )
+
+        print(
+            f'Saved to {save_path}.png '
+            f'and {save_path}.pdf'
+        )
+
+    return fig, ax
 
 def plot_parallel_coordinate_plot(df, save_path=None):
     """
-    Plot a parallel coordinate plot for the variables and objectives.
+    Plot parallel coordinate plots for the optimization variables,
+    colored by yield and throughput.
 
     Args:
         df: DataFrame containing the results
-        save_path: Optional path to save the figure
+        save_path: Optional base path used to save PNG and PDF files
     """
+
     from pandas.plotting import parallel_coordinates
     from matplotlib import colormaps
     from matplotlib.colors import Normalize
     from matplotlib.cm import ScalarMappable
+    from pathlib import Path
 
-    # Select only the relevant columns for the parallel coordinate plot
-    cols = ['flow_rate', 'reactor_concentration_uM', 'temperature', 'light_intensity']
-    plot_df = df[cols + ["iteration"]].copy()
+    # Publication formatting
+    plt.rcParams.update({
+        'font.family': 'Arial',
+        'font.size': 8,
+        'axes.labelsize': 8,
+        'xtick.labelsize': 7,
+        'ytick.labelsize': 7,
+        'axes.linewidth': 0.5,
+        'xtick.major.width': 0.8,
+        'ytick.major.width': 0.8,
+        'xtick.major.size': 3,
+        'ytick.major.size': 3,
+    })
 
-    # Normalize each plotted column from 0 to 1
+    # Variables shown in the parallel coordinate plot
+    cols = [
+        'flow_rate',
+        'reactor_concentration_uM',
+        'temperature',
+        'light_intensity'
+    ]
+
+    plot_df = df[cols + ['iteration']].copy()
+
+    # Normalize each variable from 0 to 1
     for col in cols:
-        plot_df[col] = (plot_df[col] - plot_df[col].min()) / (plot_df[col].max() - plot_df[col].min())
-    # Convert iteration into categories for coloring
-    plot_df["iteration_label"] = plot_df["iteration"].astype(str)
+        plot_df[col] = (
+            plot_df[col] - plot_df[col].min()
+        ) / (
+            plot_df[col].max() - plot_df[col].min()
+        )
 
-    color_by = "percent_yield"
+    # Dummy categorical column required by parallel_coordinates
+    plot_df['iteration_label'] = plot_df['iteration'].astype(str)
 
-    cmap = colormaps["RdYlGn"]
-    norm = Normalize(df[color_by].min(), df[color_by].max())
+    # Better display labels
+    display_labels = [
+        'Flow rate',
+        'Concentration',
+        'Temperature',
+        'Light intensity'
+    ]
 
-    colors = [cmap(norm(v)) for v in df[color_by]]
+    # ============================================================
+    # Yield-colored plot
+    # ============================================================
 
-    fig, ax = plt.subplots(figsize=(8, 5))
+    color_by = 'percent_yield'
+
+    cmap = colormaps['Blues']
+    norm = Normalize(
+        df[color_by].min(),
+        df[color_by].max()
+    )
+    from matplotlib.colors import PowerNorm
+
+    norm = PowerNorm(
+        gamma=2.0,
+        vmin=df[color_by].min(),
+        vmax=df[color_by].max()
+)
+    yield_order = df.sort_values('percent_yield', ascending=True)
+
+    yield_plot_df = plot_df.loc[yield_order.index]
+
+    colors = [cmap(norm(v)) for v in yield_order['percent_yield']]
+
+    fig, ax = plt.subplots(figsize=(3.3, 2.6))
 
     parallel_coordinates(
-        plot_df[cols + ["iteration_label"]],
-        class_column="iteration_label",
+        yield_plot_df[cols + ['iteration_label']],
+        class_column='iteration_label',
         color=colors,
-        linewidth=1.5,
+        linewidth=1.0,
         alpha=0.75,
         ax=ax
     )
 
     ax.legend_.remove()
-    ax.set_ylabel("Normalized value")
-    ax.set_title("Parallel coordinate plot of BO experiments")
 
-    sm = ScalarMappable(norm=norm, cmap=cmap)
+    ax.set_ylabel('Normalized value')
+    ax.set_xticklabels(display_labels)
+
+    sm = ScalarMappable(
+        norm=norm,
+        cmap=cmap
+    )
     sm.set_array([])
-    cbar = plt.colorbar(sm, ax=ax)
-    cbar.set_label(color_by)
 
-    plt.tight_layout()
+    cbar = fig.colorbar(
+        sm,
+        ax=ax,
+        pad=0.03,
+        fraction=0.06
+    )
+
+    cbar.set_label('Yield (%)', fontsize=8)
+    cbar.ax.tick_params(
+        labelsize=7,
+        width=0.8,
+        length=3
+    )
+
+    fig.tight_layout()
 
     if save_path:
-        save_path_stem = Path(save_path).stem
-        save_path = Path(save_path).parent / f"{save_path_stem}_yield_colored.png"
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"Saved parallel coordinate plot to {save_path}")
+        save_path = Path(save_path)
 
-    # Plot Throughput colored parallel coordinate plot
-    color_by = "throughput_nmol_per_min"
+        yield_base = (
+            save_path.parent /
+            f'{save_path.stem}_yield'
+        )
 
-    cmap = colormaps["RdYlGn"]
-    norm = Normalize(df[color_by].min(), df[color_by].max())
+        fig.savefig(
+            f'{yield_base}.png',
+            dpi=600,
+            bbox_inches='tight'
+        )
 
-    colors = [cmap(norm(v)) for v in df[color_by]]
+        fig.savefig(
+            f'{yield_base}.pdf',
+            bbox_inches='tight'
+        )
 
-    fig, ax = plt.subplots(figsize=(8, 5))
+        print(
+            f'Saved to {yield_base}.png '
+            f'and {yield_base}.pdf'
+        )
+
+    # ============================================================
+    # Throughput-colored plot
+    # ============================================================
+
+    color_by = 'throughput_nmol_per_min'
+
+    cmap = colormaps['Blues']
+    norm = Normalize(
+        df[color_by].min(),
+        df[color_by].max()
+    )
+
+    from matplotlib.colors import PowerNorm
+
+    norm = PowerNorm(
+        gamma=2.0,
+        vmin=df[color_by].min(),
+        vmax=df[color_by].max()
+)
+
+    throughput_order = df.sort_values(
+        'throughput_nmol_per_min',
+        ascending=True
+    )
+
+    throughput_plot_df = plot_df.loc[throughput_order.index]
+
+    colors = [
+        cmap(norm(v))
+        for v in throughput_order['throughput_nmol_per_min']
+    ]
+    fig, ax = plt.subplots(figsize=(3.3, 2.6))
 
     parallel_coordinates(
-        plot_df[cols + ["iteration_label"]],
-        class_column="iteration_label",
+        throughput_plot_df[cols + ['iteration_label']],
+        class_column='iteration_label',
         color=colors,
-        linewidth=1.5,
+        linewidth=1.0,
         alpha=0.75,
         ax=ax
     )
 
     ax.legend_.remove()
-    ax.set_ylabel("Normalized value")
-    ax.set_title("Parallel coordinate plot of BO experiments")
 
-    sm = ScalarMappable(norm=norm, cmap=cmap)
+    ax.set_ylabel('Normalized value')
+    ax.set_xticklabels(display_labels)
+
+    sm = ScalarMappable(
+        norm=norm,
+        cmap=cmap
+    )
     sm.set_array([])
-    cbar = plt.colorbar(sm, ax=ax)
-    cbar.set_label(color_by)
 
-    plt.tight_layout()
+    cbar = fig.colorbar(
+        sm,
+        ax=ax,
+        pad=0.03,
+        fraction=0.06
+    )
+
+    cbar.set_label(
+        r'Throughput (nmol min$^{-1}$)',
+        fontsize=8
+    )
+
+    cbar.ax.tick_params(
+        labelsize=7,
+        width=0.8,
+        length=3
+    )
+
+    fig.tight_layout()
 
     if save_path:
-        save_path_stem = Path(save_path).stem
-        save_path = Path(save_path).parent / f"{save_path_stem}_throughput_colored.png"
-        plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        print(f"Saved parallel coordinate plot to {save_path}")
+        throughput_base = (
+            save_path.parent /
+            f'{save_path.stem}_throughput'
+        )
+
+        fig.savefig(
+            f'{throughput_base}.png',
+            dpi=600,
+            bbox_inches='tight'
+        )
+
+        fig.savefig(
+            f'{throughput_base}.pdf',
+            bbox_inches='tight'
+        )
+
+        print(
+            f'Saved to {throughput_base}.png '
+            f'and {throughput_base}.pdf'
+        )
 
 def plot_correlation_heat_map(df, save_path=None):
     """

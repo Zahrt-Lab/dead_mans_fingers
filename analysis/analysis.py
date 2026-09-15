@@ -17,6 +17,34 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Path to save the plots (default: None, plots will be shown but not saved)",
     )
+    parser.add_argument(
+        "--yield-point",
+        type=float,
+        default=None,
+        help="Yield point to plot (default: 1.0)",
+    )
+
+    parser.add_argument(
+        "--throughput-point",
+        type=float,
+        default=None,
+        help="Throughput point to plot (default: 1.0)",
+    )
+
+    parser.add_argument(
+        "--trade-off-yield",
+        type=float,
+        default=None,
+        help="Yield point for the trade-off plot (default: 1.0)",
+    )
+
+    parser.add_argument(
+        "--trade-off-throughput",
+        type=float,
+        default=None,
+        help="Throughput point for the trade-off plot (default: 1.0)",
+    )
+
     return parser.parse_args()
 
 def main():
@@ -27,7 +55,7 @@ def main():
         save_dir_path = Path(save_dir_path)
         print(f"Using provided save directory path: {save_dir_path}")
     else:
-        save_dir_path = csv_dir_path / "analysis_results"
+        save_dir_path = csv_dir_path / "publication_plots"
         print(f"No save directory path provided. Using default: {save_dir_path}")
 
     if not csv_dir_path.exists():
@@ -49,13 +77,16 @@ def main():
         os.makedirs(plot_save_dir)
     pareto_plot_path = plot_save_dir / "pareto_front.png"
 
+    batch_point = (args.yield_point, args.throughput_point)
+    tradeoff_point = (args.trade_off_yield, args.trade_off_throughput)
+
     # Plot the Pareto front and variable vs objective plots
-    plot_pareto_front(df, pareto_plot_path)
-    plot_pareto_front_with_color_iteration(df, plot_save_dir / "pareto_front_with_color_iteration.png")
+    #plot_pareto_front(df, pareto_plot_path)
+    plot_pareto_front_with_color_iteration(df, plot_save_dir / "pareto_front_with_color_iteration.png", batch_point=batch_point, tradeoff_point=tradeoff_point)
     plot_parallel_coordinate_plot(df, plot_save_dir / "parallel_coordinate_plot.png")
-    plot_correlation_heat_map(df, plot_save_dir / "correlation_heatmap.png")
-    plot_pair_plot(df, plot_save_dir / "pair_plot.png")
-    plot_variable_vs_objective(df, plot_save_dir)
+    #plot_correlation_heat_map(df, plot_save_dir / "correlation_heatmap.png")
+    #plot_pair_plot(df, plot_save_dir / "pair_plot.png")
+    #plot_variable_vs_objective(df, plot_save_dir)
 
     #Plot hypervolume improvement
     hypervolume_plot_path = csv_dir_path / "hypervolume_results.csv"
@@ -67,11 +98,11 @@ def main():
         print(f"No hypervolume results file found at {hypervolume_plot_path}")
     
     # Iterate over folders and plot absorbance vs time
-    iterate_over_folders_and_plot_absorbance(data_folder=csv_dir_path, save_folder=plot_save_dir)
+    #iterate_over_folders_and_plot_absorbance(data_folder=csv_dir_path, save_folder=plot_save_dir)
 
     # Print the flow rate iterations to a CSV file
     csv_save_dir = save_dir_path / "table_results"
-    print_flow_rate_iterations(csv_dir_path, csv_save_dir)
+    #print_flow_rate_iterations(csv_dir_path, csv_save_dir)
 
 if __name__ == "__main__":
     main()
