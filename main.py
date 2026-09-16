@@ -117,7 +117,6 @@ def main() -> None:
             xylopyridine_analog=xylopyridine_analog,
         )
 
-        #TODO: STAY GONE TIL VALIDATTED
         print(f"Beginning production run for xylopyridine analog: {xylopyridine_analog}")
         production_run(
             bo_results=Path(final_base_dir) / bo_input["Fluorescent_Bayesian_Optimization_results_filename"],
