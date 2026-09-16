@@ -1,3 +1,12 @@
+
+# ------------------------------------------------------------------------------
+# Software: dead_mans_fingers
+# Copyright (c) 2026 Andrew Zahrt
+#
+# Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
+#
+# Licensed under the MIT License. See the LICENSE file in the repository root.
+# ------------------------------------------------------------------------------
 '''
 Analyze the results of a calibration campaign and returns the extinction coefficient.
 Saves the results of the analysis to a CSV file.

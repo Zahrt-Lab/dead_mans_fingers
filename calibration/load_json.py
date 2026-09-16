@@ -1,3 +1,12 @@
+# ------------------------------------------------------------------------------
+# Software: dead_mans_fingers
+# Copyright (c) 2026 Andrew Zahrt
+#
+# Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
+#
+# Licensed under the MIT License. See the LICENSE file in the repository root.
+# ------------------------------------------------------------------------------
+
 ''' This module contains functions to load experimental parameters from a JSON file.
 The main function is `load_experimental_parameters`, which reads the JSON file and returns a dictionary of parameters.
 '''

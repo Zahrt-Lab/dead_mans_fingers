@@ -1,3 +1,12 @@
+# ------------------------------------------------------------------------------
+# Software: dead_mans_fingers
+# Copyright (c) 2026 Andrew Zahrt
+#
+# Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
+#
+# Licensed under the MIT License. See the LICENSE file in the repository root.
+# ------------------------------------------------------------------------------
+
 '''This script wraps the methods to prime pump 1 (Xylopyridine solution) before starting the optimization campaign. 
 It generates the commands to prime pump 1 and saves them to a csv file. The commands include setting the valve position 
 and dispensing the Xylopyridine solution at the specified flow rate and volume.'''

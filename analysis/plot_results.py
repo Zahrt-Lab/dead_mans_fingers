@@ -1,3 +1,12 @@
+# ------------------------------------------------------------------------------
+# Software: dead_mans_fingers
+# Copyright (c) 2026 Andrew Zahrt
+#
+# Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
+#
+# Licensed under the MIT License. See the LICENSE file in the repository root.
+# ------------------------------------------------------------------------------
+
 '''
 This module contains functions for plotting the results of the analysis.
 It contains the functions to plot the pareto front and the individual variables vs yield and throughput.

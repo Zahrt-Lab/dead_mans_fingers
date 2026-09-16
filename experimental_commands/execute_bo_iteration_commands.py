@@ -1,11 +1,11 @@
 # ------------------------------------------------------------------------------
-# Software: project_dead_mans_fingers
-# Copyright: (C) 2026 by Professor Andrew Zahrt
-# This software is the intellectual property of Professor Andrew Zahrt
-# Contributions by graduate students Scott Laverty and Joao are acknowledged.
-# All rights reserved.
+# Software: dead_mans_fingers
+# Copyright (c) 2026 Andrew Zahrt
+#
+# Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
+#
+# Licensed under the MIT License. See the LICENSE file in the repository root.
 # ------------------------------------------------------------------------------
-
 """
 Bayesian Optimization Iteration Execution Module.
 

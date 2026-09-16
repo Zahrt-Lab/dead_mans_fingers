@@ -1,11 +1,11 @@
 # ------------------------------------------------------------------------------
-# Software: project_dead_mans_fingers
-# Copyright: (C) 2025 by Professor Andrew Zahrt
-# This software is the intellectual property of Professor Andrew Zahrt
-# Contributions by graduate students Scott Laverty and Joao are acknowledged.
-# All rights reserved.
+# Software: dead_mans_fingers
+# Copyright (c) 2026 Andrew Zahrt
+#
+# Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
+#
+# Licensed under the MIT License. See the LICENSE file in the repository root.
 # ------------------------------------------------------------------------------
-
 '''
 The purpose of this module is to initialize a new AxClient or load an existing one from a JSON file,
 setting up the experiment parameters and objectives for the Bayesian optimization campaign.

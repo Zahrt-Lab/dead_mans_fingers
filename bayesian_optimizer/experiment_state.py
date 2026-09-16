@@ -1,11 +1,11 @@
 # ------------------------------------------------------------------------------
-# Software: project_dead_mans_fingers
-# Copyright: (C) 2025 by Professor Andrew Zahrt
-# This software is the intellectual property of Professor Andrew Zahrt
-# Contributions by graduate students Scott Laverty and Joao are acknowledged.
-# All rights reserved.
+# Software: dead_mans_fingers
+# Copyright (c) 2026 Andrew Zahrt
+#
+# Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
+#
+# Licensed under the MIT License. See the LICENSE file in the repository root.
 # ------------------------------------------------------------------------------
-
 """
 Purpose of this code is to hold the state of the experiment across a single bo campaign,
 and provide utility functions to update the state between iterations and experiments.

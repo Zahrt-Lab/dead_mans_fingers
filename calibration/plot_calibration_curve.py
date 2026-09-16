@@ -1,3 +1,12 @@
+# ------------------------------------------------------------------------------
+# Software: dead_mans_fingers
+# Copyright (c) 2026 Andrew Zahrt
+#
+# Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
+#
+# Licensed under the MIT License. See the LICENSE file in the repository root.
+# ------------------------------------------------------------------------------
+
 '''This script is responsible for plotting the calibration curve, given the calibration results and the calculated extinction coefficient.
 It saves the calibration curve plot to a file.
 '''

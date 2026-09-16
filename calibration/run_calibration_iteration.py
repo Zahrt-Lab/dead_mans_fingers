@@ -1,3 +1,12 @@
+# ------------------------------------------------------------------------------
+# Software: dead_mans_fingers
+# Copyright (c) 2026 Andrew Zahrt
+#
+# Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
+#
+# Licensed under the MIT License. See the LICENSE file in the repository root.
+# ------------------------------------------------------------------------------
+
 ''' This script runs a single iteration of the calibration process. It is called by the main calibration loop in run_calibration.py. 
 It takes as input the current iteration number, the path to the calibration configuration file, 
 and the path to the output directory where the results of this iteration will be saved. 
