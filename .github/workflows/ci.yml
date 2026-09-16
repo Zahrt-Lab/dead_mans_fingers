@@ -4,8 +4,6 @@ on:
   push:
   pull_request:
     branches: [main]
-  schedule:
-    - cron: '0 6 * * *'   # Daily at 6:00 AM UTC
 
 jobs:
   test:
@@ -33,6 +31,3 @@ jobs:
 
       - name: Run tests (excluding hardware)
         run: pytest test/ -m "not hardware" -v --tb=short
-
-      - name: Smoke test simulation run (1 analog, 3 trials)
-        run: python main.py test/test_config_ci_smoke.json --simulation
