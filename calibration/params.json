@@ -9,7 +9,7 @@
     "reference_wavelength": 700.0,
     "blank_light_intensity_threshold": 100,
     "wavelength_for_blank_light_intensity_check": 600.0,
-    "base_directory": "C:\\Users\\zahrtlab\\AutoZahrt\\AutoZahrt_experiments\\2026_05_30",
+    "base_directory": "path/to/base/directory",
     "temperature": 25,
     "light_intensity": 255,      
     "factors": [1, 0.8, 0.6, 0.4, 0.2]
