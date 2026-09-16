@@ -94,7 +94,6 @@ def _make_bo_campaign_state(
             "waste_buffer_volume_uL": waste_buffer,
             "xylopyridine_analog_index": analog_index,
             "name_of_xylopyridine_analogs_stock_solutions": _ANALOG_NAMES,
-            "name_of_co-solvent_stock_solutions": _COSOLVENT_NAMES,
         }
     )
     state.update_volume_stock_solutions(
@@ -113,30 +112,20 @@ def _make_bo_campaign_state(
 # calculate_volumes_used
 # ---------------------------------------------------------------------------
 
-def test_calculate_volumes_used_no_cosolvent():
+def test_calculate_volumes_used():
     """With D_cosolvent=0 all wash goes to pump2, pump3 wash=0."""
     params = _make_instrument_parameters(pump1=390, pump2=2610, pump3=0, pump4=0)
-    result = calculate_volumes_used(params, co_solvent_dilution_factor=0.0)
+    result = calculate_volumes_used(params)
 
     assert result["pump1"] == pytest.approx(390.0)
     assert result["pump2"] == pytest.approx(2610.0 + 6000.0)   # wash = 6000*(1-0)
     assert result["pump3"] == pytest.approx(0.0)                # wash = 6000*0
     assert result["pump4"] == pytest.approx(3000.0)             # 0 + 3000 wash
 
-
-def test_calculate_volumes_used_with_cosolvent():
-    """D_cosolvent=0.3 splits wash between pump2 and pump3."""
-    params = _make_instrument_parameters(pump1=390, pump2=2100, pump3=510, pump4=0)
-    result = calculate_volumes_used(params, co_solvent_dilution_factor=0.3)
-
-    assert result["pump2"] == pytest.approx(2100.0 + 6000.0 * 0.7)
-    assert result["pump3"] == pytest.approx(510.0 + 6000.0 * 0.3)
-
-
 def test_calculate_volumes_used_waste_is_sum():
     """Waste equals the sum of all four pump volumes consumed."""
     params = _make_instrument_parameters(pump1=390, pump2=2100, pump3=510, pump4=0)
-    result = calculate_volumes_used(params, co_solvent_dilution_factor=0.3)
+    result = calculate_volumes_used(params)
 
     expected_waste = result["pump1"] + result["pump2"] + result["pump3"] + result["pump4"]
     assert result["waste"] == pytest.approx(expected_waste)
@@ -150,10 +139,10 @@ def test_only_active_analog_position_decremented():
     """Pump 1: only the analog at xylopyridine_analog_index is decremented."""
     state = _make_bo_campaign_state(analog_index=2)
     params = _make_instrument_parameters(pump1=500)
-    volumes_used = calculate_volumes_used(params, co_solvent_dilution_factor=0.0)
+    volumes_used = calculate_volumes_used(params)
 
     check_and_update_all_volumes(
-        state, volumes_used, iteration=1, co_solvent_valve_position=1, interactive=False
+        state, volumes_used, iteration=1, interactive=False
     )
 
     vols = state.volume_stock_solutions["pump1_volumes_uL"]
@@ -163,46 +152,6 @@ def test_only_active_analog_position_decremented():
     assert vols[3] == pytest.approx(18000.0)  # untouched
     assert vols[4] == pytest.approx(18000.0)  # untouched
 
-
-def test_only_active_cosolvent_position_decremented():
-    """Pump 3: only the co-solvent at valve_position − 1 is decremented."""
-    state = _make_bo_campaign_state()
-    params = _make_instrument_parameters(pump3=600)
-    volumes_used = calculate_volumes_used(params, co_solvent_dilution_factor=0.2)
-
-    # Use valve position 3 (index 2 = THF)
-    check_and_update_all_volumes(
-        state, volumes_used, iteration=1, co_solvent_valve_position=3, interactive=False
-    )
-
-    vols = state.volume_stock_solutions["pump3_volumes_uL"]
-    assert vols[2] == pytest.approx(18000.0 - volumes_used["pump3"])  # active (THF)
-    assert vols[0] == pytest.approx(18000.0)  # untouched
-    assert vols[1] == pytest.approx(18000.0)  # untouched
-    assert vols[3] == pytest.approx(18000.0)  # untouched
-
-
-def test_different_iterations_different_cosolvent_positions():
-    """Successive iterations with different valve positions deplete different reservoirs."""
-    state = _make_bo_campaign_state()
-    params = _make_instrument_parameters(pump3=300)
-
-    volumes_pos1 = calculate_volumes_used(params, co_solvent_dilution_factor=0.1)
-    volumes_pos2 = calculate_volumes_used(params, co_solvent_dilution_factor=0.1)
-
-    check_and_update_all_volumes(
-        state, volumes_pos1, iteration=1, co_solvent_valve_position=1, interactive=False
-    )
-    check_and_update_all_volumes(
-        state, volumes_pos2, iteration=2, co_solvent_valve_position=2, interactive=False
-    )
-
-    vols = state.volume_stock_solutions["pump3_volumes_uL"]
-    assert vols[0] < 18000.0  # position 1 decremented
-    assert vols[1] < 18000.0  # position 2 decremented
-    assert vols[2] == pytest.approx(18000.0)  # position 3 untouched
-
-
 # ---------------------------------------------------------------------------
 # check_and_update_all_volumes — error conditions
 # ---------------------------------------------------------------------------
@@ -211,10 +160,10 @@ def test_check_and_update_all_volumes_sufficient():
     """Volumes update correctly and waste accumulates when all stocks are ample."""
     state = _make_bo_campaign_state()
     params = _make_instrument_parameters()
-    volumes_used = calculate_volumes_used(params, co_solvent_dilution_factor=0.17)
+    volumes_used = calculate_volumes_used(params)
 
     check_and_update_all_volumes(
-        state, volumes_used, iteration=1, co_solvent_valve_position=1, interactive=False
+        state, volumes_used, iteration=1, interactive=False
     )
 
     assert state.volume_stock_solutions["pump1_volumes_uL"][0] == pytest.approx(
@@ -229,11 +178,11 @@ def test_insufficient_active_pump1_raises():
     low_vols[0] = 100.0  # active analog has almost nothing
     state = _make_bo_campaign_state(pump1_vols=low_vols, analog_index=0)
     params = _make_instrument_parameters(pump1=390)
-    volumes_used = calculate_volumes_used(params, co_solvent_dilution_factor=0.0)
+    volumes_used = calculate_volumes_used(params)
 
     with pytest.raises(ExperimentAborted):
         check_and_update_all_volumes(
-            state, volumes_used, iteration=1, co_solvent_valve_position=1, interactive=False
+            state, volumes_used, iteration=1, interactive=False
         )
 
 
@@ -243,37 +192,22 @@ def test_sufficient_inactive_pump1_does_not_raise():
     low_vols[2] = 18000.0  # only position 2 (index 2) is full
     state = _make_bo_campaign_state(pump1_vols=low_vols, analog_index=2)
     params = _make_instrument_parameters(pump1=390)
-    volumes_used = calculate_volumes_used(params, co_solvent_dilution_factor=0.0)
+    volumes_used = calculate_volumes_used(params)
 
     # Should not raise — active position has plenty
     check_and_update_all_volumes(
-        state, volumes_used, iteration=1, co_solvent_valve_position=1, interactive=False
+        state, volumes_used, iteration=1, interactive=False
     )
-
-
-def test_insufficient_active_pump3_raises():
-    """ExperimentAborted raised when the selected co-solvent reservoir is too low."""
-    low_vols = [18000.0] * 6
-    low_vols[1] = 50.0  # Acetonitrile (position 2) is nearly empty
-    state = _make_bo_campaign_state(pump3_vols=low_vols)
-    params = _make_instrument_parameters(pump3=600)
-    volumes_used = calculate_volumes_used(params, co_solvent_dilution_factor=0.2)
-
-    with pytest.raises(ExperimentAborted):
-        check_and_update_all_volumes(
-            state, volumes_used, iteration=1, co_solvent_valve_position=2, interactive=False
-        )
-
 
 def test_check_and_update_all_volumes_waste_full():
     """ExperimentAborted raised when waste container is nearly full."""
     state = _make_bo_campaign_state(waste_vol=3_500_000.0)
     params = _make_instrument_parameters()
-    volumes_used = calculate_volumes_used(params, co_solvent_dilution_factor=0.17)
+    volumes_used = calculate_volumes_used(params)
 
     with pytest.raises(ExperimentAborted):
         check_and_update_all_volumes(
-            state, volumes_used, iteration=1, co_solvent_valve_position=1, interactive=False
+            state, volumes_used, iteration=1, interactive=False
         )
 
 
@@ -285,17 +219,16 @@ def test_volume_log_entry_appended():
     """One log entry added per call, recording active analog and co-solvent names."""
     state = _make_bo_campaign_state(analog_index=1)
     params = _make_instrument_parameters()
-    volumes_used = calculate_volumes_used(params, co_solvent_dilution_factor=0.17)
+    volumes_used = calculate_volumes_used(params)
 
     assert len(state.volume_log) == 0
     check_and_update_all_volumes(
-        state, volumes_used, iteration=3, co_solvent_valve_position=2, interactive=False
+        state, volumes_used, iteration=3, interactive=False
     )
     assert len(state.volume_log) == 1
     entry = state.volume_log[0]
     assert entry["iteration"] == 3
-    assert entry["pump1_active_analog"] == "Xylopyridine_Analog_2"   # index 1
-    assert entry["pump3_active_cosolvent"] == "Acetonitrile"          # position 2
+    assert entry["pump1_active_analog"] == "Xylopyridine_Analog_2"   # index 1        # position 2
     assert "pump1_remaining_uL" in entry
     assert "waste_total_uL" in entry
 
@@ -384,12 +317,12 @@ def test_save_volume_log_csv_columns(tmp_path):
     """CSV has the expected columns including analog/cosolvent name columns."""
     state = _make_bo_campaign_state(analog_index=0)
     params = _make_instrument_parameters()
-    volumes_used = calculate_volumes_used(params, co_solvent_dilution_factor=0.17)
+    volumes_used = calculate_volumes_used(params)
     check_and_update_all_volumes(
-        state, volumes_used, iteration=1, co_solvent_valve_position=1, interactive=False
+        state, volumes_used, iteration=1, interactive=False
     )
     check_and_update_all_volumes(
-        state, volumes_used, iteration=2, co_solvent_valve_position=2, interactive=False
+        state, volumes_used, iteration=2, interactive=False
     )
 
     out = str(tmp_path / "volume_log.csv")
@@ -410,8 +343,6 @@ def test_save_volume_log_csv_columns(tmp_path):
     }
     assert expected_cols.issubset(set(rows[0].keys()))
     assert rows[0]["pump1_active_analog"] == "Xylopyridine_Analog_1"
-    assert rows[0]["pump3_active_cosolvent"] == "Ethanol"
-    assert rows[1]["pump3_active_cosolvent"] == "Acetonitrile"
 
 
 def test_save_volume_log_csv_empty(tmp_path):

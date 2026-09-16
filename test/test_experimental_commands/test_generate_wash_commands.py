@@ -57,7 +57,7 @@ _COMMANDS = [
         "0.5",
     ],
     [
-        "Tecan_pump_2",
+        "Tricontinental_C24000_1",
         "dispense",
         "flow_rate=25, volume=75",
         "The flow rate of our 0.1 M HCl water pump is 25 uL/min and volume is 75",
@@ -140,13 +140,13 @@ def test_generate_wash_pump3_omitted_when_zero_volume():
 def test_generate_wash_pump4_included_when_nonzero():
     commands = generate_wash_commands(0, 0, 0, 0, 25, 75, 3)
     components = [cmd[0] for cmd in commands]
-    assert "Tecan_pump_2" in components
+    assert "Tricontinental_C24000_1" in components
 
 
 def test_generate_wash_pump4_omitted_when_zero():
     commands = generate_wash_commands(0, 0, 0, 0, 0, 0, 3)
     components = [cmd[0] for cmd in commands]
-    assert "Tecan_pump_2" not in components
+    assert "Tricontinental_C24000_1" not in components
 
 
 def test_generate_wash_commands_full_output_matches_expected():

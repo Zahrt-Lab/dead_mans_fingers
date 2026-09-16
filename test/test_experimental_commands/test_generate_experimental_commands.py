@@ -97,7 +97,7 @@ def test_generate_experimental_commands_pump3_omitted_when_zero():
 def test_generate_experimental_commands_pump4_included_when_nonzero():
     commands = generate_experimental_commands(100, 0, 0, 10, 1000, 0, 0, 100, 50, 506.0, 380.0, 700.0, 200.0, 600.0, convergence_time=300.0)
     components = [cmd[0] for cmd in commands]
-    assert "Tecan_pump_2" in components
+    assert "Tricontinental_C24000_1" in components
 
 
 def test_generate_experimental_commands_pump4_omitted_when_zero():

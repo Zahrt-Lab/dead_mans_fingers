@@ -36,9 +36,9 @@ _BLANK_THRESHOLD = 200.0
 _BLANK_CHECK_WAVELENGTH = 600.0
 _CONVERGENCE_TIME = 120.0
 
-def _save(base, fraction=0.2, light_intensity=75):
+def _save(base, light_intensity=75):
     save_commands_csv(
-        str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, fraction, light_intensity,
+        str(base), 100, 50, 25, 0, 1000, 500, 250, 0, 3, 50, light_intensity,
         _REACTANT_WAVELENGTH, _PRODUCT_WAVELENGTH, _REFERENCE_WAVELENGTH,
         _BLANK_THRESHOLD, _BLANK_CHECK_WAVELENGTH, _CONVERGENCE_TIME,
     )
@@ -101,20 +101,6 @@ def test_save_commands_csv_wash_file_has_correct_header(tmp_path):
     with open(tmp_path / "iteration_1_wash.csv", newline="", encoding="utf-8") as f:
         header = next(csv.reader(f))
     assert header == _HEADER
-
-
-def test_save_commands_csv_wash_pump2_volume_proportional_to_flow_rates(tmp_path):
-    """Wash pump2 volume is 6000 µL × (pump1+pump2 fraction of total flow)."""
-    base = tmp_path / "iteration_1"
-    _save(base, fraction=0.25)
-    with open(tmp_path / "iteration_1_wash.csv", newline="", encoding="utf-8") as f:
-        rows = list(csv.reader(f))
-
-    # _save uses pump1=100, pump2=50, pump3=25, pump4=0 → total=175
-    # wash_volume_pump2 = 6000 * (150/175)
-    expected_volume = 6000 * (100 + 50) / (100 + 50 + 25 + 0)
-    param_strings = " ".join(r[2] for r in rows[1:] if r[0].startswith("Tecan_pump_1"))
-    assert f"volume={expected_volume}" in param_strings
 
 
 # ---------------------------------------------------------------------------

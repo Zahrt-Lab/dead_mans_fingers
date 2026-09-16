@@ -22,16 +22,12 @@ def make_trial_conditions(
     flow_rate=200,
     dilution_factor=0.5,
     temperature=50,
-    co_solvent_valve_position=3,
-    co_solvent_dilution_factor=0.2,
     light_intensity=50,
 ):
     return {
         "flow_rate": flow_rate,
         "dilution_factor": dilution_factor,
         "temperature": temperature,
-        "co_solvent_valve_position": co_solvent_valve_position,
-        "co_solvent_dilution_factor": co_solvent_dilution_factor,
         "light_intensity": light_intensity,
     }
 
@@ -81,7 +77,7 @@ def test_pump4_zero_when_reactor_conc_below_cuvette_target():
 def test_pump4_nonzero_when_reactor_conc_above_cuvette_target():
     # reactor_conc = 0.9 * 100 = 90 uM, cuvette_target = 200 * 0.2 = 40 uM → dilution needed
     result = call(
-        trial_conditions=make_trial_conditions(dilution_factor=0.9, co_solvent_dilution_factor=0.0),
+        trial_conditions=make_trial_conditions(dilution_factor=0.9),
         xylopyridine_uM=100,
         max_abs_uM=200,
         target_abs=0.2,
@@ -105,11 +101,6 @@ def test_light_intensity_inversion_boundaries():
     assert call(trial_conditions=make_trial_conditions(light_intensity=50))["light_intensity"] == 128.0
 
 
-def test_valve_position_passed_through():
-    result = call(trial_conditions=make_trial_conditions(co_solvent_valve_position=4))
-    assert result["position_valve2"] == 4
-
-
 def test_invalid_flow_rate_raises():
     with pytest.raises(ValueError):
         call(trial_conditions=make_trial_conditions(flow_rate=0))
@@ -119,16 +110,6 @@ def test_invalid_dilution_factor_raises():
     with pytest.raises(ValueError):
         call(trial_conditions=make_trial_conditions(dilution_factor=1.5))
 
-
-def test_invalid_valve_position_raises():
-    with pytest.raises(ValueError):
-        call(trial_conditions=make_trial_conditions(co_solvent_valve_position=7))
-
-
-def test_cosolvent_exceeds_remainder_raises():
-    # co_solvent_dilution_factor (0.6) > (1 - dilution_factor) (0.5)
-    with pytest.raises(ValueError):
-        call(trial_conditions=make_trial_conditions(dilution_factor=0.5, co_solvent_dilution_factor=0.6))
 
 
 def test_accepts_individual_scalars_without_state_objects():

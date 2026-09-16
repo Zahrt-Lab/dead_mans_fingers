@@ -25,8 +25,6 @@ _SAMPLE_RESULTS = {
     "dilution_factor": 0.5,
     "reactor_concentration_uM": 200.0,
     "temperature": 25,
-    "co_solvent_valve_position": 2,
-    "co_solvent_dilution_factor": 0.1,
     "light_intensity": 80,
     "target_volume": 500,
     "reactant_wavelength": 409,
@@ -102,4 +100,4 @@ def test_all_18_columns_present_in_header(tmp_path):
     with open(tmp_path / "results.csv") as f:
         reader = csv.reader(f)
         header = next(reader)
-    assert len(header) == 18
+    assert len(header) == 16
