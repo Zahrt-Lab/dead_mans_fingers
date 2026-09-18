@@ -109,12 +109,6 @@ post_processing/
 Processing of inline UV-Vis data, steady-state extraction, Beer-Lambert-based quantification, and calculation of yield and throughput.
 
 ```text
-production_run/
-```
-
-Utilities for executing selected reaction conditions for preparative production runs.
-
-```text
 analysis/
 ```
 
@@ -202,9 +196,9 @@ The post-processing workflow includes:
 The resulting yield and throughput values are returned to the optimization workflow.
 
 ---
-## etailed Explanation of Workflow
+## Detailed Explanation of Workflow
 
-a### Vriables, Notation, and Assumptions
+### Vriables, Notation, and Assumptions
 
 ### Flow rates
 
@@ -448,22 +442,6 @@ the optimizer updates its surrogate model and selects another condition:
 
 where **$\alpha$** is the multi-objective acquisition function used by the Ax/BoTorch generation strategy. Ax state is saved after every completed trial, and campaign hypervolume is recorded when available.
 
-### Step 15 — Select and size a production run
-
-The production-run selector filters campaign results to experiments satisfying a user-provided yield threshold, then selects the condition with the greatest measured throughput.
-
-If **$N_{desired}$** is the desired product amount in nmol and **$Q$** is throughput in nmol/min:
-
-**$t_{production} = \dfrac{N_{desired}}{Q}$**
-
-The required reactor volume is:
-
-**$V_{production}=F_Rt_{production}$**
-
-The selected **$F_R$**, **$D$**, **$T$**, and **$I$** values are converted with the same reactor-feed equations. Inline UV–Vis analysis is not used during the production run, so:
-
-**$F_4=0$** and **$V_4=0$**
-
 ---
 
 ## Optimization Objectives and Pareto Analysis
@@ -526,19 +504,15 @@ Additional raw or archival data may be provided through a separate versioned dat
 
 ---
 
-## ISoftware Environment
+## Software Environment
 
 The experimental campaigns reported in the manuscript were executed using Python 3.9. The optimization workflow used Ax 0.3.7 with BoTorch 0.10.0 for multi-objective Bayesian optimization, together with the associated scientific Python dependencies.
 
 
-The complete software environment used for the reported experiments is provided in the repository through the corresponding requirements/environment file. This file should be used when reproducing the optimization and data-analysis workflo
+The complete software environment used for the reported experiments is provided in the repository through the corresponding requirements/environment file. This file should be used when reproducing the optimization and data-analysis workflow.
 
-w.
-Direct execution on the physical experimental platform additionally requires the external Auto_Zahrt framework, the corresponding device drivers, instrument-specific configuration files, and access to the hardware described in the manuscript and Supporting Information. Consequently, recreating the Python environment alone is sufficient for software analysis and portions of the optimization workflow, but not for execution of physical experim
+Direct execution on the physical experimental platform additionally requires the external Auto_Zahrt framework, the corresponding device drivers, instrument-specific configuration files, and access to the hardware described in the manuscript and Supporting Information. Consequently, recreating the Python environment alone is sufficient for software analysis and portions of the optimization workflow, but not for execution of physical experiments.
 
-
-
-ents.
 Hardware-independent analysis and testing can be performed without connection to the experimental platform.
 
 ---
@@ -559,7 +533,11 @@ The repository includes GitHub Actions continuous integration to automatically r
 
 ## Simulation
 
-The repository contains simulation utilities used during software development and testing.
+The repository contains simulation utilities used during software development and testing. To run in simulation mode, simply use the --simulation flag:
+
+```bash
+python main.py path\to\experimental_parameters.json --simulation
+```
 
 Simulation functionality is intended to evaluate the optimization and software workflow without requiring connection to the physical experimental platform.
 
@@ -580,9 +558,9 @@ Direct execution of experiments requires:
 
 Because Auto_Zahrt and some hardware-specific components are maintained separately, cloning this repository alone is not sufficient to reproduce physical experiments on arbitrary hardware.
 
-The code and data in this repository are intended primarily to document and reproduce the optimization and analysis workflow associated with the reported st
-## 
-Manuscript
+The code and data in this repository are intended primarily to document and reproduce the optimization and analysis workflow associated with the reported manuscript.
+
+## Manuscript
 
 This repository accompanies a manuscript describing the development and application of an autonomous continuous-flow photochemistry platform for multi-objective optimization of xylopyridine-derived photoconvertible fluorophores.
 
@@ -599,13 +577,8 @@ Manuscript citation information will be added upon publication.
 
 ---
 
-
-.
-
----
-
 ## Reproducing Manuscript Analysis
-
+---
 The manuscript figures derived from Bayesian optimization data can be reproduced using the scripts in the `analysis/` directory together with the datasets in `data/optimization/`.
 
 These analyses include:
@@ -615,7 +588,23 @@ These analyses include:
 - parallel-coordinate visualization;
 - comparison of optimization campaigns.
 
-Specific data-to-figure mappings and example commands will be added with the final publication deuter
+To get the analyses figures, run:
+
+```bash
+python -m analysis.analysis "path\to\run_001" `
+  --save-dir-path "path\to\run_001\publication_plots" `
+  --yield-point 60 `
+  --throughput-point 1.5 `
+  --trade-off-yield 80 `
+  --trade-off-throughput 2.0
+```
+Flags:
+- "path\to\run_001" — directory containing BO_Results_*_results.csv. If present, hypervolume_results.csv is analyzed too.
+- --save-dir-path — output directory for generated plots. Defaults to <run directory>\publication_plots.
+- --yield-point — yield percentage for the batch/reference marker.
+- --throughput-point — throughput in nmol/min for that reference marker.
+- --trade-off-yield — yield percentage for the selected trade-off marker.
+- --trade-off-throughput — throughput in nmol/min for that trade-off marker.
 -
 ---
 
