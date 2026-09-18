@@ -1,6 +1,5 @@
-# Project Dead Man's Fingers
-
-Project Dead Man's Fingers is the software repository associated with the manuscript describing an autonomous continuous-flow photochemistry platform for the optimization and production of photoconverted xylopyridine-derived diazaxanthilidene fluorophores.
+# Dead Man's Fingers
+Dead Man's Fingers is the software repository associated with the manuscript describing an autonomous continuous-flow photochemistry platform for the optimization and production of photoconverted xylopyridine-derived diazaxanthilidene fluorophores.
 
 The repository contains the code used to manage Bayesian optimization, experimental parameter handling, analytical post-processing, and manuscript data analysis for the reported optimization campaigns. Hardware orchestration and device-level control are handled through the external Auto_Zahrt framework.
 
@@ -10,7 +9,7 @@ The name *Dead Man's Fingers* refers to the fungal family from which xylopyridin
 
 ## Overview
 
-The platform was developed to accelerate the photoconversion of xylopyridine-derived diazaxanthilidene fluorophores, which require several days under previously used batch conditions.
+The platform was developed to optimize the photoconversion of xylopyridine-derived diazaxanthilidene fluorophores. The optimized conditions improved both yield and throughput relative to the previously used batch protocol, which required several days of irradiation..
 
 The automated workflow integrates:
 
@@ -203,7 +202,284 @@ The post-processing workflow includes:
 The resulting yield and throughput values are returned to the optimization workflow.
 
 ---
+## etailed Explanation of Workflow
 
+a### Vriables, Notation, and Assumptions
+
+### Flow rates
+
+- **$F_R$**: total flow through the reactor, selected by the optimizer (`flow_rate`), in µL/min.
+- **$F_1$**: Pump 1 substrate-stock flow rate, in µL/min.
+- **$F_2$**: Pump 2 aqueous-diluent flow rate, in µL/min.
+- **$F_4$**: post-reactor dilution flow rate before the UV–Vis detector, in µL/min.
+- **$F_{UV}$**: total flow through the UV–Vis detector, in µL/min.
+
+**$F_R = F_1 + F_2$**
+
+**$F_{UV} = F_R + F_4$**
+
+### Volumes
+
+- **$V_R$**: configured total volume passed through the reactor, in µL.
+- **$V_1$**: volume delivered by Pump 1, in µL.
+- **$V_2$**: volume delivered by Pump 2, in µL.
+- **$V_4$**: post-reactor dilution volume delivered before detection, in µL.
+- **$V_{UV}$**: total volume reaching the detector, **$V_{UV}=V_R+V_4$**.
+
+### Concentrations
+
+- **$C_{stock}$**: selected xylopyridine stock concentration, in µM.
+- **$C_{S,in}$**: initial substrate concentration in the reactor bed, in µM or mol/L as indicated.
+- **$C_{target}$**: configured target concentration at the UV–Vis detector, in µM.
+- **$C_{P,UV}$**: product concentration measured in the UV cell, in mol/µL.
+- **$C_{P,R}$**: product concentration at the reactor outlet before detector dilution, in mol/µL.
+
+### Other variables
+
+- **$D$**: substrate dilution factor (`dilution_factor`), dimensionless.
+- **$T$**: reactor temperature, in °C.
+- **$I$**: requested light intensity, from 0 to 100%.
+- **$J$**: instrument dimmer command, from 0 to 255, with 0 representing the brightest setting.
+- **$A_P$**: mean product absorbance in the selected analysis window.
+- **$A_{target}$**: configured target absorbance at the detector.
+- **$C_{max}$**: detector concentration corresponding to absorbance 1.0, in µM.
+- **$\varepsilon_P$**: product extinction coefficient at the product wavelength, in L mol⁻¹ cm⁻¹.
+- **$l$**: UV–Vis path length, in cm.
+- **$V_{target}$**: target reactor volume used to define the normal post-processing cutoff, in µL.
+
+Assumptions encoded in the calculations:
+
+1. Pumped liquids are incompressible and additive over the relevant flow range.
+2. Pump 1 and Pump 2 together establish the selected reactor flow rate.
+3. Post-reactor dilution changes detector concentration but not reaction yield or molar production rate leaving the reactor.
+4. Product absorbance follows the Beer–Lambert relationship at the configured product wavelength.
+5. Negative concentrations caused by measurement noise are clamped to zero, and calculated percent yield is restricted to 0–100%.
+
+---
+
+## Step-by-Step: One Optimization Iteration (with Math)
+
+### Step 0 — Prepare and prime the platform
+
+- Prepare the selected xylopyridine stock solution and 0.1 M HCl(aq) diluent.
+- Fill reservoirs and confirm sufficient reagent and waste capacity.
+- Prime the substrate line and remove bubbles from the flow path and UV cell.
+- Set safe initial temperature and illumination conditions.
+- Route reactor effluent through the UV–Vis analysis path.
+
+### Step 1 — Select the xylopyridine analog
+
+The master configuration contains analog-specific concentrations, wavelengths, extinction coefficients, and analytical settings. `generate_bo_input_file()` selects the entries for one analog and writes an analog-specific campaign configuration.
+
+The analog index also determines which stock-solution position is tracked during the campaign.
+
+### Step 2 — Propose an experiment
+
+For trial **$k$**, Ax proposes the four-dimensional condition vector:
+
+**$x_k = (F_R, D, T, I)$**
+
+where **$F_R$** is total reactor flow, **$D$** is substrate dilution, **$T$** is reactor temperature, and **$I$** is requested light intensity. Ax proposes each value within the campaign bounds.
+
+### Step 3 — Constrain, standardize, and check the cache
+
+The proposed values are constrained to the configured bounds and standardized before execution. The standardized trial conditions form a cache key. If an identical condition has already been evaluated, its stored yield and throughput are returned without repeating the experiment.
+
+### Step 4 — Calculate reactor-feed concentration
+
+The initial substrate concentration in the reactor is:
+
+**$C_{S,in,\mu M} = C_{stock,\mu M}D$**
+
+For the yield calculation, it is converted from µM to mol/L:
+
+**$C_{S,in,mol/L} = \dfrac{C_{S,in,\mu M}}{10^6}$**
+
+### Step 5 — Calculate reactor pump settings
+
+Pump 1 supplies fraction **$D$** of the total reactor stream:
+
+**$F_1 = F_RD$**
+
+Pump 2 supplies the remaining fraction:
+
+**$F_2 = F_R(1-D)$**
+
+Therefore:
+
+**$F_1 + F_2 = F_R$**
+
+The volumes follow the same relationships:
+
+**$V_1 = V_RD$**
+
+**$V_2 = V_R(1-D)$**
+
+**$V_1 + V_2 = V_R$**
+
+The implementation warns when a nonzero pump flow is at or below 25 µL/min because pump accuracy and precision may be reduced.
+
+### Step 6 — Calculate post-reactor detector dilution
+
+The target detector concentration is:
+
+**$C_{target} = C_{max}A_{target}$**
+
+Define the required dilution ratio:
+
+**$R = \dfrac{C_{S,in}}{C_{target}}$**
+
+If **$C_{S,in} \leq C_{target}$**, no post-reactor dilution is required:
+
+**$F_4 = 0$** and **$V_4 = 0$**
+
+If **$C_{S,in} > C_{target}$**:
+
+**$F_{UV} = F_RR$**
+
+**$F_4 = F_R(R-1)$**
+
+**$V_4 = V_R(R-1)$**
+
+This dilution occurs after the reactor and does not alter the reactor conditions.
+
+### Step 7 — Convert the light-intensity request
+
+The mirror-box controller uses an inverse integer dimmer scale. The implemented conversion is:
+
+**$J = \operatorname{round}\left(\dfrac{100-I}{100}\times255\right)$**
+
+Thus **$I=100\% \Rightarrow J=0$** is the brightest setting, while **$I=0\% \Rightarrow J=255$** is the dimmest setting.
+
+### Step 8 — Generate and execute instrument commands
+
+The software writes command CSV files for temperature control, washing, light-intensity control, and the flow experiment with UV–Vis acquisition.
+
+The experiment sequence initializes the detector; configures reactant, product, and reference wavelengths; records blank and dark spectra; starts continuous acquisition; dispenses the calculated volumes; waits for the pumps; stops acquisition; and closes the light-source shutter.
+
+In simulation mode, hardware execution is replaced by generation of a synthetic UV–Vis time-series CSV.
+
+### Step 9 — Determine the UV–Vis analysis window
+
+For a normal-duration experiment, the time required to pass the target volume is:
+
+**$t_{target} = \dfrac{V_{target}}{F_R}\times60$**
+
+where time is in seconds when volume is in µL and flow is in µL/min. Data at or after **$t_{target}$** are retained.
+
+The convergence time supplied to the detector is:
+
+**$t_{conv} = \max\left(120,\ 0.10\,t_{target}\right)$**
+
+If the recording ends more than the configured tolerance before its expected duration, it is treated as having converged early and the final 120 seconds are used.
+
+### Step 10 — Average product absorbance
+
+The retained observations are averaged at the product wavelength:
+
+**$A_P = \dfrac{1}{n}\sum_{i=1}^{n}A_{P,i}$**
+
+The analysis rejects a wavelength column if any retained value lies outside −0.3 to 1.3. The absorbance used for concentration is clamped to a minimum of zero:
+
+**$A_P^+ = \max(0,A_P)$**
+
+### Step 11 — Calculate product concentration in the UV cell
+
+Beer–Lambert law is:
+
+**$A_P^+ = \varepsilon_PlC_{P,UV}$**
+
+The implementation converts the extinction coefficient from L mol⁻¹ cm⁻¹ to µL mol⁻¹ cm⁻¹. Therefore:
+
+**$C_{P,UV} = \dfrac{A_P^+}{10^6\varepsilon_Pl}$**
+
+and **$C_{P,UV}$** is expressed in mol/µL.
+
+### Step 12 — Recover reactor-outlet product concentration
+
+The detector observes product after Pump 4 dilution. The reactor-outlet concentration is recovered by reversing that dilution:
+
+**$C_{P,R} = C_{P,UV}\dfrac{V_R+V_4}{V_R}$**
+
+Equivalently for the generated flow conditions:
+
+**$C_{P,R} = C_{P,UV}\dfrac{F_R+F_4}{F_R}$**
+
+When **$V_4=0$**, **$C_{P,R}=C_{P,UV}$**.
+
+### Step 13 — Calculate percent yield and throughput
+
+Convert product concentration from mol/µL to mol/L:
+
+**$C_{P,R,mol/L} = 10^6C_{P,R,mol/\mu L}$**
+
+Percent yield is:
+
+**$Y = \dfrac{C_{P,R,mol/L}}{C_{S,in,mol/L}}\times100\%$**
+
+The reported value is restricted to 0–100%:
+
+**$Y_{reported}=\min(100,\max(0,Y))$**
+
+Product throughput is:
+
+**$Q_{mol/min}=C_{P,R,mol/\mu L}F_R$**
+
+or, in the reported units:
+
+**$Q_{nmol/min}=10^9C_{P,R,mol/\mu L}F_R$**
+
+Negative throughput is clamped to zero.
+
+### Step 14 — Return objectives to the optimizer
+
+Each completed experiment returns two objectives to maximize:
+
+- **$y_1(x)=Y_{reported}$**, percent yield;
+- **$y_2(x)=Q_{nmol/min}$**, product throughput.
+
+Ax receives each objective as a measured mean and configured standard error. Given the completed dataset
+
+**$\mathcal{D}_n=\{(x_i,y_{1,i},y_{2,i})\}_{i=1}^{n}$**,
+
+the optimizer updates its surrogate model and selects another condition:
+
+**$x_{n+1}=\arg\max_x\alpha(x\mid\mathcal{D}_n)$**
+
+where **$\alpha$** is the multi-objective acquisition function used by the Ax/BoTorch generation strategy. Ax state is saved after every completed trial, and campaign hypervolume is recorded when available.
+
+### Step 15 — Select and size a production run
+
+The production-run selector filters campaign results to experiments satisfying a user-provided yield threshold, then selects the condition with the greatest measured throughput.
+
+If **$N_{desired}$** is the desired product amount in nmol and **$Q$** is throughput in nmol/min:
+
+**$t_{production} = \dfrac{N_{desired}}{Q}$**
+
+The required reactor volume is:
+
+**$V_{production}=F_Rt_{production}$**
+
+The selected **$F_R$**, **$D$**, **$T$**, and **$I$** values are converted with the same reactor-feed equations. Inline UV–Vis analysis is not used during the production run, so:
+
+**$F_4=0$** and **$V_4=0$**
+
+---
+
+## Optimization Objectives and Pareto Analysis
+
+The two objectives generally compete:
+
+- slower flow or longer residence time may favor percent yield;
+- faster flow may favor throughput even when conversion is lower.
+
+A condition **$x_a$** dominates **$x_b$** when it is no worse in either objective and better in at least one:
+
+**$Y(x_a)\geq Y(x_b)$** and **$Q(x_a)\geq Q(x_b)$**,
+
+with at least one strict inequality.
+
+The Pareto front is the set of evaluated conditions not dominated by another evaluated condition. Hypervolume summarizes the objective space dominated by the current Pareto front relative to configured objective thresholds. The repository records observed and model-predicted hypervolume when available and uses these values to visualize campaign progress.
 ## Data Analysis
 
 The `analysis/` directory contains scripts used for post-campaign analysis and manuscript visualization.
@@ -250,25 +526,20 @@ Additional raw or archival data may be provided through a separate versioned dat
 
 ---
 
-## Installation
+## ISoftware Environment
 
-The experimental campaigns were executed using Python 3.9 and a defined scientific Python environment.
+The experimental campaigns reported in the manuscript were executed using Python 3.9. The optimization workflow used Ax 0.3.7 with BoTorch 0.10.0 for multi-objective Bayesian optimization, together with the associated scientific Python dependencies.
 
-A reproducible environment file will be provided in this repository.
 
-Typical dependencies include:
+The complete software environment used for the reported experiments is provided in the repository through the corresponding requirements/environment file. This file should be used when reproducing the optimization and data-analysis workflo
 
-- Python
-- Ax
-- BoTorch
-- PyTorch
-- NumPy
-- pandas
-- SciPy
-- matplotlib
-- pyserial
+w.
+Direct execution on the physical experimental platform additionally requires the external Auto_Zahrt framework, the corresponding device drivers, instrument-specific configuration files, and access to the hardware described in the manuscript and Supporting Information. Consequently, recreating the Python environment alone is sufficient for software analysis and portions of the optimization workflow, but not for execution of physical experim
 
-The exact environment used for the reported experiments should be recreated using the environment file provided with the repository.
+
+
+ents.
+Hardware-independent analysis and testing can be performed without connection to the experimental platform.
 
 ---
 
@@ -309,41 +580,9 @@ Direct execution of experiments requires:
 
 Because Auto_Zahrt and some hardware-specific components are maintained separately, cloning this repository alone is not sufficient to reproduce physical experiments on arbitrary hardware.
 
-The code and data in this repository are intended primarily to document and reproduce the optimization and analysis workflow associated with the reported study.
-
----
-
-## Reproducing Manuscript Analysis
-
-The manuscript figures derived from Bayesian optimization data can be reproduced using the scripts in the `analysis/` directory together with the datasets in `data/optimization/`.
-
-These analyses include:
-
-- Pareto-front generation;
-- hypervolume-improvement analysis;
-- parallel-coordinate visualization;
-- comparison of optimization campaigns.
-
-Specific data-to-figure mappings and example commands will be added with the final publication dataset.
-
----
-
-## Continuous Integration
-
-GitHub Actions is used to automatically validate the software-only test suite.
-
-The CI workflow:
-
-1. checks out the repository;
-2. installs Python 3.9;
-3. installs the required dependencies;
-4. runs all non-hardware tests.
-
-This provides an independent check that the publication version of the repository remains functional outside the development computer.
-
----
-
-## Manuscript
+The code and data in this repository are intended primarily to document and reproduce the optimization and analysis workflow associated with the reported st
+## 
+Manuscript
 
 This repository accompanies a manuscript describing the development and application of an autonomous continuous-flow photochemistry platform for multi-objective optimization of xylopyridine-derived photoconvertible fluorophores.
 
@@ -358,6 +597,26 @@ The study demonstrates:
 
 Manuscript citation information will be added upon publication.
 
+---
+
+
+.
+
+---
+
+## Reproducing Manuscript Analysis
+
+The manuscript figures derived from Bayesian optimization data can be reproduced using the scripts in the `analysis/` directory together with the datasets in `data/optimization/`.
+
+These analyses include:
+
+- Pareto-front generation;
+- hypervolume-improvement analysis;
+- parallel-coordinate visualization;
+- comparison of optimization campaigns.
+
+Specific data-to-figure mappings and example commands will be added with the final publication deuter
+-
 ---
 
 ## Citation
