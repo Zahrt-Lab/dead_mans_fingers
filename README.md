@@ -198,7 +198,7 @@ The resulting yield and throughput values are returned to the optimization workf
 ---
 ## Detailed Explanation of Workflow
 
-### Vriables, Notation, and Assumptions
+### Variables, Notation, and Assumptions
 
 ### Flow rates
 
@@ -251,7 +251,7 @@ Assumptions encoded in the calculations:
 
 ---
 
-## Step-by-Step: One Optimization Iteration (with Math)
+## Step-by-Step: One Optimization Iteration
 
 ### Step 0 — Prepare and prime the platform
 
@@ -341,7 +341,7 @@ This dilution occurs after the reactor and does not alter the reactor conditions
 
 The mirror-box controller uses an inverse integer dimmer scale. The implemented conversion is:
 
-**$J = \operatorname{round}\left(\dfrac{100-I}{100}\times255\right)$**
+**$J = \mathrm{round}\left(\dfrac{100-I}{100}\times255\right)$**
 
 Thus **$I=100\% \Rightarrow J=0$** is the brightest setting, while **$I=0\% \Rightarrow J=255$** is the dimmest setting.
 
@@ -434,7 +434,7 @@ Each completed experiment returns two objectives to maximize:
 
 Ax receives each objective as a measured mean and configured standard error. Given the completed dataset
 
-**$\mathcal{D}_n=\{(x_i,y_{1,i},y_{2,i})\}_{i=1}^{n}$**,
+**$D_n = \{(x_i, y_{1,i}, y_{2,i})\}_{i=1}^{n}$**, 
 
 the optimizer updates its surrogate model and selects another condition:
 
@@ -605,7 +605,7 @@ Flags:
 - --throughput-point — throughput in nmol/min for that reference marker.
 - --trade-off-yield — yield percentage for the selected trade-off marker.
 - --trade-off-throughput — throughput in nmol/min for that trade-off marker.
--
+
 ---
 
 ## Citation
