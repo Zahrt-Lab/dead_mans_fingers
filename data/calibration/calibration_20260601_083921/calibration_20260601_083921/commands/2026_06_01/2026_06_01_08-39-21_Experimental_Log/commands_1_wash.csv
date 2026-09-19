@@ -1,0 +1,5 @@
+Component,Action,Parameters,Notes,delay
+Valve6Way_2,go_to_position,position=1,,0.5
+SYNC,wait_for_pumps,,Waiting for co-solvent pump to complete,0.5
+Tecan_pump_1,dispense,"flow_rate=3000.0, volume=6000.0",The flow rate of our 0.1 M HCl Water is 3000.0 uL/min and volume is 6000.0,0.5
+SYNC,wait_for_pumps,,Waiting for XYLO and WATER pumps to complete,0.5
