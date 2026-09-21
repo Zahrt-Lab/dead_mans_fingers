@@ -1,0 +1,18 @@
+Component,Action,Parameters,Notes,delay
+MirrorBox365nm_1,set_dimmer,value=0.0,Setting light intensity to 0 for the experiment,0.5
+DH2000_1,shutter_open,,,5.0
+OceanOptics_UVVis_1,init,,,5.0
+OceanOptics_UVVis_1,set_params,"integration_time=30000,num_scans=10,measurement_interval=5,target_wavelengths=409.0;506.0;700.0,reference_wavelength=700.0,blank_light_intensity_threshold=200.0,wavelength_for_blank_light_intensity_check=600.0, convergence_time = 166.66666666666669",,5.0
+OceanOptics_UVVis_1,record_blank,,,5.0
+DH2000_1,shutter_close,,,5.0
+OceanOptics_UVVis_1,record_dark,,,5.0
+DH2000_1,shutter_open,,,5.0
+OceanOptics_UVVis_1,start_continuous,stop_upon_convergence=True,,0.5
+Tricontinental_C24000_1,dispense,"flow_rate=1000, volume=100",The tricontnent pump is initializing,0.5
+SYNC,wait_for_pumps,,Waiting for XYLO and WATER pumps to complete,0.5
+VICI_M6_Pump_1,dispense,"flow_rate=31.16,volume=1009.75",The flow rate of our Xylo compund is 31.16 uL/min and volume is 1009.75,0.5
+Tecan_pump_1,dispense,"flow_rate=76.84,volume=2490.25",The flow rate of our 0.1 M HCl Water is 76.84 uL/min and volume is 2490.25,0.5
+Tricontinental_C24000_1,dispense,"flow_rate=453.91, volume=14709.92",The flow rate of our 0.1 M HCl water pump is 453.91 uL/min and volume is 14709.92,0.5
+SYNC,wait_for_pumps,,Waiting for XYLO and WATER pumps to complete,0.5
+OceanOptics_UVVis_1,stop_continuous,,,3.0
+DH2000_1,shutter_close,,,3.0
