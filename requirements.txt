@@ -1,5 +1,4 @@
 asttokens==3.0.1
--e git+https://github.com/Zahrt-Lab/AutoZahrt_V3.git@39fb8ee358614866cb5369a3573ab0f49cbbc4ce#egg=auto_zahrt
 ax-platform==0.3.7
 botorch==0.10.0
 colorama==0.4.6
