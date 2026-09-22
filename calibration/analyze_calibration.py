@@ -1,7 +1,7 @@
 
 # ------------------------------------------------------------------------------
 # Software: dead_mans_fingers
-# Copyright (c) 2026 Andrew Zahrt
+# Copyright (c) 2026 Zahrt Research Group
 #
 # Contributions by Scott Laverty and Joao Albuquerque are acknowledged.
 #
