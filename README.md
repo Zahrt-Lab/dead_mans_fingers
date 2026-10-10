@@ -200,6 +200,8 @@ The resulting yield and throughput values are returned to the optimization workf
 
 ### Variables, Notation, and Assumptions
 
+**Pump numbering**. The software retains the pump numbering established during earlier iterations of the experimental platform. Pump 3 was originally assigned to co-solvent delivery, a capability that was subsequently excluded from the final four-variable optimization workflow. Consequently, Pump 3 is not used in the reported experiments, while Pump 4 remains assigned to post-reactor dilution before UV–Vis analysis. The original numbering was preserved to maintain consistency with the validated software implementation.
+
 ### Flow rates
 
 - **$F_R$**: total flow through the reactor, selected by the optimizer (`flow_rate`), in µL/min.
