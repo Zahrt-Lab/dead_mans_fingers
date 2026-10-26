@@ -9,7 +9,7 @@ The name *Dead Man's Fingers* refers to the fungal family from which xylopyridin
 
 ## Overview
 
-The platform was developed to optimize the photoconversion of xylopyridine-derived diazaxanthilidene fluorophores. The optimized conditions improved both yield and throughput relative to the previously used batch protocol, which required several days of irradiation..
+The platform was developed to optimize the photoconversion of xylopyridine-derived diazaxanthilidene fluorophores. The optimized conditions improved both yield and throughput relative to the previously used batch protocol, which required several days of irradiation.
 
 The automated workflow integrates:
 
@@ -510,6 +510,12 @@ Additional raw or archival data may be provided through a separate versioned dat
 
 The experimental campaigns reported in the manuscript were executed using Python 3.9. The optimization workflow used Ax 0.3.7 with BoTorch 0.10.0 for multi-objective Bayesian optimization, together with the associated scientific Python dependencies.
 
+Install the pinned dependencies with:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
 
 The complete software environment used for the reported experiments is provided in the repository through the corresponding requirements/environment file. This file should be used when reproducing the optimization and data-analysis workflow.
 
@@ -580,7 +586,7 @@ Manuscript citation information will be added upon publication.
 ---
 
 ## Reproducing Manuscript Analysis
----
+
 The manuscript figures derived from Bayesian optimization data can be reproduced using the scripts in the `analysis/` directory together with the datasets in `data/optimization/`.
 
 These analyses include:
@@ -590,7 +596,7 @@ These analyses include:
 - parallel-coordinate visualization;
 - comparison of optimization campaigns.
 
-To get the analyses figures, run:
+To generate the analysis figures, run:
 
 ```bash
 python -m analysis.analysis "path\to\run_001" `
